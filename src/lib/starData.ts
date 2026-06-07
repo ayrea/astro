@@ -16,3 +16,7 @@ export function filterStarsByMagnitude(magnitudeCutoff: number): StarRecord[] {
 export function getStarRadius(magnitude: number): number {
   return Math.max(0.5, 3.5 - magnitude * 0.4);
 }
+
+export function getScreenStarRadius(magnitude: number, scale: number): number {
+  return getStarRadius(magnitude) / scale;
+}

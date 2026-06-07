@@ -1,4 +1,5 @@
 import { Settings as SettingsIcon } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -14,6 +15,81 @@ import {
 import { Slider } from "@/components/ui/slider";
 import { Switch } from "@/components/ui/switch";
 import { useSettings } from "@/context/SettingsContext";
+
+const PARTIAL_NUMBER_PATTERN = /^-?\d*\.?\d*$/;
+
+interface NumericInputProps {
+  id: string;
+  value: number;
+  min: number;
+  max: number;
+  onChange: (value: number) => void;
+}
+
+function NumericInput({ id, value, min, max, onChange }: NumericInputProps) {
+  const [text, setText] = useState(String(value));
+  const isFocusedRef = useRef(false);
+
+  useEffect(() => {
+    if (!isFocusedRef.current) {
+      setText(String(value));
+    }
+  }, [value]);
+
+  const commitValue = (raw: string, fallback: number) => {
+    const trimmed = raw.trim();
+    if (
+      trimmed === "" ||
+      trimmed === "-" ||
+      trimmed === "." ||
+      trimmed === "-."
+    ) {
+      setText(String(fallback));
+      onChange(fallback);
+      return;
+    }
+
+    const parsed = Number(trimmed);
+    if (Number.isNaN(parsed)) {
+      setText(String(fallback));
+      onChange(fallback);
+      return;
+    }
+
+    const clamped = Math.min(max, Math.max(min, parsed));
+    setText(String(clamped));
+    onChange(clamped);
+  };
+
+  return (
+    <Input
+      id={id}
+      type="text"
+      inputMode="decimal"
+      value={text}
+      onFocus={() => {
+        isFocusedRef.current = true;
+      }}
+      onBlur={() => {
+        isFocusedRef.current = false;
+        commitValue(text, value);
+      }}
+      onChange={(event) => {
+        const next = event.target.value;
+        if (next !== "" && !PARTIAL_NUMBER_PATTERN.test(next)) {
+          return;
+        }
+
+        setText(next);
+
+        const parsed = Number(next);
+        if (!Number.isNaN(parsed) && parsed >= min && parsed <= max) {
+          onChange(parsed);
+        }
+      }}
+    />
+  );
+}
 
 export function Settings() {
   const { settings, updateSettings } = useSettings();
@@ -41,16 +117,12 @@ export function Settings() {
         <div className="mt-6 space-y-6">
           <div className="space-y-2">
             <Label htmlFor="latitude">Latitude</Label>
-            <Input
+            <NumericInput
               id="latitude"
-              type="number"
               min={-90}
               max={90}
-              step={0.01}
               value={settings.latitude}
-              onChange={(event) =>
-                updateSettings({ latitude: Number(event.target.value) })
-              }
+              onChange={(latitude) => updateSettings({ latitude })}
             />
             <p className="text-xs text-muted-foreground">
               Observer latitude in degrees (-90 to 90).
@@ -59,16 +131,12 @@ export function Settings() {
 
           <div className="space-y-2">
             <Label htmlFor="longitude">Longitude</Label>
-            <Input
+            <NumericInput
               id="longitude"
-              type="number"
               min={-180}
               max={180}
-              step={0.01}
               value={settings.longitude}
-              onChange={(event) =>
-                updateSettings({ longitude: Number(event.target.value) })
-              }
+              onChange={(longitude) => updateSettings({ longitude })}
             />
             <p className="text-xs text-muted-foreground">
               Observer longitude in degrees (-180 to 180, positive east).

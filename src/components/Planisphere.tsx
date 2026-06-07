@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 
 import { useSettings } from "@/context/SettingsContext";
 import { useInterval } from "@/hooks/useInterval";
+import { usePanZoom } from "@/hooks/usePanZoom";
 import {
   equatorialToHorizontal,
   getJulianDate,
@@ -11,13 +12,16 @@ import {
   projectAltitudeAzimuth,
   projectAltitudeCircle,
 } from "@/lib/projection";
-import { filterStarsByMagnitude, getStarRadius } from "@/lib/starData";
+import { filterStarsByMagnitude, getScreenStarRadius } from "@/lib/starData";
+import { getCanvasMetrics } from "@/lib/viewport";
+import { cn } from "@/lib/utils";
 
 const REFRESH_INTERVAL_MS = 15_000;
 
 export function Planisphere() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  const drawRef = useRef<(() => void) | null>(null);
   const { settings } = useSettings();
   const [now, setNow] = useState(() => new Date());
 
@@ -26,6 +30,25 @@ export function Planisphere() {
   }, []);
 
   useInterval(refresh, REFRESH_INTERVAL_MS);
+
+  const getMetrics = useCallback(() => {
+    const container = containerRef.current;
+    if (!container) {
+      return getCanvasMetrics(new DOMRect(0, 0, 0, 0));
+    }
+
+    return getCanvasMetrics(container.getBoundingClientRect());
+  }, []);
+
+  const requestRedraw = useCallback(() => {
+    drawRef.current?.();
+  }, []);
+
+  const { getViewport, isDragging, isZoomed } = usePanZoom(
+    canvasRef,
+    getMetrics,
+    requestRedraw,
+  );
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -40,30 +63,40 @@ export function Planisphere() {
     }
 
     const draw = () => {
-      const rect = container.getBoundingClientRect();
-      const size = Math.min(rect.width, rect.height);
+      const viewport = getViewport();
+      const metrics = getCanvasMetrics(container.getBoundingClientRect());
+      const { width, height, centerX, centerY, radius } = metrics;
       const dpr = window.devicePixelRatio || 1;
 
-      canvas.width = size * dpr;
-      canvas.height = size * dpr;
-      canvas.style.width = `${size}px`;
-      canvas.style.height = `${size}px`;
+      canvas.width = width * dpr;
+      canvas.height = height * dpr;
+      canvas.style.width = `${width}px`;
+      canvas.style.height = `${height}px`;
 
       context.setTransform(dpr, 0, 0, dpr, 0, 0);
-      context.clearRect(0, 0, size, size);
-
-      const centerX = size / 2;
-      const centerY = size / 2;
-      const radius = size * 0.46;
+      context.clearRect(0, 0, width, height);
 
       context.fillStyle = "#050814";
-      context.fillRect(0, 0, size, size);
+      context.fillRect(0, 0, width, height);
 
       context.save();
-      context.translate(centerX, centerY);
+      context.translate(centerX + viewport.offsetX, centerY + viewport.offsetY);
+      context.scale(viewport.scale, viewport.scale);
 
-      drawAltitudeCircle(context, radius, 60, "rgba(148, 163, 184, 0.25)");
-      drawAltitudeCircle(context, radius, 30, "rgba(148, 163, 184, 0.35)");
+      drawAltitudeCircle(
+        context,
+        radius,
+        60,
+        "rgba(148, 163, 184, 0.25)",
+        viewport.scale,
+      );
+      drawAltitudeCircle(
+        context,
+        radius,
+        30,
+        "rgba(148, 163, 184, 0.35)",
+        viewport.scale,
+      );
 
       context.beginPath();
       context.arc(0, 0, radius, 0, Math.PI * 2);
@@ -71,7 +104,7 @@ export function Planisphere() {
       context.lineWidth = 1.5;
       context.stroke();
 
-      drawZenithCross(context);
+      drawZenithCross(context, viewport.scale);
       drawCompassLabels(context, radius, settings.mirrorEastWest);
 
       const julianDate = getJulianDate(now);
@@ -103,7 +136,7 @@ export function Planisphere() {
           continue;
         }
 
-        const starRadius = getStarRadius(star.m);
+        const starRadius = getScreenStarRadius(star.m, viewport.scale);
         const alpha = Math.max(0.35, 1 - star.m / 10);
 
         context.beginPath();
@@ -122,12 +155,13 @@ export function Planisphere() {
       }
 
       if (settings.showLabels) {
-        drawStarLabels(context, labelCandidates);
+        drawStarLabels(context, labelCandidates, viewport.scale);
       }
 
       context.restore();
     };
 
+    drawRef.current = draw;
     draw();
 
     const resizeObserver = new ResizeObserver(draw);
@@ -135,17 +169,19 @@ export function Planisphere() {
 
     return () => {
       resizeObserver.disconnect();
+      drawRef.current = null;
     };
-  }, [now, settings]);
+  }, [getViewport, now, settings]);
 
   return (
-    <div
-      ref={containerRef}
-      className="flex h-full w-full items-center justify-center"
-    >
+    <div ref={containerRef} className="h-full w-full">
       <canvas
         ref={canvasRef}
-        className="touch-none"
+        className={cn(
+          "block h-full w-full touch-none",
+          isZoomed && !isDragging && "cursor-grab",
+          isDragging && "cursor-grabbing",
+        )}
         aria-label="Night sky planisphere"
       />
     </div>
@@ -157,21 +193,22 @@ function drawAltitudeCircle(
   radius: number,
   altitude: number,
   strokeStyle: string,
+  scale: number,
 ) {
   const circleRadius = projectAltitudeCircle(altitude, radius);
   context.beginPath();
   context.arc(0, 0, circleRadius, 0, Math.PI * 2);
   context.strokeStyle = strokeStyle;
-  context.lineWidth = 1;
-  context.setLineDash([4, 6]);
+  context.lineWidth = 1 / scale;
+  context.setLineDash([4 / scale, 6 / scale]);
   context.stroke();
   context.setLineDash([]);
 }
 
-function drawZenithCross(context: CanvasRenderingContext2D) {
+function drawZenithCross(context: CanvasRenderingContext2D, scale: number) {
   const size = 8;
   context.strokeStyle = "rgba(226, 232, 240, 0.8)";
-  context.lineWidth = 1.5;
+  context.lineWidth = 1.5 / scale;
   context.beginPath();
   context.moveTo(-size, 0);
   context.lineTo(size, 0);
@@ -216,6 +253,7 @@ function drawCompassLabels(
 function drawStarLabels(
   context: CanvasRenderingContext2D,
   labels: Array<{ x: number; y: number; name: string; magnitude: number }>,
+  scale: number,
 ) {
   const sorted = [...labels]
     .sort((a, b) => a.magnitude - b.magnitude)
@@ -227,6 +265,10 @@ function drawStarLabels(
   context.textBaseline = "middle";
 
   for (const label of sorted) {
-    context.fillText(label.name, label.x + 6, label.y - 6);
+    context.save();
+    context.translate(label.x, label.y);
+    context.scale(1 / scale, 1 / scale);
+    context.fillText(label.name, 6, -6);
+    context.restore();
   }
 }
