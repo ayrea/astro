@@ -1,6 +1,10 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 
-import { useSettings } from "@/context/SettingsContext";
+import {
+  type GridDecSpacing,
+  type GridRaSpacing,
+  useSettings,
+} from "@/context/SettingsContext";
 import { useInterval } from "@/hooks/useInterval";
 import { usePanZoom } from "@/hooks/usePanZoom";
 import {
@@ -17,6 +21,34 @@ import { getCanvasMetrics } from "@/lib/viewport";
 import { cn } from "@/lib/utils";
 
 const REFRESH_INTERVAL_MS = 15_000;
+
+function applyOpacity(rgbaColor: string, opacity: number): string {
+  const match = rgbaColor.match(
+    /rgba?\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)/i,
+  );
+
+  if (!match) {
+    return rgbaColor;
+  }
+
+  const [, red, green, blue] = match;
+  return `rgba(${red}, ${green}, ${blue}, ${opacity})`;
+}
+const DECLINATION_SAMPLES = 180;
+const RIGHT_ASCENSION_SAMPLES = 180;
+
+function getRightAscensionLines(spacingHours: GridRaSpacing): number[] {
+  const lineCount = 24 / spacingHours;
+  return Array.from({ length: lineCount }, (_, index) => index * spacingHours);
+}
+
+function getDeclinationLines(spacingDegrees: GridDecSpacing): number[] {
+  const lineCount = 180 / spacingDegrees + 1;
+  return Array.from(
+    { length: lineCount },
+    (_, index) => -90 + index * spacingDegrees,
+  );
+}
 
 export function Planisphere() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -98,6 +130,51 @@ export function Planisphere() {
         viewport.scale,
       );
 
+      const julianDate = getJulianDate(now);
+      const lst = getLocalSiderealTime(julianDate, settings.longitude);
+
+      if (settings.showGrid) {
+        const rightAscensionLines = getRightAscensionLines(
+          settings.gridRaSpacing,
+        );
+        const declinationLines = getDeclinationLines(settings.gridDecSpacing);
+        const gridLineColor = applyOpacity(
+          settings.gridLineColor,
+          settings.gridLineOpacity,
+        );
+        const gridLabelColor = applyOpacity(
+          settings.gridLabelColor,
+          settings.gridLineOpacity,
+        );
+
+        drawDeclinationLines(
+          context,
+          radius,
+          settings.latitude,
+          lst,
+          settings.mirrorEastWest,
+          viewport.scale,
+          declinationLines,
+          gridLineColor,
+          settings.gridLineThickness,
+          gridLabelColor,
+          settings.gridLabelFontSize,
+        );
+        drawRightAscensionLines(
+          context,
+          radius,
+          settings.latitude,
+          lst,
+          settings.mirrorEastWest,
+          viewport.scale,
+          rightAscensionLines,
+          gridLineColor,
+          settings.gridLineThickness,
+          gridLabelColor,
+          settings.gridLabelFontSize,
+        );
+      }
+
       context.beginPath();
       context.arc(0, 0, radius, 0, Math.PI * 2);
       context.strokeStyle = "rgba(226, 232, 240, 0.7)";
@@ -107,8 +184,6 @@ export function Planisphere() {
       drawZenithCross(context, viewport.scale);
       drawCompassLabels(context, radius, settings.mirrorEastWest);
 
-      const julianDate = getJulianDate(now);
-      const lst = getLocalSiderealTime(julianDate, settings.longitude);
       const visibleStars = filterStarsByMagnitude(settings.magnitudeCutoff);
       const labelCandidates: Array<{
         x: number;
@@ -186,6 +261,217 @@ export function Planisphere() {
       />
     </div>
   );
+}
+
+function projectEquatorial(
+  rightAscensionHours: number,
+  declinationDegrees: number,
+  latitude: number,
+  lst: number,
+  radius: number,
+  mirrorEastWest: boolean,
+) {
+  const horizontal = equatorialToHorizontal(
+    rightAscensionHours,
+    declinationDegrees,
+    latitude,
+    lst,
+  );
+
+  return projectAltitudeAzimuth(
+    horizontal.altitude,
+    horizontal.azimuth,
+    radius,
+    mirrorEastWest,
+  );
+}
+
+function strokeSampledPath(
+  context: CanvasRenderingContext2D,
+  samples: Array<{ x: number; y: number; visible: boolean }>,
+  strokeStyle: string,
+  scale: number,
+  lineThickness: number,
+) {
+  context.strokeStyle = strokeStyle;
+  context.lineWidth = lineThickness / scale;
+  context.setLineDash([4 / scale, 6 / scale]);
+
+  let pathStarted = false;
+
+  for (const point of samples) {
+    if (point.visible) {
+      if (!pathStarted) {
+        context.beginPath();
+        context.moveTo(point.x, point.y);
+        pathStarted = true;
+      } else {
+        context.lineTo(point.x, point.y);
+      }
+    } else if (pathStarted) {
+      context.stroke();
+      pathStarted = false;
+    }
+  }
+
+  if (pathStarted) {
+    context.stroke();
+  }
+
+  context.setLineDash([]);
+}
+
+function drawInverseScaleLabel(
+  context: CanvasRenderingContext2D,
+  text: string,
+  x: number,
+  y: number,
+  scale: number,
+  labelColor: string,
+  fontSize: number,
+  align: CanvasTextAlign = "center",
+) {
+  context.save();
+  context.translate(x, y);
+  context.scale(1 / scale, 1 / scale);
+  context.font = `${fontSize}px system-ui, sans-serif`;
+  context.fillStyle = labelColor;
+  context.textAlign = align;
+  context.textBaseline = "middle";
+  context.fillText(text, 0, 0);
+  context.restore();
+}
+
+function formatDeclinationLabel(declination: number): string {
+  if (declination === 0) {
+    return "0°";
+  }
+
+  const sign = declination > 0 ? "+" : "";
+  return `${sign}${declination}°`;
+}
+
+function drawDeclinationLines(
+  context: CanvasRenderingContext2D,
+  radius: number,
+  latitude: number,
+  lst: number,
+  mirrorEastWest: boolean,
+  scale: number,
+  declinationLines: number[],
+  lineColor: string,
+  lineThickness: number,
+  labelColor: string,
+  labelFontSize: number,
+) {
+  for (const declination of declinationLines) {
+    if (Math.abs(declination) === 90) {
+      continue;
+    }
+
+    const samples = Array.from({ length: DECLINATION_SAMPLES + 1 }, (_, index) => {
+      const rightAscension = (index / DECLINATION_SAMPLES) * 24;
+      return projectEquatorial(
+        rightAscension,
+        declination,
+        latitude,
+        lst,
+        radius,
+        mirrorEastWest,
+      );
+    });
+
+    strokeSampledPath(
+      context,
+      samples,
+      lineColor,
+      scale,
+      lineThickness,
+    );
+
+    const labelPoint = projectEquatorial(
+      lst,
+      declination,
+      latitude,
+      lst,
+      radius,
+      mirrorEastWest,
+    );
+
+    if (labelPoint.visible) {
+      drawInverseScaleLabel(
+        context,
+        formatDeclinationLabel(declination),
+        labelPoint.x,
+        labelPoint.y,
+        scale,
+        labelColor,
+        labelFontSize,
+        declination >= 0 ? "left" : "right",
+      );
+    }
+  }
+}
+
+function drawRightAscensionLines(
+  context: CanvasRenderingContext2D,
+  radius: number,
+  latitude: number,
+  lst: number,
+  mirrorEastWest: boolean,
+  scale: number,
+  rightAscensionLines: number[],
+  lineColor: string,
+  lineThickness: number,
+  labelColor: string,
+  labelFontSize: number,
+) {
+  for (const rightAscension of rightAscensionLines) {
+    const samples = Array.from(
+      { length: RIGHT_ASCENSION_SAMPLES + 1 },
+      (_, index) => {
+        const declination =
+          -90 + (index / RIGHT_ASCENSION_SAMPLES) * 180;
+        return projectEquatorial(
+          rightAscension,
+          declination,
+          latitude,
+          lst,
+          radius,
+          mirrorEastWest,
+        );
+      },
+    );
+
+    strokeSampledPath(
+      context,
+      samples,
+      lineColor,
+      scale,
+      lineThickness,
+    );
+
+    const labelPoint = projectEquatorial(
+      rightAscension,
+      0,
+      latitude,
+      lst,
+      radius,
+      mirrorEastWest,
+    );
+
+    if (labelPoint.visible) {
+      drawInverseScaleLabel(
+        context,
+        `${rightAscension}h`,
+        labelPoint.x,
+        labelPoint.y,
+        scale,
+        labelColor,
+        labelFontSize,
+      );
+    }
+  }
 }
 
 function drawAltitudeCircle(
