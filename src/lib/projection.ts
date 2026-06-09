@@ -6,18 +6,18 @@ export interface ProjectedPoint {
   visible: boolean;
 }
 
-export function projectAltitudeAzimuth(
-  altitudeDegrees: number,
+export function projectElevationAzimuth(
+  elevationDegrees: number,
   azimuthDegrees: number,
   radius: number,
   mirrorEastWest: boolean,
 ): ProjectedPoint {
-  if (altitudeDegrees < 0) {
+  if (elevationDegrees < 0) {
     return { x: 0, y: 0, visible: false };
   }
 
   const azimuth = toRadians(azimuthDegrees);
-  const r = ((90 - altitudeDegrees) / 90) * radius;
+  const r = ((90 - elevationDegrees) / 90) * radius;
 
   let x = r * Math.sin(azimuth);
   const y = -r * Math.cos(azimuth);
@@ -29,9 +29,9 @@ export function projectAltitudeAzimuth(
   return { x, y, visible: true };
 }
 
-export function projectAltitudeCircle(
-  altitudeDegrees: number,
+export function projectElevationCircle(
+  elevationDegrees: number,
   radius: number,
 ): number {
-  return ((90 - altitudeDegrees) / 90) * radius;
+  return ((90 - elevationDegrees) / 90) * radius;
 }

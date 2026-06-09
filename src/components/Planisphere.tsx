@@ -15,8 +15,8 @@ import {
   equatorialToScreen,
 } from "@/lib/astronomy";
 import {
-  projectAltitudeAzimuth,
-  projectAltitudeCircle,
+  projectElevationAzimuth,
+  projectElevationCircle,
 } from "@/lib/projection";
 import {
   getScreenStarRadius,
@@ -153,14 +153,14 @@ export function Planisphere() {
       context.translate(centerX + viewport.offsetX, centerY + viewport.offsetY);
       context.scale(viewport.scale, viewport.scale);
 
-      drawAltitudeCircle(
+      drawElevationCircle(
         context,
         radius,
         60,
         "rgba(148, 163, 184, 0.25)",
         viewport.scale,
       );
-      drawAltitudeCircle(
+      drawElevationCircle(
         context,
         radius,
         30,
@@ -344,8 +344,8 @@ function projectEquatorial(
     lst,
   );
 
-  return projectAltitudeAzimuth(
-    horizontal.altitude,
+  return projectElevationAzimuth(
+    horizontal.elevation,
     horizontal.azimuth,
     radius,
     mirrorEastWest,
@@ -530,14 +530,14 @@ function drawRightAscensionLines(
   }
 }
 
-function drawAltitudeCircle(
+function drawElevationCircle(
   context: CanvasRenderingContext2D,
   radius: number,
-  altitude: number,
+  elevation: number,
   strokeStyle: string,
   scale: number,
 ) {
-  const circleRadius = projectAltitudeCircle(altitude, radius);
+  const circleRadius = projectElevationCircle(elevation, radius);
   context.beginPath();
   context.arc(0, 0, circleRadius, 0, Math.PI * 2);
   context.strokeStyle = strokeStyle;

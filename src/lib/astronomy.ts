@@ -3,7 +3,7 @@ const RAD_TO_DEG = 180 / Math.PI;
 const HOURS_TO_RAD = Math.PI / 12;
 
 export interface HorizontalCoordinates {
-  altitude: number;
+  elevation: number;
   azimuth: number;
 }
 
@@ -117,20 +117,20 @@ export function equatorialToScreen(
   const ra = rightAscensionHours * HOURS_TO_RAD;
   const dec = toRadians(declinationDegrees);
   const hourAngle = frame.lstRad - ra;
-  const sinAlt =
+  const sinElev =
     Math.sin(dec) * frame.sinLat +
     Math.cos(dec) * frame.cosLat * Math.cos(hourAngle);
-  const altitude = Math.asin(sinAlt);
-  const altitudeDegrees = toDegrees(altitude);
+  const elevation = Math.asin(sinElev);
+  const elevationDegrees = toDegrees(elevation);
 
-  if (altitudeDegrees < 0) {
+  if (elevationDegrees < 0) {
     out.visible = false;
     return;
   }
 
   const cosAz =
-    (Math.sin(dec) - Math.sin(altitude) * frame.sinLat) /
-    (Math.cos(altitude) * frame.cosLat);
+    (Math.sin(dec) - Math.sin(elevation) * frame.sinLat) /
+    (Math.cos(elevation) * frame.cosLat);
 
   let azimuth = Math.acos(Math.min(1, Math.max(-1, cosAz)));
 
@@ -138,7 +138,7 @@ export function equatorialToScreen(
     azimuth = 2 * Math.PI - azimuth;
   }
 
-  const projectedRadius = ((90 - altitudeDegrees) / 90) * radius;
+  const projectedRadius = ((90 - elevationDegrees) / 90) * radius;
   let x = projectedRadius * Math.sin(azimuth);
   const y = -projectedRadius * Math.cos(azimuth);
 
@@ -163,14 +163,14 @@ export function equatorialToHorizontal(
   const lst = localSiderealTimeHours * HOURS_TO_RAD;
 
   const hourAngle = lst - ra;
-  const sinAlt =
+  const sinElev =
     Math.sin(dec) * Math.sin(lat) +
     Math.cos(dec) * Math.cos(lat) * Math.cos(hourAngle);
-  const altitude = Math.asin(sinAlt);
+  const elevation = Math.asin(sinElev);
 
   const cosAz =
-    (Math.sin(dec) - Math.sin(altitude) * Math.sin(lat)) /
-    (Math.cos(altitude) * Math.cos(lat));
+    (Math.sin(dec) - Math.sin(elevation) * Math.sin(lat)) /
+    (Math.cos(elevation) * Math.cos(lat));
 
   let azimuth = Math.acos(Math.min(1, Math.max(-1, cosAz)));
 
@@ -179,7 +179,7 @@ export function equatorialToHorizontal(
   }
 
   return {
-    altitude: toDegrees(altitude),
+    elevation: toDegrees(elevation),
     azimuth: normalizeDegrees(toDegrees(azimuth)),
   };
 }
