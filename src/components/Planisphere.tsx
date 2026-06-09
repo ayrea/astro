@@ -11,16 +11,29 @@ import {
   equatorialToHorizontal,
   getJulianDate,
   getLocalSiderealTime,
+  prepareFrameConstants,
+  equatorialToScreen,
 } from "@/lib/astronomy";
 import {
   projectAltitudeAzimuth,
   projectAltitudeCircle,
 } from "@/lib/projection";
-import { filterStarsByMagnitude, getScreenStarRadius } from "@/lib/starData";
+import {
+  getScreenStarRadius,
+  getStarCountForMagnitude,
+  stars,
+} from "@/lib/starData";
 import { getCanvasMetrics } from "@/lib/viewport";
 import { cn } from "@/lib/utils";
 
 const REFRESH_INTERVAL_MS = 15_000;
+const ALPHA_BUCKETS = 10;
+
+interface StarArc {
+  x: number;
+  y: number;
+  r: number;
+}
 
 function applyOpacity(rgbaColor: string, opacity: number): string {
   const match = rgbaColor.match(
@@ -54,6 +67,7 @@ export function Planisphere() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const drawRef = useRef<(() => void) | null>(null);
+  const rafIdRef = useRef(0);
   const { settings } = useSettings();
   const [now, setNow] = useState(() => new Date());
 
@@ -73,7 +87,21 @@ export function Planisphere() {
   }, []);
 
   const requestRedraw = useCallback(() => {
-    drawRef.current?.();
+    if (rafIdRef.current === 0) {
+      rafIdRef.current = requestAnimationFrame(() => {
+        rafIdRef.current = 0;
+        drawRef.current?.();
+      });
+    }
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      if (rafIdRef.current !== 0) {
+        cancelAnimationFrame(rafIdRef.current);
+        rafIdRef.current = 0;
+      }
+    };
   }, []);
 
   const { getViewport, isDragging, isZoomed } = usePanZoom(
@@ -94,16 +122,28 @@ export function Planisphere() {
       return;
     }
 
+    const starBuckets: StarArc[][] = Array.from(
+      { length: ALPHA_BUCKETS },
+      () => [],
+    );
+    const projectedPoint = { x: 0, y: 0, visible: false };
+
     const draw = () => {
+      const t0 = performance.now();
       const viewport = getViewport();
       const metrics = getCanvasMetrics(container.getBoundingClientRect());
       const { width, height, centerX, centerY, radius } = metrics;
       const dpr = window.devicePixelRatio || 1;
 
-      canvas.width = width * dpr;
-      canvas.height = height * dpr;
-      canvas.style.width = `${width}px`;
-      canvas.style.height = `${height}px`;
+      const targetWidth = width * dpr;
+      const targetHeight = height * dpr;
+
+      if (canvas.width !== targetWidth || canvas.height !== targetHeight) {
+        canvas.width = targetWidth;
+        canvas.height = targetHeight;
+        canvas.style.width = `${width}px`;
+        canvas.style.height = `${height}px`;
+      }
 
       context.setTransform(dpr, 0, 0, dpr, 0, 0);
       context.clearRect(0, 0, width, height);
@@ -132,6 +172,7 @@ export function Planisphere() {
 
       const julianDate = getJulianDate(now);
       const lst = getLocalSiderealTime(julianDate, settings.longitude);
+      const frameConstants = prepareFrameConstants(settings.latitude, lst);
 
       if (settings.showGrid) {
         const rightAscensionLines = getRightAscensionLines(
@@ -184,7 +225,7 @@ export function Planisphere() {
       drawZenithCross(context, viewport.scale);
       drawCompassLabels(context, radius, settings.mirrorEastWest);
 
-      const visibleStars = filterStarsByMagnitude(settings.magnitudeCutoff);
+      const starCount = getStarCountForMagnitude(settings.magnitudeCutoff);
       const labelCandidates: Array<{
         x: number;
         y: number;
@@ -192,41 +233,64 @@ export function Planisphere() {
         magnitude: number;
       }> = [];
 
-      for (const star of visibleStars) {
-        const horizontal = equatorialToHorizontal(
+      for (let i = 0; i < ALPHA_BUCKETS; i++) {
+        starBuckets[i].length = 0;
+      }
+
+      for (let starIndex = 0; starIndex < starCount; starIndex++) {
+        const star = stars[starIndex];
+
+        equatorialToScreen(
           star.r,
           star.d,
-          settings.latitude,
-          lst,
-        );
-
-        const projected = projectAltitudeAzimuth(
-          horizontal.altitude,
-          horizontal.azimuth,
+          frameConstants,
           radius,
           settings.mirrorEastWest,
+          projectedPoint,
         );
 
-        if (!projected.visible) {
+        if (!projectedPoint.visible) {
           continue;
         }
 
         const starRadius = getScreenStarRadius(star.m, viewport.scale);
-        const alpha = Math.max(0.35, 1 - star.m / 10);
+        const bucketIndex = Math.min(
+          ALPHA_BUCKETS - 1,
+          Math.floor((1 - star.m / 10) * ALPHA_BUCKETS),
+        );
 
-        context.beginPath();
-        context.arc(projected.x, projected.y, starRadius, 0, Math.PI * 2);
-        context.fillStyle = `rgba(248, 250, 252, ${alpha})`;
-        context.fill();
+        starBuckets[bucketIndex].push({
+          x: projectedPoint.x,
+          y: projectedPoint.y,
+          r: starRadius,
+        });
 
         if (settings.showLabels && star.n) {
           labelCandidates.push({
-            x: projected.x,
-            y: projected.y,
+            x: projectedPoint.x,
+            y: projectedPoint.y,
             name: star.n,
             magnitude: star.m,
           });
         }
+      }
+
+      for (let bucketIndex = 0; bucketIndex < ALPHA_BUCKETS; bucketIndex++) {
+        const bucket = starBuckets[bucketIndex];
+        if (bucket.length === 0) {
+          continue;
+        }
+
+        const alpha = Math.max(0.35, (bucketIndex + 0.5) / ALPHA_BUCKETS);
+        context.fillStyle = `rgba(248, 250, 252, ${alpha})`;
+        context.beginPath();
+
+        for (const starArc of bucket) {
+          context.moveTo(starArc.x + starArc.r, starArc.y);
+          context.arc(starArc.x, starArc.y, starArc.r, 0, Math.PI * 2);
+        }
+
+        context.fill();
       }
 
       if (settings.showLabels) {
@@ -234,6 +298,10 @@ export function Planisphere() {
       }
 
       context.restore();
+
+      console.log(
+        `[Planisphere] redraw: ${(performance.now() - t0).toFixed(2)}ms`,
+      );
     };
 
     drawRef.current = draw;

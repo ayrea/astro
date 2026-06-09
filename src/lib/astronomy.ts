@@ -7,6 +7,18 @@ export interface HorizontalCoordinates {
   azimuth: number;
 }
 
+export interface FrameConstants {
+  sinLat: number;
+  cosLat: number;
+  lstRad: number;
+}
+
+export interface ScreenPoint {
+  x: number;
+  y: number;
+  visible: boolean;
+}
+
 export function toRadians(degrees: number): number {
   return degrees * DEG_TO_RAD;
 }
@@ -79,6 +91,64 @@ export function getLocalSiderealTime(
   const gmst = getGreenwichMeanSiderealTime(julianDate);
   const longitudeHours = longitudeDegrees / 15;
   return normalizeHours(gmst + longitudeHours);
+}
+
+export function prepareFrameConstants(
+  latitudeDegrees: number,
+  localSiderealTimeHours: number,
+): FrameConstants {
+  const lat = toRadians(latitudeDegrees);
+
+  return {
+    sinLat: Math.sin(lat),
+    cosLat: Math.cos(lat),
+    lstRad: localSiderealTimeHours * HOURS_TO_RAD,
+  };
+}
+
+export function equatorialToScreen(
+  rightAscensionHours: number,
+  declinationDegrees: number,
+  frame: FrameConstants,
+  radius: number,
+  mirrorEastWest: boolean,
+  out: ScreenPoint,
+): void {
+  const ra = rightAscensionHours * HOURS_TO_RAD;
+  const dec = toRadians(declinationDegrees);
+  const hourAngle = frame.lstRad - ra;
+  const sinAlt =
+    Math.sin(dec) * frame.sinLat +
+    Math.cos(dec) * frame.cosLat * Math.cos(hourAngle);
+  const altitude = Math.asin(sinAlt);
+  const altitudeDegrees = toDegrees(altitude);
+
+  if (altitudeDegrees < 0) {
+    out.visible = false;
+    return;
+  }
+
+  const cosAz =
+    (Math.sin(dec) - Math.sin(altitude) * frame.sinLat) /
+    (Math.cos(altitude) * frame.cosLat);
+
+  let azimuth = Math.acos(Math.min(1, Math.max(-1, cosAz)));
+
+  if (Math.sin(hourAngle) > 0) {
+    azimuth = 2 * Math.PI - azimuth;
+  }
+
+  const projectedRadius = ((90 - altitudeDegrees) / 90) * radius;
+  let x = projectedRadius * Math.sin(azimuth);
+  const y = -projectedRadius * Math.cos(azimuth);
+
+  if (mirrorEastWest) {
+    x = -x;
+  }
+
+  out.x = x;
+  out.y = y;
+  out.visible = true;
 }
 
 export function equatorialToHorizontal(

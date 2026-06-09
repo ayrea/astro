@@ -9,8 +9,38 @@ export interface StarRecord {
 
 export const stars = starsJson as StarRecord[];
 
+stars.sort((a, b) => a.m - b.m);
+
+let cachedCutoff = -Infinity;
+let cachedEndIndex = 0;
+
+function binarySearchCutoff(cutoff: number): number {
+  let lo = 0;
+  let hi = stars.length;
+
+  while (lo < hi) {
+    const mid = (lo + hi) >>> 1;
+    if (stars[mid].m <= cutoff) {
+      lo = mid + 1;
+    } else {
+      hi = mid;
+    }
+  }
+
+  return lo;
+}
+
+export function getStarCountForMagnitude(cutoff: number): number {
+  if (cutoff !== cachedCutoff) {
+    cachedCutoff = cutoff;
+    cachedEndIndex = binarySearchCutoff(cutoff);
+  }
+
+  return cachedEndIndex;
+}
+
 export function filterStarsByMagnitude(magnitudeCutoff: number): StarRecord[] {
-  return stars.filter((star) => star.m <= magnitudeCutoff);
+  return stars.slice(0, getStarCountForMagnitude(magnitudeCutoff));
 }
 
 export function getStarRadius(magnitude: number): number {
