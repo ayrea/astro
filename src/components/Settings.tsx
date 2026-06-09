@@ -178,6 +178,7 @@ export function Settings() {
             <TabsTrigger value="general">General</TabsTrigger>
             <TabsTrigger value="ra-dec">RA & Dec</TabsTrigger>
             <TabsTrigger value="elevation">Elevation</TabsTrigger>
+            <TabsTrigger value="constellations">Constellations</TabsTrigger>
           </TabsList>
 
           <TabsContent value="general" className="space-y-6">
@@ -760,6 +761,257 @@ export function Settings() {
                     onValueChange={(value) =>
                       updateSettings({
                         elevationLabelFontSize: value[0] ?? 10,
+                      })
+                    }
+                  />
+                </div>
+              </div>
+            </div>
+          </TabsContent>
+          <TabsContent value="constellations" className="space-y-6">
+            <div className="space-y-4">
+              <div className="flex items-center justify-between gap-4">
+                <div className="space-y-1">
+                  <Label htmlFor="constellations">Constellation Lines</Label>
+                  <p className="text-xs text-muted-foreground">
+                    Display stick-figure lines connecting stars in each
+                    constellation.
+                  </p>
+                </div>
+                <Switch
+                  id="constellations"
+                  checked={settings.showConstellations}
+                  onCheckedChange={(checked) =>
+                    updateSettings({ showConstellations: checked })
+                  }
+                />
+              </div>
+
+              <div
+                className={cn(
+                  "space-y-4 border-t border-border/60 pt-4",
+                  !settings.showConstellations &&
+                    "pointer-events-none opacity-50",
+                )}
+              >
+                <div className="space-y-2">
+                  <Label>Line Color</Label>
+                  <div className="flex flex-wrap items-center gap-2">
+                    {GRID_COLOR_PRESETS.map((preset) => (
+                      <button
+                        key={`const-line-${preset.value}`}
+                        type="button"
+                        aria-label={preset.label}
+                        disabled={!settings.showConstellations}
+                        onClick={() =>
+                          updateSettings({
+                            constellationLineColor: preset.value,
+                          })
+                        }
+                        className={cn(
+                          "h-8 w-8 rounded-full border-2 transition-transform hover:scale-105 disabled:cursor-not-allowed",
+                          settings.constellationLineColor === preset.value
+                            ? "border-primary ring-2 ring-primary/30"
+                            : "border-border/80",
+                        )}
+                        style={{ backgroundColor: preset.value }}
+                      />
+                    ))}
+                    <label
+                      className={cn(
+                        "relative flex h-8 w-8 cursor-pointer items-center justify-center overflow-hidden rounded-full border-2 border-border/80 bg-background",
+                        !settings.showConstellations && "cursor-not-allowed",
+                      )}
+                      aria-label="Custom line color"
+                    >
+                      <input
+                        type="color"
+                        value={rgbaToHex(settings.constellationLineColor)}
+                        disabled={!settings.showConstellations}
+                        onChange={(event) => {
+                          const hex = event.target.value;
+                          const red = Number.parseInt(hex.slice(1, 3), 16);
+                          const green = Number.parseInt(hex.slice(3, 5), 16);
+                          const blue = Number.parseInt(hex.slice(5, 7), 16);
+                          updateSettings({
+                            constellationLineColor: `rgba(${red}, ${green}, ${blue}, 1)`,
+                          });
+                        }}
+                        className="absolute inset-0 h-full w-full cursor-pointer opacity-0 disabled:cursor-not-allowed"
+                      />
+                      <span className="text-xs text-muted-foreground">+</span>
+                    </label>
+                  </div>
+                </div>
+
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between">
+                    <Label htmlFor="const-line-opacity">Line Opacity</Label>
+                    <span className="text-sm text-muted-foreground">
+                      {Math.round(settings.constellationLineOpacity * 100)}%
+                    </span>
+                  </div>
+                  <Slider
+                    id="const-line-opacity"
+                    min={0}
+                    max={100}
+                    step={5}
+                    value={[
+                      Math.round(settings.constellationLineOpacity * 100),
+                    ]}
+                    disabled={!settings.showConstellations}
+                    onValueChange={(value) =>
+                      updateSettings({
+                        constellationLineOpacity: (value[0] ?? 40) / 100,
+                      })
+                    }
+                  />
+                </div>
+
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between">
+                    <Label htmlFor="const-line-thickness">Line Thickness</Label>
+                    <span className="text-sm text-muted-foreground">
+                      {settings.constellationLineThickness.toFixed(1)}
+                    </span>
+                  </div>
+                  <Slider
+                    id="const-line-thickness"
+                    min={1}
+                    max={4}
+                    step={1.0}
+                    value={[settings.constellationLineThickness]}
+                    disabled={!settings.showConstellations}
+                    onValueChange={(value) =>
+                      updateSettings({
+                        constellationLineThickness: value[0] ?? 1,
+                      })
+                    }
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div className="space-y-4">
+              <div className="flex items-center justify-between gap-4">
+                <div className="space-y-1">
+                  <Label htmlFor="const-bounds">Constellation Boundaries</Label>
+                  <p className="text-xs text-muted-foreground">
+                    Display IAU constellation boundary lines.
+                  </p>
+                </div>
+                <Switch
+                  id="const-bounds"
+                  checked={settings.showConstellationBounds}
+                  onCheckedChange={(checked) =>
+                    updateSettings({ showConstellationBounds: checked })
+                  }
+                />
+              </div>
+
+              <div
+                className={cn(
+                  "space-y-4 border-t border-border/60 pt-4",
+                  !settings.showConstellationBounds &&
+                    "pointer-events-none opacity-50",
+                )}
+              >
+                <div className="space-y-2">
+                  <Label>Boundary Color</Label>
+                  <div className="flex flex-wrap items-center gap-2">
+                    {GRID_COLOR_PRESETS.map((preset) => (
+                      <button
+                        key={`const-bound-${preset.value}`}
+                        type="button"
+                        aria-label={preset.label}
+                        disabled={!settings.showConstellationBounds}
+                        onClick={() =>
+                          updateSettings({
+                            constellationBoundsColor: preset.value,
+                          })
+                        }
+                        className={cn(
+                          "h-8 w-8 rounded-full border-2 transition-transform hover:scale-105 disabled:cursor-not-allowed",
+                          settings.constellationBoundsColor === preset.value
+                            ? "border-primary ring-2 ring-primary/30"
+                            : "border-border/80",
+                        )}
+                        style={{ backgroundColor: preset.value }}
+                      />
+                    ))}
+                    <label
+                      className={cn(
+                        "relative flex h-8 w-8 cursor-pointer items-center justify-center overflow-hidden rounded-full border-2 border-border/80 bg-background",
+                        !settings.showConstellationBounds &&
+                          "cursor-not-allowed",
+                      )}
+                      aria-label="Custom boundary color"
+                    >
+                      <input
+                        type="color"
+                        value={rgbaToHex(settings.constellationBoundsColor)}
+                        disabled={!settings.showConstellationBounds}
+                        onChange={(event) => {
+                          const hex = event.target.value;
+                          const red = Number.parseInt(hex.slice(1, 3), 16);
+                          const green = Number.parseInt(hex.slice(3, 5), 16);
+                          const blue = Number.parseInt(hex.slice(5, 7), 16);
+                          updateSettings({
+                            constellationBoundsColor: `rgba(${red}, ${green}, ${blue}, 1)`,
+                          });
+                        }}
+                        className="absolute inset-0 h-full w-full cursor-pointer opacity-0 disabled:cursor-not-allowed"
+                      />
+                      <span className="text-xs text-muted-foreground">+</span>
+                    </label>
+                  </div>
+                </div>
+
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between">
+                    <Label htmlFor="const-bounds-opacity">
+                      Boundary Opacity
+                    </Label>
+                    <span className="text-sm text-muted-foreground">
+                      {Math.round(settings.constellationBoundsOpacity * 100)}%
+                    </span>
+                  </div>
+                  <Slider
+                    id="const-bounds-opacity"
+                    min={0}
+                    max={100}
+                    step={5}
+                    value={[
+                      Math.round(settings.constellationBoundsOpacity * 100),
+                    ]}
+                    disabled={!settings.showConstellationBounds}
+                    onValueChange={(value) =>
+                      updateSettings({
+                        constellationBoundsOpacity: (value[0] ?? 15) / 100,
+                      })
+                    }
+                  />
+                </div>
+
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between">
+                    <Label htmlFor="const-bounds-thickness">
+                      Boundary Thickness
+                    </Label>
+                    <span className="text-sm text-muted-foreground">
+                      {settings.constellationBoundsThickness.toFixed(1)}
+                    </span>
+                  </div>
+                  <Slider
+                    id="const-bounds-thickness"
+                    min={1}
+                    max={4}
+                    step={1.0}
+                    value={[settings.constellationBoundsThickness]}
+                    disabled={!settings.showConstellationBounds}
+                    onValueChange={(value) =>
+                      updateSettings({
+                        constellationBoundsThickness: value[0] ?? 1,
                       })
                     }
                   />

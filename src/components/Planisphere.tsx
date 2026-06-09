@@ -10,6 +10,7 @@ import { useInterval } from "@/hooks/useInterval";
 import { usePanZoom } from "@/hooks/usePanZoom";
 import {
   equatorialToHorizontal,
+  type FrameConstants,
   getJulianDate,
   getLocalSiderealTime,
   prepareFrameConstants,
@@ -19,6 +20,10 @@ import {
   projectElevationAzimuth,
   projectElevationCircle,
 } from "@/lib/projection";
+import {
+  constellationBoundaries,
+  constellationLines,
+} from "@/lib/constellationData";
 import {
   getScreenStarRadius,
   getStarCountForMagnitude,
@@ -250,6 +255,38 @@ export function Planisphere() {
           settings.gridLineThickness,
           gridLabelColor,
           settings.gridLabelFontSize,
+        );
+      }
+
+      if (settings.showConstellationBounds) {
+        const boundsColor = applyOpacity(
+          settings.constellationBoundsColor,
+          settings.constellationBoundsOpacity,
+        );
+        drawConstellationBoundaries(
+          context,
+          frameConstants,
+          radius,
+          settings.mirrorEastWest,
+          viewport.scale,
+          boundsColor,
+          settings.constellationBoundsThickness,
+        );
+      }
+
+      if (settings.showConstellations) {
+        const constLineColor = applyOpacity(
+          settings.constellationLineColor,
+          settings.constellationLineOpacity,
+        );
+        drawConstellationLines(
+          context,
+          frameConstants,
+          radius,
+          settings.mirrorEastWest,
+          viewport.scale,
+          constLineColor,
+          settings.constellationLineThickness,
         );
       }
 
@@ -655,4 +692,114 @@ function drawStarLabels(
     context.fillText(label.name, 6, -6);
     context.restore();
   }
+}
+
+const constellationScreenPoint = { x: 0, y: 0, visible: false };
+
+function drawConstellationLines(
+  context: CanvasRenderingContext2D,
+  frame: FrameConstants,
+  radius: number,
+  mirrorEastWest: boolean,
+  scale: number,
+  strokeColor: string,
+  lineThickness: number,
+) {
+  context.strokeStyle = strokeColor;
+  context.lineWidth = lineThickness / scale;
+  context.setLineDash([]);
+
+  for (const constellation of constellationLines) {
+    for (const segment of constellation.segments) {
+      let pathStarted = false;
+
+      for (const point of segment.points) {
+        equatorialToScreen(
+          point.ra,
+          point.dec,
+          frame,
+          radius,
+          mirrorEastWest,
+          constellationScreenPoint,
+        );
+
+        if (constellationScreenPoint.visible) {
+          if (!pathStarted) {
+            context.beginPath();
+            context.moveTo(
+              constellationScreenPoint.x,
+              constellationScreenPoint.y,
+            );
+            pathStarted = true;
+          } else {
+            context.lineTo(
+              constellationScreenPoint.x,
+              constellationScreenPoint.y,
+            );
+          }
+        } else if (pathStarted) {
+          context.stroke();
+          pathStarted = false;
+        }
+      }
+
+      if (pathStarted) {
+        context.stroke();
+      }
+    }
+  }
+}
+
+function drawConstellationBoundaries(
+  context: CanvasRenderingContext2D,
+  frame: FrameConstants,
+  radius: number,
+  mirrorEastWest: boolean,
+  scale: number,
+  strokeColor: string,
+  lineThickness: number,
+) {
+  context.strokeStyle = strokeColor;
+  context.lineWidth = lineThickness / scale;
+  context.setLineDash([2 / scale, 4 / scale]);
+
+  for (const boundary of constellationBoundaries) {
+    let pathStarted = false;
+
+    for (const vertex of boundary.vertices) {
+      equatorialToScreen(
+        vertex.ra,
+        vertex.dec,
+        frame,
+        radius,
+        mirrorEastWest,
+        constellationScreenPoint,
+      );
+
+      if (constellationScreenPoint.visible) {
+        if (!pathStarted) {
+          context.beginPath();
+          context.moveTo(
+            constellationScreenPoint.x,
+            constellationScreenPoint.y,
+          );
+          pathStarted = true;
+        } else {
+          context.lineTo(
+            constellationScreenPoint.x,
+            constellationScreenPoint.y,
+          );
+        }
+      } else if (pathStarted) {
+        context.stroke();
+        pathStarted = false;
+      }
+    }
+
+    if (pathStarted) {
+      context.stroke();
+    }
+  }
+
+  context.setLineDash([]);
 }

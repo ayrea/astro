@@ -34,6 +34,14 @@ export interface Settings {
   elevationLineThickness: number;
   elevationLabelColor: string;
   elevationLabelFontSize: number;
+  showConstellations: boolean;
+  constellationLineColor: string;
+  constellationLineOpacity: number;
+  constellationLineThickness: number;
+  showConstellationBounds: boolean;
+  constellationBoundsColor: string;
+  constellationBoundsOpacity: number;
+  constellationBoundsThickness: number;
 }
 
 interface SettingsContextValue {
@@ -66,6 +74,14 @@ const defaultSettings: Settings = {
   elevationLineThickness: 1,
   elevationLabelColor: "rgba(148, 163, 184, 1)",
   elevationLabelFontSize: 10,
+  showConstellations: true,
+  constellationLineColor: "rgba(251, 191, 36, 1)",
+  constellationLineOpacity: 0.4,
+  constellationLineThickness: 1,
+  showConstellationBounds: false,
+  constellationBoundsColor: "rgba(167, 139, 250, 1)",
+  constellationBoundsOpacity: 0.15,
+  constellationBoundsThickness: 1,
 };
 
 const VALID_RA_SPACINGS = new Set<GridRaSpacing>([1, 2, 3, 6]);
@@ -156,6 +172,46 @@ function normalizeSettings(parsed: Partial<Settings>): Settings {
       ? parsed.elevationLabelFontSize
       : defaultSettings.elevationLabelFontSize;
 
+  const constellationLineColor =
+    typeof parsed.constellationLineColor === "string" &&
+    parsed.constellationLineColor.length > 0
+      ? parsed.constellationLineColor
+      : defaultSettings.constellationLineColor;
+
+  const constellationLineOpacity =
+    typeof parsed.constellationLineOpacity === "number" &&
+    parsed.constellationLineOpacity >= 0 &&
+    parsed.constellationLineOpacity <= 1
+      ? parsed.constellationLineOpacity
+      : defaultSettings.constellationLineOpacity;
+
+  const constellationLineThickness =
+    typeof parsed.constellationLineThickness === "number" &&
+    parsed.constellationLineThickness >= 0.5 &&
+    parsed.constellationLineThickness <= 4
+      ? parsed.constellationLineThickness
+      : defaultSettings.constellationLineThickness;
+
+  const constellationBoundsColor =
+    typeof parsed.constellationBoundsColor === "string" &&
+    parsed.constellationBoundsColor.length > 0
+      ? parsed.constellationBoundsColor
+      : defaultSettings.constellationBoundsColor;
+
+  const constellationBoundsOpacity =
+    typeof parsed.constellationBoundsOpacity === "number" &&
+    parsed.constellationBoundsOpacity >= 0 &&
+    parsed.constellationBoundsOpacity <= 1
+      ? parsed.constellationBoundsOpacity
+      : defaultSettings.constellationBoundsOpacity;
+
+  const constellationBoundsThickness =
+    typeof parsed.constellationBoundsThickness === "number" &&
+    parsed.constellationBoundsThickness >= 0.5 &&
+    parsed.constellationBoundsThickness <= 4
+      ? parsed.constellationBoundsThickness
+      : defaultSettings.constellationBoundsThickness;
+
   return {
     ...defaultSettings,
     ...parsed,
@@ -172,6 +228,12 @@ function normalizeSettings(parsed: Partial<Settings>): Settings {
     elevationLineThickness,
     elevationLabelColor,
     elevationLabelFontSize,
+    constellationLineColor,
+    constellationLineOpacity,
+    constellationLineThickness,
+    constellationBoundsColor,
+    constellationBoundsOpacity,
+    constellationBoundsThickness,
   };
 }
 
