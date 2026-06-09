@@ -85,7 +85,8 @@ function normalizeSettings(parsed: Partial<Settings>): Settings {
       : defaultSettings.gridLineOpacity;
 
   const gridLabelColor =
-    typeof parsed.gridLabelColor === "string" && parsed.gridLabelColor.length > 0
+    typeof parsed.gridLabelColor === "string" &&
+    parsed.gridLabelColor.length > 0
       ? parsed.gridLabelColor
       : defaultSettings.gridLabelColor;
 

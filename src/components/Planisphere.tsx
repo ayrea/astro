@@ -36,9 +36,7 @@ interface StarArc {
 }
 
 function applyOpacity(rgbaColor: string, opacity: number): string {
-  const match = rgbaColor.match(
-    /rgba?\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)/i,
-  );
+  const match = rgbaColor.match(/rgba?\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)/i);
 
   if (!match) {
     return rgbaColor;
@@ -437,25 +435,22 @@ function drawDeclinationLines(
       continue;
     }
 
-    const samples = Array.from({ length: DECLINATION_SAMPLES + 1 }, (_, index) => {
-      const rightAscension = (index / DECLINATION_SAMPLES) * 24;
-      return projectEquatorial(
-        rightAscension,
-        declination,
-        latitude,
-        lst,
-        radius,
-        mirrorEastWest,
-      );
-    });
-
-    strokeSampledPath(
-      context,
-      samples,
-      lineColor,
-      scale,
-      lineThickness,
+    const samples = Array.from(
+      { length: DECLINATION_SAMPLES + 1 },
+      (_, index) => {
+        const rightAscension = (index / DECLINATION_SAMPLES) * 24;
+        return projectEquatorial(
+          rightAscension,
+          declination,
+          latitude,
+          lst,
+          radius,
+          mirrorEastWest,
+        );
+      },
     );
+
+    strokeSampledPath(context, samples, lineColor, scale, lineThickness);
 
     const labelPoint = projectEquatorial(
       lst,
@@ -498,8 +493,7 @@ function drawRightAscensionLines(
     const samples = Array.from(
       { length: RIGHT_ASCENSION_SAMPLES + 1 },
       (_, index) => {
-        const declination =
-          -90 + (index / RIGHT_ASCENSION_SAMPLES) * 180;
+        const declination = -90 + (index / RIGHT_ASCENSION_SAMPLES) * 180;
         return projectEquatorial(
           rightAscension,
           declination,
@@ -511,13 +505,7 @@ function drawRightAscensionLines(
       },
     );
 
-    strokeSampledPath(
-      context,
-      samples,
-      lineColor,
-      scale,
-      lineThickness,
-    );
+    strokeSampledPath(context, samples, lineColor, scale, lineThickness);
 
     const labelPoint = projectEquatorial(
       rightAscension,
