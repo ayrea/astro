@@ -23,6 +23,7 @@ import { Slider } from "@/components/ui/slider";
 import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
+  type ElevationSpacing,
   type GridDecSpacing,
   type GridRaSpacing,
   useSettings,
@@ -47,6 +48,16 @@ const RA_SPACING_OPTIONS: Array<{ value: GridRaSpacing; label: string }> = [
 ];
 
 const DEC_SPACING_OPTIONS: Array<{ value: GridDecSpacing; label: string }> = [
+  { value: 10, label: "10°" },
+  { value: 15, label: "15°" },
+  { value: 30, label: "30°" },
+  { value: 45, label: "45°" },
+];
+
+const ELEVATION_SPACING_OPTIONS: Array<{
+  value: ElevationSpacing;
+  label: string;
+}> = [
   { value: 10, label: "10°" },
   { value: 15, label: "15°" },
   { value: 30, label: "30°" },
@@ -166,6 +177,7 @@ export function Settings() {
           <TabsList>
             <TabsTrigger value="general">General</TabsTrigger>
             <TabsTrigger value="ra-dec">RA & Dec</TabsTrigger>
+            <TabsTrigger value="elevation">Elevation</TabsTrigger>
           </TabsList>
 
           <TabsContent value="general" className="space-y-6">
@@ -253,7 +265,7 @@ export function Settings() {
           </TabsContent>
 
           <TabsContent value="ra-dec" className="space-y-6">
-            <div className="space-y-4 rounded-lg border border-border/80 bg-muted/20 p-4">
+            <div className="space-y-4">
               <div className="flex items-center justify-between gap-4">
                 <div className="space-y-1">
                   <Label htmlFor="grid">RA / Dec Grid</Label>
@@ -492,6 +504,263 @@ export function Settings() {
                     disabled={!settings.showGrid}
                     onValueChange={(value) =>
                       updateSettings({ gridLabelFontSize: value[0] ?? 10 })
+                    }
+                  />
+                </div>
+              </div>
+            </div>
+          </TabsContent>
+
+          <TabsContent value="elevation" className="space-y-6">
+            <div className="space-y-4">
+              <div className="flex items-center justify-between gap-4">
+                <div className="space-y-1">
+                  <Label htmlFor="elevation">Elevation Circles</Label>
+                  <p className="text-xs text-muted-foreground">
+                    Display concentric elevation angle circles.
+                  </p>
+                </div>
+                <Switch
+                  id="elevation"
+                  checked={settings.showElevation}
+                  onCheckedChange={(checked) =>
+                    updateSettings({ showElevation: checked })
+                  }
+                />
+              </div>
+
+              <div
+                className={cn(
+                  "space-y-4 border-t border-border/60 pt-4",
+                  !settings.showElevation && "pointer-events-none opacity-50",
+                )}
+              >
+                <div className="space-y-2">
+                  <Label htmlFor="elevation-spacing">Circle Spacing</Label>
+                  <Select
+                    value={String(settings.elevationSpacing)}
+                    onValueChange={(value) =>
+                      updateSettings({
+                        elevationSpacing: Number(value) as ElevationSpacing,
+                      })
+                    }
+                    disabled={!settings.showElevation}
+                  >
+                    <SelectTrigger id="elevation-spacing">
+                      <SelectValue placeholder="Select spacing" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {ELEVATION_SPACING_OPTIONS.map((option) => (
+                        <SelectItem
+                          key={option.value}
+                          value={String(option.value)}
+                        >
+                          {option.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <p className="text-xs text-muted-foreground">
+                    Degrees between elevation circles.
+                  </p>
+                </div>
+
+                <div className="flex items-center justify-between gap-4">
+                  <div className="space-y-1">
+                    <Label htmlFor="zenith-cross">Zenith Cross</Label>
+                    <p className="text-xs text-muted-foreground">
+                      Show a cross marker at the zenith.
+                    </p>
+                  </div>
+                  <Switch
+                    id="zenith-cross"
+                    checked={settings.showZenithCross}
+                    disabled={!settings.showElevation}
+                    onCheckedChange={(checked) =>
+                      updateSettings({ showZenithCross: checked })
+                    }
+                  />
+                </div>
+
+                <div className="flex items-center justify-between gap-4">
+                  <div className="space-y-1">
+                    <Label htmlFor="elevation-labels">Elevation Labels</Label>
+                    <p className="text-xs text-muted-foreground">
+                      Show numeric elevation angle on each circle.
+                    </p>
+                  </div>
+                  <Switch
+                    id="elevation-labels"
+                    checked={settings.showElevationLabels}
+                    disabled={!settings.showElevation}
+                    onCheckedChange={(checked) =>
+                      updateSettings({ showElevationLabels: checked })
+                    }
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label>Line Color</Label>
+                  <div className="flex flex-wrap items-center gap-2">
+                    {GRID_COLOR_PRESETS.map((preset) => (
+                      <button
+                        key={`elevation-line-${preset.value}`}
+                        type="button"
+                        aria-label={preset.label}
+                        disabled={!settings.showElevation}
+                        onClick={() =>
+                          updateSettings({ elevationLineColor: preset.value })
+                        }
+                        className={cn(
+                          "h-8 w-8 rounded-full border-2 transition-transform hover:scale-105 disabled:cursor-not-allowed",
+                          settings.elevationLineColor === preset.value
+                            ? "border-primary ring-2 ring-primary/30"
+                            : "border-border/80",
+                        )}
+                        style={{ backgroundColor: preset.value }}
+                      />
+                    ))}
+                    <label
+                      className={cn(
+                        "relative flex h-8 w-8 cursor-pointer items-center justify-center overflow-hidden rounded-full border-2 border-border/80 bg-background",
+                        !settings.showElevation && "cursor-not-allowed",
+                      )}
+                      aria-label="Custom line color"
+                    >
+                      <input
+                        type="color"
+                        value={rgbaToHex(settings.elevationLineColor)}
+                        disabled={!settings.showElevation}
+                        onChange={(event) => {
+                          const hex = event.target.value;
+                          const red = Number.parseInt(hex.slice(1, 3), 16);
+                          const green = Number.parseInt(hex.slice(3, 5), 16);
+                          const blue = Number.parseInt(hex.slice(5, 7), 16);
+                          updateSettings({
+                            elevationLineColor: `rgba(${red}, ${green}, ${blue}, 1)`,
+                          });
+                        }}
+                        className="absolute inset-0 h-full w-full cursor-pointer opacity-0 disabled:cursor-not-allowed"
+                      />
+                      <span className="text-xs text-muted-foreground">+</span>
+                    </label>
+                  </div>
+                </div>
+
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between">
+                    <Label htmlFor="elevation-line-opacity">Line Opacity</Label>
+                    <span className="text-sm text-muted-foreground">
+                      {Math.round(settings.elevationLineOpacity * 100)}%
+                    </span>
+                  </div>
+                  <Slider
+                    id="elevation-line-opacity"
+                    min={0}
+                    max={100}
+                    step={5}
+                    value={[Math.round(settings.elevationLineOpacity * 100)]}
+                    disabled={!settings.showElevation}
+                    onValueChange={(value) =>
+                      updateSettings({
+                        elevationLineOpacity: (value[0] ?? 25) / 100,
+                      })
+                    }
+                  />
+                </div>
+
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between">
+                    <Label htmlFor="elevation-line-thickness">
+                      Line Thickness
+                    </Label>
+                    <span className="text-sm text-muted-foreground">
+                      {settings.elevationLineThickness.toFixed(1)}
+                    </span>
+                  </div>
+                  <Slider
+                    id="elevation-line-thickness"
+                    min={1}
+                    max={4}
+                    step={1.0}
+                    value={[settings.elevationLineThickness]}
+                    disabled={!settings.showElevation}
+                    onValueChange={(value) =>
+                      updateSettings({
+                        elevationLineThickness: value[0] ?? 1,
+                      })
+                    }
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label>Label Color</Label>
+                  <div className="flex flex-wrap items-center gap-2">
+                    {GRID_COLOR_PRESETS.map((preset) => (
+                      <button
+                        key={`elevation-label-${preset.value}`}
+                        type="button"
+                        aria-label={preset.label}
+                        disabled={!settings.showElevation}
+                        onClick={() =>
+                          updateSettings({ elevationLabelColor: preset.value })
+                        }
+                        className={cn(
+                          "h-8 w-8 rounded-full border-2 transition-transform hover:scale-105 disabled:cursor-not-allowed",
+                          settings.elevationLabelColor === preset.value
+                            ? "border-primary ring-2 ring-primary/30"
+                            : "border-border/80",
+                        )}
+                        style={{ backgroundColor: preset.value }}
+                      />
+                    ))}
+                    <label
+                      className={cn(
+                        "relative flex h-8 w-8 cursor-pointer items-center justify-center overflow-hidden rounded-full border-2 border-border/80 bg-background",
+                        !settings.showElevation && "cursor-not-allowed",
+                      )}
+                      aria-label="Custom label color"
+                    >
+                      <input
+                        type="color"
+                        value={rgbaToHex(settings.elevationLabelColor)}
+                        disabled={!settings.showElevation}
+                        onChange={(event) => {
+                          const hex = event.target.value;
+                          const red = Number.parseInt(hex.slice(1, 3), 16);
+                          const green = Number.parseInt(hex.slice(3, 5), 16);
+                          const blue = Number.parseInt(hex.slice(5, 7), 16);
+                          updateSettings({
+                            elevationLabelColor: `rgba(${red}, ${green}, ${blue}, 1)`,
+                          });
+                        }}
+                        className="absolute inset-0 h-full w-full cursor-pointer opacity-0 disabled:cursor-not-allowed"
+                      />
+                      <span className="text-xs text-muted-foreground">+</span>
+                    </label>
+                  </div>
+                </div>
+
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between">
+                    <Label htmlFor="elevation-label-font-size">
+                      Label Font Size
+                    </Label>
+                    <span className="text-sm text-muted-foreground">
+                      {settings.elevationLabelFontSize}px
+                    </span>
+                  </div>
+                  <Slider
+                    id="elevation-label-font-size"
+                    min={8}
+                    max={18}
+                    step={1}
+                    value={[settings.elevationLabelFontSize]}
+                    disabled={!settings.showElevation}
+                    onValueChange={(value) =>
+                      updateSettings({
+                        elevationLabelFontSize: value[0] ?? 10,
+                      })
                     }
                   />
                 </div>

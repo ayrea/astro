@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 
 import {
+  type ElevationSpacing,
   type GridDecSpacing,
   type GridRaSpacing,
   useSettings,
@@ -58,6 +59,14 @@ function getDeclinationLines(spacingDegrees: GridDecSpacing): number[] {
   return Array.from(
     { length: lineCount },
     (_, index) => -90 + index * spacingDegrees,
+  );
+}
+
+function getElevationAngles(spacingDegrees: ElevationSpacing): number[] {
+  const lineCount = 90 / spacingDegrees;
+  return Array.from(
+    { length: lineCount },
+    (_, index) => (index + 1) * spacingDegrees,
   );
 }
 
@@ -153,20 +162,50 @@ export function Planisphere() {
       context.translate(centerX + viewport.offsetX, centerY + viewport.offsetY);
       context.scale(viewport.scale, viewport.scale);
 
-      drawElevationCircle(
-        context,
-        radius,
-        60,
-        "rgba(148, 163, 184, 0.25)",
-        viewport.scale,
-      );
-      drawElevationCircle(
-        context,
-        radius,
-        30,
-        "rgba(148, 163, 184, 0.35)",
-        viewport.scale,
-      );
+      if (settings.showElevation) {
+        const elevationAngles = getElevationAngles(settings.elevationSpacing);
+        const elevationLineColor = applyOpacity(
+          settings.elevationLineColor,
+          settings.elevationLineOpacity,
+        );
+        const elevationLabelColor = applyOpacity(
+          settings.elevationLabelColor,
+          settings.elevationLineOpacity,
+        );
+
+        for (const elevation of elevationAngles) {
+          const circleRadius = projectElevationCircle(elevation, radius);
+
+          drawElevationCircle(
+            context,
+            circleRadius,
+            elevationLineColor,
+            viewport.scale,
+            settings.elevationLineThickness,
+          );
+
+          if (settings.showElevationLabels) {
+            drawInverseScaleLabel(
+              context,
+              `${elevation}°`,
+              0,
+              -circleRadius,
+              viewport.scale,
+              elevationLabelColor,
+              settings.elevationLabelFontSize,
+            );
+          }
+        }
+
+        if (settings.showZenithCross) {
+          drawZenithCross(
+            context,
+            viewport.scale,
+            elevationLineColor,
+            settings.elevationLineThickness,
+          );
+        }
+      }
 
       const julianDate = getJulianDate(now);
       const lst = getLocalSiderealTime(julianDate, settings.longitude);
@@ -220,7 +259,6 @@ export function Planisphere() {
       context.lineWidth = 1.5;
       context.stroke();
 
-      drawZenithCross(context, viewport.scale);
       drawCompassLabels(context, radius, settings.mirrorEastWest);
 
       const starCount = getStarCountForMagnitude(settings.magnitudeCutoff);
@@ -532,25 +570,29 @@ function drawRightAscensionLines(
 
 function drawElevationCircle(
   context: CanvasRenderingContext2D,
-  radius: number,
-  elevation: number,
+  circleRadius: number,
   strokeStyle: string,
   scale: number,
+  lineThickness: number,
 ) {
-  const circleRadius = projectElevationCircle(elevation, radius);
   context.beginPath();
   context.arc(0, 0, circleRadius, 0, Math.PI * 2);
   context.strokeStyle = strokeStyle;
-  context.lineWidth = 1 / scale;
+  context.lineWidth = lineThickness / scale;
   context.setLineDash([4 / scale, 6 / scale]);
   context.stroke();
   context.setLineDash([]);
 }
 
-function drawZenithCross(context: CanvasRenderingContext2D, scale: number) {
+function drawZenithCross(
+  context: CanvasRenderingContext2D,
+  scale: number,
+  strokeStyle: string,
+  lineThickness: number,
+) {
   const size = 8;
-  context.strokeStyle = "rgba(226, 232, 240, 0.8)";
-  context.lineWidth = 1.5 / scale;
+  context.strokeStyle = strokeStyle;
+  context.lineWidth = lineThickness / scale;
   context.beginPath();
   context.moveTo(-size, 0);
   context.lineTo(size, 0);

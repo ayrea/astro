@@ -9,6 +9,7 @@ import {
 
 export type GridRaSpacing = 1 | 2 | 3 | 6;
 export type GridDecSpacing = 10 | 15 | 30 | 45;
+export type ElevationSpacing = 10 | 15 | 30 | 45;
 
 export interface Settings {
   latitude: number;
@@ -24,6 +25,15 @@ export interface Settings {
   gridLineThickness: number;
   gridLabelColor: string;
   gridLabelFontSize: number;
+  showElevation: boolean;
+  elevationSpacing: ElevationSpacing;
+  showZenithCross: boolean;
+  showElevationLabels: boolean;
+  elevationLineColor: string;
+  elevationLineOpacity: number;
+  elevationLineThickness: number;
+  elevationLabelColor: string;
+  elevationLabelFontSize: number;
 }
 
 interface SettingsContextValue {
@@ -47,10 +57,20 @@ const defaultSettings: Settings = {
   gridLineThickness: 1,
   gridLabelColor: "rgba(56, 189, 248, 1)",
   gridLabelFontSize: 10,
+  showElevation: true,
+  elevationSpacing: 30,
+  showZenithCross: true,
+  showElevationLabels: true,
+  elevationLineColor: "rgba(148, 163, 184, 1)",
+  elevationLineOpacity: 0.25,
+  elevationLineThickness: 1,
+  elevationLabelColor: "rgba(148, 163, 184, 1)",
+  elevationLabelFontSize: 10,
 };
 
 const VALID_RA_SPACINGS = new Set<GridRaSpacing>([1, 2, 3, 6]);
 const VALID_DEC_SPACINGS = new Set<GridDecSpacing>([10, 15, 30, 45]);
+const VALID_ELEVATION_SPACINGS = new Set<ElevationSpacing>([10, 15, 30, 45]);
 
 function normalizeSettings(parsed: Partial<Settings>): Settings {
   const gridRaSpacing = VALID_RA_SPACINGS.has(
@@ -97,6 +117,45 @@ function normalizeSettings(parsed: Partial<Settings>): Settings {
       ? parsed.gridLabelFontSize
       : defaultSettings.gridLabelFontSize;
 
+  const elevationSpacing = VALID_ELEVATION_SPACINGS.has(
+    parsed.elevationSpacing as ElevationSpacing,
+  )
+    ? (parsed.elevationSpacing as ElevationSpacing)
+    : defaultSettings.elevationSpacing;
+
+  const elevationLineThickness =
+    typeof parsed.elevationLineThickness === "number" &&
+    parsed.elevationLineThickness >= 0.5 &&
+    parsed.elevationLineThickness <= 4
+      ? parsed.elevationLineThickness
+      : defaultSettings.elevationLineThickness;
+
+  const elevationLineColor =
+    typeof parsed.elevationLineColor === "string" &&
+    parsed.elevationLineColor.length > 0
+      ? parsed.elevationLineColor
+      : defaultSettings.elevationLineColor;
+
+  const elevationLineOpacity =
+    typeof parsed.elevationLineOpacity === "number" &&
+    parsed.elevationLineOpacity >= 0 &&
+    parsed.elevationLineOpacity <= 1
+      ? parsed.elevationLineOpacity
+      : defaultSettings.elevationLineOpacity;
+
+  const elevationLabelColor =
+    typeof parsed.elevationLabelColor === "string" &&
+    parsed.elevationLabelColor.length > 0
+      ? parsed.elevationLabelColor
+      : defaultSettings.elevationLabelColor;
+
+  const elevationLabelFontSize =
+    typeof parsed.elevationLabelFontSize === "number" &&
+    parsed.elevationLabelFontSize >= 8 &&
+    parsed.elevationLabelFontSize <= 18
+      ? parsed.elevationLabelFontSize
+      : defaultSettings.elevationLabelFontSize;
+
   return {
     ...defaultSettings,
     ...parsed,
@@ -107,6 +166,12 @@ function normalizeSettings(parsed: Partial<Settings>): Settings {
     gridLineThickness,
     gridLabelColor,
     gridLabelFontSize,
+    elevationSpacing,
+    elevationLineColor,
+    elevationLineOpacity,
+    elevationLineThickness,
+    elevationLabelColor,
+    elevationLabelFontSize,
   };
 }
 
