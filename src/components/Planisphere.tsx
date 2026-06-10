@@ -21,7 +21,7 @@ import {
   projectElevationCircle,
 } from "@/lib/projection";
 import {
-  constellationBoundaries,
+  constellationBoundaryEdges,
   constellationLines,
 } from "@/lib/constellationData";
 import {
@@ -443,17 +443,10 @@ function projectEquatorial(
   );
 }
 
-function strokeSampledPath(
+function strokeVisibleSampledPath(
   context: CanvasRenderingContext2D,
   samples: Array<{ x: number; y: number; visible: boolean }>,
-  strokeStyle: string,
-  scale: number,
-  lineThickness: number,
 ) {
-  context.strokeStyle = strokeStyle;
-  context.lineWidth = lineThickness / scale;
-  context.setLineDash([4 / scale, 6 / scale]);
-
   let pathStarted = false;
 
   for (const point of samples) {
@@ -474,7 +467,19 @@ function strokeSampledPath(
   if (pathStarted) {
     context.stroke();
   }
+}
 
+function strokeSampledPath(
+  context: CanvasRenderingContext2D,
+  samples: Array<{ x: number; y: number; visible: boolean }>,
+  strokeStyle: string,
+  scale: number,
+  lineThickness: number,
+) {
+  context.strokeStyle = strokeStyle;
+  context.lineWidth = lineThickness / scale;
+  context.setLineDash([4 / scale, 6 / scale]);
+  strokeVisibleSampledPath(context, samples);
   context.setLineDash([]);
 }
 
@@ -828,43 +833,32 @@ function drawConstellationBoundaries(
   context.lineWidth = lineThickness / scale;
   context.setLineDash([2 / scale, 4 / scale]);
 
-  for (const boundary of constellationBoundaries) {
-    let pathStarted = false;
+  const projectedSamples: Array<{ x: number; y: number; visible: boolean }> =
+    [];
 
-    for (const vertex of boundary.vertices) {
+  for (const edge of constellationBoundaryEdges) {
+    if (projectedSamples.length > 0) {
+      projectedSamples.push({ x: 0, y: 0, visible: false });
+    }
+
+    for (const point of edge.points) {
       equatorialToScreen(
-        vertex.ra,
-        vertex.dec,
+        point.ra,
+        point.dec,
         frame,
         radius,
         mirrorEastWest,
         constellationScreenPoint,
       );
 
-      if (constellationScreenPoint.visible) {
-        if (!pathStarted) {
-          context.beginPath();
-          context.moveTo(
-            constellationScreenPoint.x,
-            constellationScreenPoint.y,
-          );
-          pathStarted = true;
-        } else {
-          context.lineTo(
-            constellationScreenPoint.x,
-            constellationScreenPoint.y,
-          );
-        }
-      } else if (pathStarted) {
-        context.stroke();
-        pathStarted = false;
-      }
-    }
-
-    if (pathStarted) {
-      context.stroke();
+      projectedSamples.push({
+        x: constellationScreenPoint.x,
+        y: constellationScreenPoint.y,
+        visible: constellationScreenPoint.visible,
+      });
     }
   }
 
+  strokeVisibleSampledPath(context, projectedSamples);
   context.setLineDash([]);
 }

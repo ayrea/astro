@@ -151,6 +151,150 @@ export function equatorialToScreen(
   out.visible = true;
 }
 
+export const B1875_T_CENTURIES = -1.25;
+
+type Matrix3 = [
+  [number, number, number],
+  [number, number, number],
+  [number, number, number],
+];
+
+export interface EquatorialCoordinates {
+  raHours: number;
+  decDegrees: number;
+}
+
+const ARCSEC_TO_RAD = Math.PI / (180 * 3600);
+const J2000_TO_B1875_MATRIX = buildPrecessionMatrix(B1875_T_CENTURIES);
+
+function buildPrecessionMatrix(tCenturies: number): Matrix3 {
+  const t = tCenturies;
+  const t2 = t * t;
+
+  const zeta =
+    (2306.2181 * t + 0.30188 * t2 + 0.017998 * t2 * t) * ARCSEC_TO_RAD;
+  const z = (2306.2181 * t + 1.09468 * t2 + 0.018203 * t2 * t) * ARCSEC_TO_RAD;
+  const theta =
+    (2004.3109 * t - 0.42665 * t2 - 0.041833 * t2 * t) * ARCSEC_TO_RAD;
+
+  const cosZeta = Math.cos(zeta);
+  const sinZeta = Math.sin(zeta);
+  const cosTheta = Math.cos(theta);
+  const sinTheta = Math.sin(theta);
+  const cosZ = Math.cos(z);
+  const sinZ = Math.sin(z);
+
+  return [
+    [
+      cosZ * cosTheta * cosZeta - sinZ * sinZeta,
+      -cosZ * cosTheta * sinZeta - sinZ * cosZeta,
+      -cosZ * sinTheta,
+    ],
+    [
+      sinZ * cosTheta * cosZeta + cosZ * sinZeta,
+      -sinZ * cosTheta * sinZeta + cosZ * cosZeta,
+      -sinZ * sinTheta,
+    ],
+    [sinTheta * cosZeta, -sinTheta * sinZeta, cosTheta],
+  ];
+}
+
+function equatorialToUnitVector(
+  rightAscensionHours: number,
+  declinationDegrees: number,
+): [number, number, number] {
+  const ra = rightAscensionHours * HOURS_TO_RAD;
+  const dec = toRadians(declinationDegrees);
+  const cosDec = Math.cos(dec);
+
+  return [cosDec * Math.cos(ra), cosDec * Math.sin(ra), Math.sin(dec)];
+}
+
+function unitVectorToEquatorial(
+  x: number,
+  y: number,
+  z: number,
+): EquatorialCoordinates {
+  const raRadians = Math.atan2(y, x);
+  const decRadians = Math.asin(Math.min(1, Math.max(-1, z)));
+
+  return {
+    raHours: normalizeHours((raRadians * RAD_TO_DEG) / 15),
+    decDegrees: toDegrees(decRadians),
+  };
+}
+
+function applyPrecessionMatrix(
+  vector: [number, number, number],
+  matrix: Matrix3,
+  transpose: boolean,
+): [number, number, number] {
+  if (transpose) {
+    return [
+      matrix[0][0] * vector[0] +
+        matrix[1][0] * vector[1] +
+        matrix[2][0] * vector[2],
+      matrix[0][1] * vector[0] +
+        matrix[1][1] * vector[1] +
+        matrix[2][1] * vector[2],
+      matrix[0][2] * vector[0] +
+        matrix[1][2] * vector[1] +
+        matrix[2][2] * vector[2],
+    ];
+  }
+
+  return [
+    matrix[0][0] * vector[0] +
+      matrix[0][1] * vector[1] +
+      matrix[0][2] * vector[2],
+    matrix[1][0] * vector[0] +
+      matrix[1][1] * vector[1] +
+      matrix[1][2] * vector[2],
+    matrix[2][0] * vector[0] +
+      matrix[2][1] * vector[1] +
+      matrix[2][2] * vector[2],
+  ];
+}
+
+function precessRaDec(
+  rightAscensionHours: number,
+  declinationDegrees: number,
+  matrix: Matrix3,
+  transpose: boolean,
+): EquatorialCoordinates {
+  const vector = equatorialToUnitVector(
+    rightAscensionHours,
+    declinationDegrees,
+  );
+  const [x, y, z] = applyPrecessionMatrix(vector, matrix, transpose);
+
+  return unitVectorToEquatorial(x, y, z);
+}
+
+export function j2000ToB1875(
+  rightAscensionHours: number,
+  declinationDegrees: number,
+): EquatorialCoordinates {
+  return precessRaDec(
+    rightAscensionHours,
+    declinationDegrees,
+    J2000_TO_B1875_MATRIX,
+    false,
+  );
+}
+
+export function b1875ToJ2000(
+  rightAscensionHours: number,
+  declinationDegrees: number,
+): EquatorialCoordinates {
+  return precessRaDec(
+    rightAscensionHours,
+    declinationDegrees,
+    J2000_TO_B1875_MATRIX,
+    true,
+  );
+}
+
 export function equatorialToHorizontal(
   rightAscensionHours: number,
   declinationDegrees: number,
