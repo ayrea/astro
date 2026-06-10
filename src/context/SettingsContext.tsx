@@ -38,6 +38,9 @@ export interface Settings {
   constellationLineColor: string;
   constellationLineOpacity: number;
   constellationLineThickness: number;
+  showConstellationLabels: boolean;
+  constellationLabelColor: string;
+  constellationLabelFontSize: number;
   showConstellationBounds: boolean;
   constellationBoundsColor: string;
   constellationBoundsOpacity: number;
@@ -78,6 +81,9 @@ const defaultSettings: Settings = {
   constellationLineColor: "rgba(251, 191, 36, 1)",
   constellationLineOpacity: 0.4,
   constellationLineThickness: 1,
+  showConstellationLabels: true,
+  constellationLabelColor: "rgba(251, 191, 36, 1)",
+  constellationLabelFontSize: 10,
   showConstellationBounds: false,
   constellationBoundsColor: "rgba(167, 139, 250, 1)",
   constellationBoundsOpacity: 0.15,
@@ -192,6 +198,19 @@ function normalizeSettings(parsed: Partial<Settings>): Settings {
       ? parsed.constellationLineThickness
       : defaultSettings.constellationLineThickness;
 
+  const constellationLabelColor =
+    typeof parsed.constellationLabelColor === "string" &&
+    parsed.constellationLabelColor.length > 0
+      ? parsed.constellationLabelColor
+      : defaultSettings.constellationLabelColor;
+
+  const constellationLabelFontSize =
+    typeof parsed.constellationLabelFontSize === "number" &&
+    parsed.constellationLabelFontSize >= 8 &&
+    parsed.constellationLabelFontSize <= 18
+      ? parsed.constellationLabelFontSize
+      : defaultSettings.constellationLabelFontSize;
+
   const constellationBoundsColor =
     typeof parsed.constellationBoundsColor === "string" &&
     parsed.constellationBoundsColor.length > 0
@@ -231,6 +250,8 @@ function normalizeSettings(parsed: Partial<Settings>): Settings {
     constellationLineColor,
     constellationLineOpacity,
     constellationLineThickness,
+    constellationLabelColor,
+    constellationLabelFontSize,
     constellationBoundsColor,
     constellationBoundsOpacity,
     constellationBoundsThickness,

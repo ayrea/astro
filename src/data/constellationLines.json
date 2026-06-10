@@ -4,7 +4,10 @@
     {
       "type": "Feature",
       "id": "And",
-      "properties": { "rank": "1" },
+      "properties": {
+        "rank": "1",
+        "name": "Andromeda"
+      },
       "geometry": {
         "type": "MultiLineString",
         "coordinates": [
@@ -45,7 +48,10 @@
     {
       "type": "Feature",
       "id": "Ant",
-      "properties": { "rank": "3" },
+      "properties": {
+        "rank": "3",
+        "name": "Antlia"
+      },
       "geometry": {
         "type": "MultiLineString",
         "coordinates": [
@@ -60,7 +66,10 @@
     {
       "type": "Feature",
       "id": "Aps",
-      "properties": { "rank": "3" },
+      "properties": {
+        "rank": "3",
+        "name": "Apus"
+      },
       "geometry": {
         "type": "MultiLineString",
         "coordinates": [
@@ -76,7 +85,10 @@
     {
       "type": "Feature",
       "id": "Aqr",
-      "properties": { "rank": "2" },
+      "properties": {
+        "rank": "2",
+        "name": "Aquarius"
+      },
       "geometry": {
         "type": "MultiLineString",
         "coordinates": [
@@ -115,7 +127,10 @@
     {
       "type": "Feature",
       "id": "Aql",
-      "properties": { "rank": "1" },
+      "properties": {
+        "rank": "1",
+        "name": "Aquila"
+      },
       "geometry": {
         "type": "MultiLineString",
         "coordinates": [
@@ -137,7 +152,10 @@
     {
       "type": "Feature",
       "id": "Ara",
-      "properties": { "rank": "3" },
+      "properties": {
+        "rank": "3",
+        "name": "Ara"
+      },
       "geometry": {
         "type": "MultiLineString",
         "coordinates": [
@@ -156,7 +174,10 @@
     {
       "type": "Feature",
       "id": "Ari",
-      "properties": { "rank": "1" },
+      "properties": {
+        "rank": "1",
+        "name": "Aries"
+      },
       "geometry": {
         "type": "MultiLineString",
         "coordinates": [
@@ -172,7 +193,10 @@
     {
       "type": "Feature",
       "id": "Aur",
-      "properties": { "rank": "1" },
+      "properties": {
+        "rank": "1",
+        "name": "Auriga"
+      },
       "geometry": {
         "type": "MultiLineString",
         "coordinates": [
@@ -195,7 +219,10 @@
     {
       "type": "Feature",
       "id": "Boo",
-      "properties": { "rank": "1" },
+      "properties": {
+        "rank": "1",
+        "name": "Boötes"
+      },
       "geometry": {
         "type": "MultiLineString",
         "coordinates": [
@@ -224,7 +251,10 @@
     {
       "type": "Feature",
       "id": "Cae",
-      "properties": { "rank": "3" },
+      "properties": {
+        "rank": "3",
+        "name": "Caelum"
+      },
       "geometry": {
         "type": "MultiLineString",
         "coordinates": [
@@ -240,7 +270,10 @@
     {
       "type": "Feature",
       "id": "Cam",
-      "properties": { "rank": "2" },
+      "properties": {
+        "rank": "2",
+        "name": "Camelopardalis"
+      },
       "geometry": {
         "type": "MultiLineString",
         "coordinates": [
@@ -263,7 +296,10 @@
     {
       "type": "Feature",
       "id": "Cnc",
-      "properties": { "rank": "2" },
+      "properties": {
+        "rank": "2",
+        "name": "Cancer"
+      },
       "geometry": {
         "type": "MultiLineString",
         "coordinates": [
@@ -283,7 +319,10 @@
     {
       "type": "Feature",
       "id": "CVn",
-      "properties": { "rank": "2" },
+      "properties": {
+        "rank": "2",
+        "name": "Canes Venatici"
+      },
       "geometry": {
         "type": "MultiLineString",
         "coordinates": [
@@ -297,7 +336,10 @@
     {
       "type": "Feature",
       "id": "CMa",
-      "properties": { "rank": "1" },
+      "properties": {
+        "rank": "1",
+        "name": "Canis Major"
+      },
       "geometry": {
         "type": "MultiLineString",
         "coordinates": [
@@ -327,7 +369,10 @@
     {
       "type": "Feature",
       "id": "CMi",
-      "properties": { "rank": "2" },
+      "properties": {
+        "rank": "2",
+        "name": "Canis Minor"
+      },
       "geometry": {
         "type": "MultiLineString",
         "coordinates": [
@@ -341,7 +386,10 @@
     {
       "type": "Feature",
       "id": "Cap",
-      "properties": { "rank": "2" },
+      "properties": {
+        "rank": "2",
+        "name": "Capricornus"
+      },
       "geometry": {
         "type": "MultiLineString",
         "coordinates": [
@@ -364,7 +412,10 @@
     {
       "type": "Feature",
       "id": "Car",
-      "properties": { "rank": "1" },
+      "properties": {
+        "rank": "1",
+        "name": "Carina"
+      },
       "geometry": {
         "type": "MultiLineString",
         "coordinates": [
@@ -398,7 +449,10 @@
     {
       "type": "Feature",
       "id": "Cas",
-      "properties": { "rank": "1" },
+      "properties": {
+        "rank": "1",
+        "name": "Cassiopeia"
+      },
       "geometry": {
         "type": "MultiLineString",
         "coordinates": [
@@ -415,7 +469,10 @@
     {
       "type": "Feature",
       "id": "Cen",
-      "properties": { "rank": "1" },
+      "properties": {
+        "rank": "1",
+        "name": "Centaurus"
+      },
       "geometry": {
         "type": "MultiLineString",
         "coordinates": [
@@ -452,7 +509,10 @@
     {
       "type": "Feature",
       "id": "Cep",
-      "properties": { "rank": "2" },
+      "properties": {
+        "rank": "2",
+        "name": "Cepheus"
+      },
       "geometry": {
         "type": "MultiLineString",
         "coordinates": [
@@ -479,7 +539,10 @@
     {
       "type": "Feature",
       "id": "Cet",
-      "properties": { "rank": "1" },
+      "properties": {
+        "rank": "1",
+        "name": "Cetus"
+      },
       "geometry": {
         "type": "MultiLineString",
         "coordinates": [
@@ -507,7 +570,10 @@
     {
       "type": "Feature",
       "id": "Cha",
-      "properties": { "rank": "3" },
+      "properties": {
+        "rank": "3",
+        "name": "Chamaeleon"
+      },
       "geometry": {
         "type": "MultiLineString",
         "coordinates": [
@@ -525,7 +591,10 @@
     {
       "type": "Feature",
       "id": "Cir",
-      "properties": { "rank": "3" },
+      "properties": {
+        "rank": "3",
+        "name": "Circinus"
+      },
       "geometry": {
         "type": "MultiLineString",
         "coordinates": [
@@ -540,7 +609,10 @@
     {
       "type": "Feature",
       "id": "Col",
-      "properties": { "rank": "3" },
+      "properties": {
+        "rank": "3",
+        "name": "Columba"
+      },
       "geometry": {
         "type": "MultiLineString",
         "coordinates": [
@@ -560,7 +632,10 @@
     {
       "type": "Feature",
       "id": "Com",
-      "properties": { "rank": "3" },
+      "properties": {
+        "rank": "3",
+        "name": "Coma Berenices"
+      },
       "geometry": {
         "type": "MultiLineString",
         "coordinates": [
@@ -575,7 +650,10 @@
     {
       "type": "Feature",
       "id": "CrA",
-      "properties": { "rank": "3" },
+      "properties": {
+        "rank": "3",
+        "name": "Corona Australis"
+      },
       "geometry": {
         "type": "MultiLineString",
         "coordinates": [
@@ -595,7 +673,10 @@
     {
       "type": "Feature",
       "id": "CrB",
-      "properties": { "rank": "2" },
+      "properties": {
+        "rank": "2",
+        "name": "Corona Borealis"
+      },
       "geometry": {
         "type": "MultiLineString",
         "coordinates": [
@@ -614,7 +695,10 @@
     {
       "type": "Feature",
       "id": "Crv",
-      "properties": { "rank": "3" },
+      "properties": {
+        "rank": "3",
+        "name": "Corvus"
+      },
       "geometry": {
         "type": "MultiLineString",
         "coordinates": [
@@ -632,7 +716,10 @@
     {
       "type": "Feature",
       "id": "Crt",
-      "properties": { "rank": "3" },
+      "properties": {
+        "rank": "3",
+        "name": "Crater"
+      },
       "geometry": {
         "type": "MultiLineString",
         "coordinates": [
@@ -657,7 +744,10 @@
     {
       "type": "Feature",
       "id": "Cru",
-      "properties": { "rank": "2" },
+      "properties": {
+        "rank": "2",
+        "name": "Crux"
+      },
       "geometry": {
         "type": "MultiLineString",
         "coordinates": [
@@ -675,7 +765,10 @@
     {
       "type": "Feature",
       "id": "Cyg",
-      "properties": { "rank": "1" },
+      "properties": {
+        "rank": "1",
+        "name": "Cygnus"
+      },
       "geometry": {
         "type": "MultiLineString",
         "coordinates": [
@@ -699,7 +792,10 @@
     {
       "type": "Feature",
       "id": "Del",
-      "properties": { "rank": "3" },
+      "properties": {
+        "rank": "3",
+        "name": "Delphinus"
+      },
       "geometry": {
         "type": "MultiLineString",
         "coordinates": [
@@ -717,7 +813,10 @@
     {
       "type": "Feature",
       "id": "Dor",
-      "properties": { "rank": "3" },
+      "properties": {
+        "rank": "3",
+        "name": "Dorado"
+      },
       "geometry": {
         "type": "MultiLineString",
         "coordinates": [
@@ -737,7 +836,10 @@
     {
       "type": "Feature",
       "id": "Dra",
-      "properties": { "rank": "2" },
+      "properties": {
+        "rank": "2",
+        "name": "Draco"
+      },
       "geometry": {
         "type": "MultiLineString",
         "coordinates": [
@@ -771,7 +873,10 @@
     {
       "type": "Feature",
       "id": "Equ",
-      "properties": { "rank": "3" },
+      "properties": {
+        "rank": "3",
+        "name": "Equuleus"
+      },
       "geometry": {
         "type": "MultiLineString",
         "coordinates": [
@@ -786,7 +891,10 @@
     {
       "type": "Feature",
       "id": "Eri",
-      "properties": { "rank": "1" },
+      "properties": {
+        "rank": "1",
+        "name": "Eridanus"
+      },
       "geometry": {
         "type": "MultiLineString",
         "coordinates": [
@@ -825,7 +933,10 @@
     {
       "type": "Feature",
       "id": "For",
-      "properties": { "rank": "3" },
+      "properties": {
+        "rank": "3",
+        "name": "Fornax"
+      },
       "geometry": {
         "type": "MultiLineString",
         "coordinates": [
@@ -840,7 +951,10 @@
     {
       "type": "Feature",
       "id": "Gem",
-      "properties": { "rank": "1" },
+      "properties": {
+        "rank": "1",
+        "name": "Gemini"
+      },
       "geometry": {
         "type": "MultiLineString",
         "coordinates": [
@@ -867,7 +981,10 @@
     {
       "type": "Feature",
       "id": "Gru",
-      "properties": { "rank": "3" },
+      "properties": {
+        "rank": "3",
+        "name": "Grus"
+      },
       "geometry": {
         "type": "MultiLineString",
         "coordinates": [
@@ -891,7 +1008,10 @@
     {
       "type": "Feature",
       "id": "Her",
-      "properties": { "rank": "2" },
+      "properties": {
+        "rank": "2",
+        "name": "Hercules"
+      },
       "geometry": {
         "type": "MultiLineString",
         "coordinates": [
@@ -933,7 +1053,10 @@
     {
       "type": "Feature",
       "id": "Hor",
-      "properties": { "rank": "3" },
+      "properties": {
+        "rank": "3",
+        "name": "Horologium"
+      },
       "geometry": {
         "type": "MultiLineString",
         "coordinates": [
@@ -951,7 +1074,10 @@
     {
       "type": "Feature",
       "id": "Hya",
-      "properties": { "rank": "2" },
+      "properties": {
+        "rank": "2",
+        "name": "Hydra"
+      },
       "geometry": {
         "type": "MultiLineString",
         "coordinates": [
@@ -982,7 +1108,10 @@
     {
       "type": "Feature",
       "id": "Hyi",
-      "properties": { "rank": "3" },
+      "properties": {
+        "rank": "3",
+        "name": "Hydrus"
+      },
       "geometry": {
         "type": "MultiLineString",
         "coordinates": [
@@ -1000,7 +1129,10 @@
     {
       "type": "Feature",
       "id": "Ind",
-      "properties": { "rank": "3" },
+      "properties": {
+        "rank": "3",
+        "name": "Indus"
+      },
       "geometry": {
         "type": "MultiLineString",
         "coordinates": [
@@ -1018,7 +1150,10 @@
     {
       "type": "Feature",
       "id": "Lac",
-      "properties": { "rank": "3" },
+      "properties": {
+        "rank": "3",
+        "name": "Lacerta"
+      },
       "geometry": {
         "type": "MultiLineString",
         "coordinates": [
@@ -1044,7 +1179,10 @@
     {
       "type": "Feature",
       "id": "Leo",
-      "properties": { "rank": "1" },
+      "properties": {
+        "rank": "1",
+        "name": "Leo"
+      },
       "geometry": {
         "type": "MultiLineString",
         "coordinates": [
@@ -1069,7 +1207,10 @@
     {
       "type": "Feature",
       "id": "LMi",
-      "properties": { "rank": "3" },
+      "properties": {
+        "rank": "3",
+        "name": "Leo Minor"
+      },
       "geometry": {
         "type": "MultiLineString",
         "coordinates": [
@@ -1087,7 +1228,10 @@
     {
       "type": "Feature",
       "id": "Lep",
-      "properties": { "rank": "3" },
+      "properties": {
+        "rank": "3",
+        "name": "Lepus"
+      },
       "geometry": {
         "type": "MultiLineString",
         "coordinates": [
@@ -1113,7 +1257,10 @@
     {
       "type": "Feature",
       "id": "Lib",
-      "properties": { "rank": "2" },
+      "properties": {
+        "rank": "2",
+        "name": "Libra"
+      },
       "geometry": {
         "type": "MultiLineString",
         "coordinates": [
@@ -1135,7 +1282,10 @@
     {
       "type": "Feature",
       "id": "Lup",
-      "properties": { "rank": "3" },
+      "properties": {
+        "rank": "3",
+        "name": "Lupus"
+      },
       "geometry": {
         "type": "MultiLineString",
         "coordinates": [
@@ -1163,7 +1313,10 @@
     {
       "type": "Feature",
       "id": "Lyn",
-      "properties": { "rank": "3" },
+      "properties": {
+        "rank": "3",
+        "name": "Lynx"
+      },
       "geometry": {
         "type": "MultiLineString",
         "coordinates": [
@@ -1182,7 +1335,10 @@
     {
       "type": "Feature",
       "id": "Lyr",
-      "properties": { "rank": "2" },
+      "properties": {
+        "rank": "2",
+        "name": "Lyra"
+      },
       "geometry": {
         "type": "MultiLineString",
         "coordinates": [
@@ -1202,7 +1358,10 @@
     {
       "type": "Feature",
       "id": "Men",
-      "properties": { "rank": "3" },
+      "properties": {
+        "rank": "3",
+        "name": "Mensa"
+      },
       "geometry": {
         "type": "MultiLineString",
         "coordinates": [
@@ -1218,7 +1377,10 @@
     {
       "type": "Feature",
       "id": "Mic",
-      "properties": { "rank": "3" },
+      "properties": {
+        "rank": "3",
+        "name": "Microscopium"
+      },
       "geometry": {
         "type": "MultiLineString",
         "coordinates": [
@@ -1236,7 +1398,10 @@
     {
       "type": "Feature",
       "id": "Mon",
-      "properties": { "rank": "2" },
+      "properties": {
+        "rank": "2",
+        "name": "Monoceros"
+      },
       "geometry": {
         "type": "MultiLineString",
         "coordinates": [
@@ -1260,7 +1425,10 @@
     {
       "type": "Feature",
       "id": "Mus",
-      "properties": { "rank": "3" },
+      "properties": {
+        "rank": "3",
+        "name": "Musca"
+      },
       "geometry": {
         "type": "MultiLineString",
         "coordinates": [
@@ -1279,7 +1447,10 @@
     {
       "type": "Feature",
       "id": "Nor",
-      "properties": { "rank": "3" },
+      "properties": {
+        "rank": "3",
+        "name": "Norma"
+      },
       "geometry": {
         "type": "MultiLineString",
         "coordinates": [
@@ -1296,7 +1467,10 @@
     {
       "type": "Feature",
       "id": "Oct",
-      "properties": { "rank": "3" },
+      "properties": {
+        "rank": "3",
+        "name": "Octans"
+      },
       "geometry": {
         "type": "MultiLineString",
         "coordinates": [
@@ -1312,7 +1486,10 @@
     {
       "type": "Feature",
       "id": "Oph",
-      "properties": { "rank": "2" },
+      "properties": {
+        "rank": "2",
+        "name": "Ophiuchus"
+      },
       "geometry": {
         "type": "MultiLineString",
         "coordinates": [
@@ -1348,7 +1525,10 @@
     {
       "type": "Feature",
       "id": "Ori",
-      "properties": { "rank": "1" },
+      "properties": {
+        "rank": "1",
+        "name": "Orion"
+      },
       "geometry": {
         "type": "MultiLineString",
         "coordinates": [
@@ -1394,7 +1574,10 @@
     {
       "type": "Feature",
       "id": "Pav",
-      "properties": { "rank": "2" },
+      "properties": {
+        "rank": "2",
+        "name": "Pavo"
+      },
       "geometry": {
         "type": "MultiLineString",
         "coordinates": [
@@ -1417,7 +1600,10 @@
     {
       "type": "Feature",
       "id": "Peg",
-      "properties": { "rank": "1" },
+      "properties": {
+        "rank": "1",
+        "name": "Pegasus"
+      },
       "geometry": {
         "type": "MultiLineString",
         "coordinates": [
@@ -1447,7 +1633,10 @@
     {
       "type": "Feature",
       "id": "Per",
-      "properties": { "rank": "1" },
+      "properties": {
+        "rank": "1",
+        "name": "Perseus"
+      },
       "geometry": {
         "type": "MultiLineString",
         "coordinates": [
@@ -1489,7 +1678,10 @@
     {
       "type": "Feature",
       "id": "Phe",
-      "properties": { "rank": "2" },
+      "properties": {
+        "rank": "2",
+        "name": "Phoenix"
+      },
       "geometry": {
         "type": "MultiLineString",
         "coordinates": [
@@ -1509,7 +1701,10 @@
     {
       "type": "Feature",
       "id": "Pic",
-      "properties": { "rank": "3" },
+      "properties": {
+        "rank": "3",
+        "name": "Pictor"
+      },
       "geometry": {
         "type": "MultiLineString",
         "coordinates": [
@@ -1524,7 +1719,10 @@
     {
       "type": "Feature",
       "id": "Psc",
-      "properties": { "rank": "2" },
+      "properties": {
+        "rank": "2",
+        "name": "Pisces"
+      },
       "geometry": {
         "type": "MultiLineString",
         "coordinates": [
@@ -1563,7 +1761,10 @@
     {
       "type": "Feature",
       "id": "PsA",
-      "properties": { "rank": "2" },
+      "properties": {
+        "rank": "2",
+        "name": "Piscis Austrinus"
+      },
       "geometry": {
         "type": "MultiLineString",
         "coordinates": [
@@ -1585,7 +1786,10 @@
     {
       "type": "Feature",
       "id": "Pup",
-      "properties": { "rank": "2" },
+      "properties": {
+        "rank": "2",
+        "name": "Puppis"
+      },
       "geometry": {
         "type": "MultiLineString",
         "coordinates": [
@@ -1612,7 +1816,10 @@
     {
       "type": "Feature",
       "id": "Pyx",
-      "properties": { "rank": "3" },
+      "properties": {
+        "rank": "3",
+        "name": "Pyxis"
+      },
       "geometry": {
         "type": "MultiLineString",
         "coordinates": [
@@ -1628,7 +1835,10 @@
     {
       "type": "Feature",
       "id": "Ret",
-      "properties": { "rank": "3" },
+      "properties": {
+        "rank": "3",
+        "name": "Reticulum"
+      },
       "geometry": {
         "type": "MultiLineString",
         "coordinates": [
@@ -1645,7 +1855,10 @@
     {
       "type": "Feature",
       "id": "Sge",
-      "properties": { "rank": "3" },
+      "properties": {
+        "rank": "3",
+        "name": "Sagitta"
+      },
       "geometry": {
         "type": "MultiLineString",
         "coordinates": [
@@ -1664,7 +1877,10 @@
     {
       "type": "Feature",
       "id": "Sgr",
-      "properties": { "rank": "1" },
+      "properties": {
+        "rank": "1",
+        "name": "Sagittarius"
+      },
       "geometry": {
         "type": "MultiLineString",
         "coordinates": [
@@ -1715,7 +1931,10 @@
     {
       "type": "Feature",
       "id": "Sco",
-      "properties": { "rank": "1" },
+      "properties": {
+        "rank": "1",
+        "name": "Scorpius"
+      },
       "geometry": {
         "type": "MultiLineString",
         "coordinates": [
@@ -1744,7 +1963,10 @@
     {
       "type": "Feature",
       "id": "Scl",
-      "properties": { "rank": "3" },
+      "properties": {
+        "rank": "3",
+        "name": "Sculptor"
+      },
       "geometry": {
         "type": "MultiLineString",
         "coordinates": [
@@ -1760,7 +1982,10 @@
     {
       "type": "Feature",
       "id": "Sct",
-      "properties": { "rank": "3" },
+      "properties": {
+        "rank": "3",
+        "name": "Scutum"
+      },
       "geometry": {
         "type": "MultiLineString",
         "coordinates": [
@@ -1777,7 +2002,10 @@
     {
       "type": "Feature",
       "id": "Ser",
-      "properties": { "rank": "3" },
+      "properties": {
+        "rank": "3",
+        "name": "Serpens"
+      },
       "geometry": {
         "type": "MultiLineString",
         "coordinates": [
@@ -1798,7 +2026,10 @@
     {
       "type": "Feature",
       "id": "Ser",
-      "properties": { "rank": "3" },
+      "properties": {
+        "rank": "3",
+        "name": "Serpens"
+      },
       "geometry": {
         "type": "MultiLineString",
         "coordinates": [
@@ -1816,7 +2047,10 @@
     {
       "type": "Feature",
       "id": "Sex",
-      "properties": { "rank": "3" },
+      "properties": {
+        "rank": "3",
+        "name": "Sextans"
+      },
       "geometry": {
         "type": "MultiLineString",
         "coordinates": [
@@ -1832,7 +2066,10 @@
     {
       "type": "Feature",
       "id": "Tau",
-      "properties": { "rank": "1" },
+      "properties": {
+        "rank": "1",
+        "name": "Taurus"
+      },
       "geometry": {
         "type": "MultiLineString",
         "coordinates": [
@@ -1862,7 +2099,10 @@
     {
       "type": "Feature",
       "id": "Tel",
-      "properties": { "rank": "3" },
+      "properties": {
+        "rank": "3",
+        "name": "Telescopium"
+      },
       "geometry": {
         "type": "MultiLineString",
         "coordinates": [
@@ -1877,7 +2117,10 @@
     {
       "type": "Feature",
       "id": "Tri",
-      "properties": { "rank": "3" },
+      "properties": {
+        "rank": "3",
+        "name": "Triangulum"
+      },
       "geometry": {
         "type": "MultiLineString",
         "coordinates": [
@@ -1893,7 +2136,10 @@
     {
       "type": "Feature",
       "id": "TrA",
-      "properties": { "rank": "2" },
+      "properties": {
+        "rank": "2",
+        "name": "Triangulum Australe"
+      },
       "geometry": {
         "type": "MultiLineString",
         "coordinates": [
@@ -1909,7 +2155,10 @@
     {
       "type": "Feature",
       "id": "Tuc",
-      "properties": { "rank": "3" },
+      "properties": {
+        "rank": "3",
+        "name": "Tucana"
+      },
       "geometry": {
         "type": "MultiLineString",
         "coordinates": [
@@ -1928,7 +2177,10 @@
     {
       "type": "Feature",
       "id": "UMa",
-      "properties": { "rank": "1" },
+      "properties": {
+        "rank": "1",
+        "name": "Ursa Major"
+      },
       "geometry": {
         "type": "MultiLineString",
         "coordinates": [
@@ -1980,7 +2232,10 @@
     {
       "type": "Feature",
       "id": "UMi",
-      "properties": { "rank": "2" },
+      "properties": {
+        "rank": "2",
+        "name": "Ursa Minor"
+      },
       "geometry": {
         "type": "MultiLineString",
         "coordinates": [
@@ -2000,7 +2255,10 @@
     {
       "type": "Feature",
       "id": "Vel",
-      "properties": { "rank": "2" },
+      "properties": {
+        "rank": "2",
+        "name": "Vela"
+      },
       "geometry": {
         "type": "MultiLineString",
         "coordinates": [
@@ -2020,7 +2278,10 @@
     {
       "type": "Feature",
       "id": "Vir",
-      "properties": { "rank": "1" },
+      "properties": {
+        "rank": "1",
+        "name": "Virgo"
+      },
       "geometry": {
         "type": "MultiLineString",
         "coordinates": [
@@ -2051,7 +2312,10 @@
     {
       "type": "Feature",
       "id": "Vol",
-      "properties": { "rank": "3" },
+      "properties": {
+        "rank": "3",
+        "name": "Volans"
+      },
       "geometry": {
         "type": "MultiLineString",
         "coordinates": [
@@ -2070,7 +2334,10 @@
     {
       "type": "Feature",
       "id": "Vul",
-      "properties": { "rank": "3" },
+      "properties": {
+        "rank": "3",
+        "name": "Vulpecula"
+      },
       "geometry": {
         "type": "MultiLineString",
         "coordinates": [

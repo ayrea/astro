@@ -889,6 +889,118 @@ export function Settings() {
                     }
                   />
                 </div>
+
+                <div className="flex items-center justify-between gap-4">
+                  <div className="space-y-1">
+                    <Label htmlFor="constellation-labels">
+                      Constellation Labels
+                    </Label>
+                    <p className="text-xs text-muted-foreground">
+                      Show constellation names on the chart.
+                    </p>
+                  </div>
+                  <Switch
+                    id="constellation-labels"
+                    checked={settings.showConstellationLabels}
+                    disabled={!settings.showConstellations}
+                    onCheckedChange={(checked) =>
+                      updateSettings({ showConstellationLabels: checked })
+                    }
+                  />
+                </div>
+
+                <div
+                  className={cn(
+                    "space-y-4",
+                    !settings.showConstellationLabels &&
+                      "pointer-events-none opacity-50",
+                  )}
+                >
+                  <div className="space-y-2">
+                    <Label>Label Color</Label>
+                    <div className="flex flex-wrap items-center gap-2">
+                      {GRID_COLOR_PRESETS.map((preset) => (
+                        <button
+                          key={`const-label-${preset.value}`}
+                          type="button"
+                          aria-label={preset.label}
+                          disabled={
+                            !settings.showConstellations ||
+                            !settings.showConstellationLabels
+                          }
+                          onClick={() =>
+                            updateSettings({
+                              constellationLabelColor: preset.value,
+                            })
+                          }
+                          className={cn(
+                            "h-8 w-8 rounded-full border-2 transition-transform hover:scale-105 disabled:cursor-not-allowed",
+                            settings.constellationLabelColor === preset.value
+                              ? "border-primary ring-2 ring-primary/30"
+                              : "border-border/80",
+                          )}
+                          style={{ backgroundColor: preset.value }}
+                        />
+                      ))}
+                      <label
+                        className={cn(
+                          "relative flex h-8 w-8 cursor-pointer items-center justify-center overflow-hidden rounded-full border-2 border-border/80 bg-background",
+                          (!settings.showConstellations ||
+                            !settings.showConstellationLabels) &&
+                            "cursor-not-allowed",
+                        )}
+                        aria-label="Custom label color"
+                      >
+                        <input
+                          type="color"
+                          value={rgbaToHex(settings.constellationLabelColor)}
+                          disabled={
+                            !settings.showConstellations ||
+                            !settings.showConstellationLabels
+                          }
+                          onChange={(event) => {
+                            const hex = event.target.value;
+                            const red = Number.parseInt(hex.slice(1, 3), 16);
+                            const green = Number.parseInt(hex.slice(3, 5), 16);
+                            const blue = Number.parseInt(hex.slice(5, 7), 16);
+                            updateSettings({
+                              constellationLabelColor: `rgba(${red}, ${green}, ${blue}, 1)`,
+                            });
+                          }}
+                          className="absolute inset-0 h-full w-full cursor-pointer opacity-0 disabled:cursor-not-allowed"
+                        />
+                        <span className="text-xs text-muted-foreground">+</span>
+                      </label>
+                    </div>
+                  </div>
+
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between">
+                      <Label htmlFor="constellation-label-font-size">
+                        Label Font Size
+                      </Label>
+                      <span className="text-sm text-muted-foreground">
+                        {settings.constellationLabelFontSize}px
+                      </span>
+                    </div>
+                    <Slider
+                      id="constellation-label-font-size"
+                      min={8}
+                      max={18}
+                      step={1}
+                      value={[settings.constellationLabelFontSize]}
+                      disabled={
+                        !settings.showConstellations ||
+                        !settings.showConstellationLabels
+                      }
+                      onValueChange={(value) =>
+                        updateSettings({
+                          constellationLabelFontSize: value[0] ?? 10,
+                        })
+                      }
+                    />
+                  </div>
+                </div>
               </div>
             </div>
 

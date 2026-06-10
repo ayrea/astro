@@ -288,6 +288,22 @@ export function Planisphere() {
           constLineColor,
           settings.constellationLineThickness,
         );
+
+        if (settings.showConstellationLabels) {
+          const constellationLabelColor = applyOpacity(
+            settings.constellationLabelColor,
+            settings.constellationLineOpacity,
+          );
+          drawConstellationLabels(
+            context,
+            frameConstants,
+            radius,
+            settings.mirrorEastWest,
+            viewport.scale,
+            constellationLabelColor,
+            settings.constellationLabelFontSize,
+          );
+        }
       }
 
       context.beginPath();
@@ -747,6 +763,55 @@ function drawConstellationLines(
         context.stroke();
       }
     }
+  }
+}
+
+function drawConstellationLabels(
+  context: CanvasRenderingContext2D,
+  frame: FrameConstants,
+  radius: number,
+  mirrorEastWest: boolean,
+  scale: number,
+  labelColor: string,
+  labelFontSize: number,
+) {
+  for (const constellation of constellationLines) {
+    let sumX = 0;
+    let sumY = 0;
+    let visibleCount = 0;
+
+    for (const segment of constellation.segments) {
+      for (const point of segment.points) {
+        equatorialToScreen(
+          point.ra,
+          point.dec,
+          frame,
+          radius,
+          mirrorEastWest,
+          constellationScreenPoint,
+        );
+
+        if (constellationScreenPoint.visible) {
+          sumX += constellationScreenPoint.x;
+          sumY += constellationScreenPoint.y;
+          visibleCount++;
+        }
+      }
+    }
+
+    if (visibleCount === 0) {
+      continue;
+    }
+
+    drawInverseScaleLabel(
+      context,
+      constellation.name,
+      sumX / visibleCount,
+      sumY / visibleCount,
+      scale,
+      labelColor,
+      labelFontSize,
+    );
   }
 }
 

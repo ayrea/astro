@@ -7,16 +7,19 @@ export interface ConstellationSegment {
 
 export interface ConstellationLines {
   id: string;
+  name: string;
   segments: ConstellationSegment[];
 }
 
 export interface ConstellationBoundary {
   id: string;
+  name: string;
   vertices: Array<{ ra: number; dec: number }>;
 }
 
 interface GeoJsonFeature {
   id: string;
+  properties?: { name?: string };
   geometry: {
     type: string;
     coordinates: number[][][] | number[][][][];
@@ -40,7 +43,11 @@ function parseLines(data: GeoJsonCollection): ConstellationLines[] {
         dec: lat,
       })),
     }));
-    return { id: feature.id, segments };
+    return {
+      id: feature.id,
+      name: feature.properties?.name ?? feature.id,
+      segments,
+    };
   });
 }
 
@@ -52,7 +59,11 @@ function parseBounds(data: GeoJsonCollection): ConstellationBoundary[] {
       ra: lonToRaHours(lon),
       dec: lat,
     }));
-    return { id: feature.id, vertices };
+    return {
+      id: feature.id,
+      name: feature.properties?.name ?? feature.id,
+      vertices,
+    };
   });
 }
 
