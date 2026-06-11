@@ -1,5 +1,5 @@
 export const MIN_SCALE = 1;
-export const MAX_SCALE = 8;
+export const MAX_SCALE = 16;
 
 export interface Viewport {
   scale: number;

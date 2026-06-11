@@ -7,6 +7,7 @@ import {
 } from "react";
 
 import {
+  clampScale,
   DEFAULT_VIEWPORT,
   MIN_SCALE,
   normalizeViewport,
@@ -121,7 +122,7 @@ export function usePanZoom(
       const { scale, offsetX, offsetY } = viewportRef.current;
       const factor =
         event.deltaY < 0 ? WHEEL_ZOOM_FACTOR : 1 / WHEEL_ZOOM_FACTOR;
-      const nextScale = scale * factor;
+      const nextScale = clampScale(scale * factor);
 
       if (nextScale === scale) {
         return;
