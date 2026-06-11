@@ -50,6 +50,7 @@ export interface Settings {
 interface SettingsContextValue {
   settings: Settings;
   updateSettings: (partial: Partial<Settings>) => void;
+  resetSettings: () => void;
 }
 
 const STORAGE_KEY = "astro-planisphere-settings";
@@ -289,12 +290,26 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
     });
   }, []);
 
+  const resetSettings = useCallback(() => {
+    setSettings((current) => {
+      const next = {
+        ...defaultSettings,
+        latitude: current.latitude,
+        longitude: current.longitude,
+      };
+      window.localStorage.removeItem(STORAGE_KEY);
+      window.localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
+      return next;
+    });
+  }, []);
+
   const value = useMemo(
     () => ({
       settings,
       updateSettings,
+      resetSettings,
     }),
-    [settings, updateSettings],
+    [settings, updateSettings, resetSettings],
   );
 
   return (

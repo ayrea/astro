@@ -151,7 +151,8 @@ function NumericInput({ id, value, min, max, onChange }: NumericInputProps) {
 }
 
 export function Settings() {
-  const { settings, updateSettings } = useSettings();
+  const { settings, updateSettings, resetSettings } = useSettings();
+  const [confirmingReset, setConfirmingReset] = useState(false);
 
   return (
     <Sheet>
@@ -262,6 +263,52 @@ export function Settings() {
                   updateSettings({ showLabels: checked })
                 }
               />
+            </div>
+
+            <div className="space-y-2 border-t border-border/60 pt-4">
+              {confirmingReset ? (
+                <div className="space-y-3 rounded-md border border-border/60 p-3">
+                  <p className="text-sm">
+                    Reset all settings to their defaults?
+                  </p>
+                  <p className="text-sm">
+                    Latitude and longitude values will be kept. All other
+                    settings from all tabs will be reset.
+                  </p>
+                  <div className="flex justify-end gap-2">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setConfirmingReset(false)}
+                    >
+                      Cancel
+                    </Button>
+                    <Button
+                      size="sm"
+                      onClick={() => {
+                        resetSettings();
+                        setConfirmingReset(false);
+                      }}
+                    >
+                      Reset
+                    </Button>
+                  </div>
+                </div>
+              ) : (
+                <>
+                  <Button
+                    variant="outline"
+                    className="w-full text-destructive hover:text-destructive"
+                    onClick={() => setConfirmingReset(true)}
+                  >
+                    Reset to defaults
+                  </Button>
+                  <p className="text-xs text-muted-foreground">
+                    Restore all settings to defaults. Latitude and longitude are
+                    preserved.
+                  </p>
+                </>
+              )}
             </div>
           </TabsContent>
 
