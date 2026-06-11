@@ -1,5 +1,7 @@
+import { InstallPrompt } from "@/components/InstallPrompt";
 import { Planisphere } from "@/components/Planisphere";
 import { Settings } from "@/components/Settings";
+import { Toaster } from "@/components/ui/sonner";
 import { SettingsProvider } from "@/context/SettingsContext";
 
 function App() {
@@ -8,6 +10,8 @@ function App() {
       <div className="relative h-dvh w-full overflow-hidden bg-[#050814]">
         <Planisphere />
         <Settings />
+        <InstallPrompt />
+        <Toaster position="top-center" richColors />
       </div>
     </SettingsProvider>
   );
