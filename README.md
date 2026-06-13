@@ -1,20 +1,22 @@
 # Astro - Astronomy Planisphere
 
-A Progressive Web App (PWA) and can be installed on a mobile device for offline use (e.g. remote dar sky location).
+Can be found here: https://ayrea.github.io/astro/
 
-Features include:
+A Progressive Web App (PWA) that can be installed on a mobile device for offline use (e.g. in remote dark sky locations).
 
-- Can be used offline
-- Stars to a visual magnitide of +8.
-- Can be used anywhere on Earth by entering your local Latitude & Longitude.
-- Completely customisable settings for colors and font sizes for:
-  - Right Assention & Declination (RA & Dec)
-  - Elivation
-  - Constellations
+## Features:
+
+- Can be used offline.
+- Adjustable visual magnitude up to +8.
+- Shows bright star names.
+- Constellation names, lines and boundaries.
+- Concentric circles representing elevation angle.
+- Right Ascension & Declination (RA & Dec) lines and coordinates.
+- Can mirror East/West for overhead viewing.
 
 Future features roadmap:
 
 - Ecliptic line
-- Planet and Moon
+- Planets and Moon
 - Manual setting of Date/Time (currently only the current Date/Time is available)
-- Satelite predictions
+- Satellite predictions
