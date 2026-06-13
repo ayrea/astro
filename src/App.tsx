@@ -1,4 +1,5 @@
 import { InstallPrompt } from "@/components/InstallPrompt";
+import { UpdatePrompt } from "@/components/UpdatePrompt";
 import { Planisphere } from "@/components/Planisphere";
 import { Settings } from "@/components/Settings";
 import { Toaster } from "@/components/ui/sonner";
@@ -11,6 +12,7 @@ function App() {
         <Planisphere />
         <Settings />
         <InstallPrompt />
+        <UpdatePrompt />
         <Toaster position="top-center" richColors />
       </div>
     </SettingsProvider>
