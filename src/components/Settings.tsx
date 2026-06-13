@@ -138,7 +138,7 @@ function NumericInput({ id, value, min, max, onChange }: NumericInputProps) {
   );
 }
 
-export function Settings() {
+export function SettingsTrigger() {
   const { settings, updateSettings, resetSettings } = useSettings();
   const [confirmingReset, setConfirmingReset] = useState(false);
 
@@ -147,14 +147,14 @@ export function Settings() {
       <SheetTrigger asChild>
         <Button
           variant="outline"
-          size="icon"
-          className="fixed right-4 top-4 z-40 border-border/80 bg-card/80 backdrop-blur"
+          className="border-border/80 bg-card/80 backdrop-blur"
           aria-label="Open settings"
         >
           <SettingsIcon className="h-4 w-4" />
+          Settings
         </Button>
       </SheetTrigger>
-      <SheetContent side="right" className="overflow-y-auto">
+      <SheetContent side="center" className="overflow-y-auto">
         <SheetHeader>
           <SheetTitle>Settings</SheetTitle>
           <SheetDescription>

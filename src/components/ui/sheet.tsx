@@ -1,4 +1,5 @@
 import * as React from "react";
+import { createPortal } from "react-dom";
 import { X } from "lucide-react";
 
 import { cn } from "@/lib/utils";
@@ -61,7 +62,7 @@ function SheetContent({
   className,
   children,
 }: {
-  side?: "top" | "right" | "bottom" | "left";
+  side?: "top" | "right" | "bottom" | "left" | "center";
   className?: string;
   children: React.ReactNode;
 }) {
@@ -86,8 +87,13 @@ function SheetContent({
     return null;
   }
 
-  return (
-    <div className="fixed inset-0 z-50">
+  return createPortal(
+    <div
+      className={cn(
+        "fixed inset-0 z-50",
+        side === "center" && "flex items-start justify-center p-4",
+      )}
+    >
       <button
         type="button"
         aria-label="Close settings"
@@ -99,6 +105,8 @@ function SheetContent({
           "absolute z-50 flex flex-col gap-4 bg-card p-6 shadow-lg",
           side === "right" &&
             "inset-y-0 right-0 h-full w-full max-w-sm border-l border-border",
+          side === "center" &&
+            "relative max-h-[calc(100dvh-2rem)] w-full max-w-md overflow-y-auto rounded-lg border border-border",
           className,
         )}
       >
@@ -112,7 +120,8 @@ function SheetContent({
           <X className="h-4 w-4" />
         </button>
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 }
 
