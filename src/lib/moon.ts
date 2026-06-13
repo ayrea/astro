@@ -162,7 +162,7 @@ const LATITUDE_TERMS: LatitudeTerm[] = [
   { d: 2, m: -2, mp: 0, f: 1, sumB: 107 },
 ];
 
-export interface MoonCrossings {
+export interface CrossingsDetail {
   isAboveHorizon: boolean;
   lastRise: Date | null;
   lastSet: Date | null;
@@ -414,7 +414,7 @@ export function findMoonCrossings(
   now: Date,
   latitudeDegrees: number,
   longitudeDegrees: number,
-): MoonCrossings {
+): CrossingsDetail {
   const nowMs = now.getTime();
   const windowStart = new Date(nowMs - SEARCH_WINDOW_MS);
   const windowEnd = new Date(nowMs + SEARCH_WINDOW_MS);

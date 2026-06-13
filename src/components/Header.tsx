@@ -5,7 +5,7 @@ import { SettingsTrigger } from "@/components/Settings";
 import { Button } from "@/components/ui/button";
 import { useSettings } from "@/context/SettingsContext";
 import { useInterval } from "@/hooks/useInterval";
-import { findMoonCrossings, type MoonCrossings } from "@/lib/moon";
+import { findMoonCrossings, type CrossingsDetail } from "@/lib/moon";
 import { findSunCrossings } from "@/lib/sun";
 import { cn } from "@/lib/utils";
 
@@ -24,18 +24,18 @@ function formatCrossingTime(date: Date | null): string {
   return date ? formatTime(date) : "—";
 }
 
-function buildCrossingInfoRows(crossings: MoonCrossings) {
+function buildCrossingInfoRows(crossings: CrossingsDetail) {
   return [
     {
-      label: crossings.isAboveHorizon ? "Last Rise" : "Next Rise",
+      label: crossings.isAboveHorizon ? "Last Rise" : "Last Set",
       value: formatCrossingTime(
-        crossings.isAboveHorizon ? crossings.nextRise : crossings.lastRise,
+        crossings.isAboveHorizon ? crossings.lastRise : crossings.lastSet,
       ),
     },
     {
-      label: "Next Set",
+      label: crossings.isAboveHorizon ? "Next Set" : "Last Rise",
       value: formatCrossingTime(
-        crossings.isAboveHorizon ? crossings.nextSet : crossings.lastSet,
+        crossings.isAboveHorizon ? crossings.nextSet : crossings.nextRise,
       ),
     },
   ];
