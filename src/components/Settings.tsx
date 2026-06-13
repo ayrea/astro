@@ -2,6 +2,7 @@ import { Settings as SettingsIcon } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
 import { Button } from "@/components/ui/button";
+import { ColorPicker } from "@/components/ui/color-picker";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
@@ -63,19 +64,6 @@ const ELEVATION_SPACING_OPTIONS: Array<{
   { value: 30, label: "30°" },
   { value: 45, label: "45°" },
 ];
-
-function rgbaToHex(color: string): string {
-  const match = color.match(/rgba?\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)/i);
-
-  if (!match) {
-    return "#38bdf8";
-  }
-
-  const [, red, green, blue] = match;
-  return `#${[red, green, blue]
-    .map((channel) => Number(channel).toString(16).padStart(2, "0"))
-    .join("")}`;
-}
 
 interface NumericInputProps {
   id: string;
@@ -398,50 +386,15 @@ export function Settings() {
 
                 <div className="space-y-2">
                   <Label>Line Color</Label>
-                  <div className="flex flex-wrap items-center gap-2">
-                    {GRID_COLOR_PRESETS.map((preset) => (
-                      <button
-                        key={preset.value}
-                        type="button"
-                        aria-label={preset.label}
-                        disabled={!settings.showGrid}
-                        onClick={() =>
-                          updateSettings({ gridLineColor: preset.value })
-                        }
-                        className={cn(
-                          "h-8 w-8 rounded-full border-2 transition-transform hover:scale-105 disabled:cursor-not-allowed",
-                          settings.gridLineColor === preset.value
-                            ? "border-primary ring-2 ring-primary/30"
-                            : "border-border/80",
-                        )}
-                        style={{ backgroundColor: preset.value }}
-                      />
-                    ))}
-                    <label
-                      className={cn(
-                        "relative flex h-8 w-8 cursor-pointer items-center justify-center overflow-hidden rounded-full border-2 border-border/80 bg-background",
-                        !settings.showGrid && "cursor-not-allowed",
-                      )}
-                      aria-label="Custom line color"
-                    >
-                      <input
-                        type="color"
-                        value={rgbaToHex(settings.gridLineColor)}
-                        disabled={!settings.showGrid}
-                        onChange={(event) => {
-                          const hex = event.target.value;
-                          const red = Number.parseInt(hex.slice(1, 3), 16);
-                          const green = Number.parseInt(hex.slice(3, 5), 16);
-                          const blue = Number.parseInt(hex.slice(5, 7), 16);
-                          updateSettings({
-                            gridLineColor: `rgba(${red}, ${green}, ${blue}, 1)`,
-                          });
-                        }}
-                        className="absolute inset-0 h-full w-full cursor-pointer opacity-0 disabled:cursor-not-allowed"
-                      />
-                      <span className="text-xs text-muted-foreground">+</span>
-                    </label>
-                  </div>
+                  <ColorPicker
+                    value={settings.gridLineColor}
+                    onChange={(gridLineColor) =>
+                      updateSettings({ gridLineColor })
+                    }
+                    presets={GRID_COLOR_PRESETS}
+                    previewOpacity={settings.gridLineOpacity}
+                    disabled={!settings.showGrid}
+                  />
                 </div>
 
                 <div className="space-y-3">
@@ -488,50 +441,15 @@ export function Settings() {
 
                 <div className="space-y-2">
                   <Label>Label Color</Label>
-                  <div className="flex flex-wrap items-center gap-2">
-                    {GRID_COLOR_PRESETS.map((preset) => (
-                      <button
-                        key={`label-${preset.value}`}
-                        type="button"
-                        aria-label={preset.label}
-                        disabled={!settings.showGrid}
-                        onClick={() =>
-                          updateSettings({ gridLabelColor: preset.value })
-                        }
-                        className={cn(
-                          "h-8 w-8 rounded-full border-2 transition-transform hover:scale-105 disabled:cursor-not-allowed",
-                          settings.gridLabelColor === preset.value
-                            ? "border-primary ring-2 ring-primary/30"
-                            : "border-border/80",
-                        )}
-                        style={{ backgroundColor: preset.value }}
-                      />
-                    ))}
-                    <label
-                      className={cn(
-                        "relative flex h-8 w-8 cursor-pointer items-center justify-center overflow-hidden rounded-full border-2 border-border/80 bg-background",
-                        !settings.showGrid && "cursor-not-allowed",
-                      )}
-                      aria-label="Custom label color"
-                    >
-                      <input
-                        type="color"
-                        value={rgbaToHex(settings.gridLabelColor)}
-                        disabled={!settings.showGrid}
-                        onChange={(event) => {
-                          const hex = event.target.value;
-                          const red = Number.parseInt(hex.slice(1, 3), 16);
-                          const green = Number.parseInt(hex.slice(3, 5), 16);
-                          const blue = Number.parseInt(hex.slice(5, 7), 16);
-                          updateSettings({
-                            gridLabelColor: `rgba(${red}, ${green}, ${blue}, 1)`,
-                          });
-                        }}
-                        className="absolute inset-0 h-full w-full cursor-pointer opacity-0 disabled:cursor-not-allowed"
-                      />
-                      <span className="text-xs text-muted-foreground">+</span>
-                    </label>
-                  </div>
+                  <ColorPicker
+                    value={settings.gridLabelColor}
+                    onChange={(gridLabelColor) =>
+                      updateSettings({ gridLabelColor })
+                    }
+                    presets={GRID_COLOR_PRESETS}
+                    previewOpacity={settings.gridLineOpacity}
+                    disabled={!settings.showGrid}
+                  />
                 </div>
 
                 <div className="space-y-3">
@@ -649,50 +567,15 @@ export function Settings() {
 
                 <div className="space-y-2">
                   <Label>Line Color</Label>
-                  <div className="flex flex-wrap items-center gap-2">
-                    {GRID_COLOR_PRESETS.map((preset) => (
-                      <button
-                        key={`elevation-line-${preset.value}`}
-                        type="button"
-                        aria-label={preset.label}
-                        disabled={!settings.showElevation}
-                        onClick={() =>
-                          updateSettings({ elevationLineColor: preset.value })
-                        }
-                        className={cn(
-                          "h-8 w-8 rounded-full border-2 transition-transform hover:scale-105 disabled:cursor-not-allowed",
-                          settings.elevationLineColor === preset.value
-                            ? "border-primary ring-2 ring-primary/30"
-                            : "border-border/80",
-                        )}
-                        style={{ backgroundColor: preset.value }}
-                      />
-                    ))}
-                    <label
-                      className={cn(
-                        "relative flex h-8 w-8 cursor-pointer items-center justify-center overflow-hidden rounded-full border-2 border-border/80 bg-background",
-                        !settings.showElevation && "cursor-not-allowed",
-                      )}
-                      aria-label="Custom line color"
-                    >
-                      <input
-                        type="color"
-                        value={rgbaToHex(settings.elevationLineColor)}
-                        disabled={!settings.showElevation}
-                        onChange={(event) => {
-                          const hex = event.target.value;
-                          const red = Number.parseInt(hex.slice(1, 3), 16);
-                          const green = Number.parseInt(hex.slice(3, 5), 16);
-                          const blue = Number.parseInt(hex.slice(5, 7), 16);
-                          updateSettings({
-                            elevationLineColor: `rgba(${red}, ${green}, ${blue}, 1)`,
-                          });
-                        }}
-                        className="absolute inset-0 h-full w-full cursor-pointer opacity-0 disabled:cursor-not-allowed"
-                      />
-                      <span className="text-xs text-muted-foreground">+</span>
-                    </label>
-                  </div>
+                  <ColorPicker
+                    value={settings.elevationLineColor}
+                    onChange={(elevationLineColor) =>
+                      updateSettings({ elevationLineColor })
+                    }
+                    presets={GRID_COLOR_PRESETS}
+                    previewOpacity={settings.elevationLineOpacity}
+                    disabled={!settings.showElevation}
+                  />
                 </div>
 
                 <div className="space-y-3">
@@ -743,50 +626,15 @@ export function Settings() {
 
                 <div className="space-y-2">
                   <Label>Label Color</Label>
-                  <div className="flex flex-wrap items-center gap-2">
-                    {GRID_COLOR_PRESETS.map((preset) => (
-                      <button
-                        key={`elevation-label-${preset.value}`}
-                        type="button"
-                        aria-label={preset.label}
-                        disabled={!settings.showElevation}
-                        onClick={() =>
-                          updateSettings({ elevationLabelColor: preset.value })
-                        }
-                        className={cn(
-                          "h-8 w-8 rounded-full border-2 transition-transform hover:scale-105 disabled:cursor-not-allowed",
-                          settings.elevationLabelColor === preset.value
-                            ? "border-primary ring-2 ring-primary/30"
-                            : "border-border/80",
-                        )}
-                        style={{ backgroundColor: preset.value }}
-                      />
-                    ))}
-                    <label
-                      className={cn(
-                        "relative flex h-8 w-8 cursor-pointer items-center justify-center overflow-hidden rounded-full border-2 border-border/80 bg-background",
-                        !settings.showElevation && "cursor-not-allowed",
-                      )}
-                      aria-label="Custom label color"
-                    >
-                      <input
-                        type="color"
-                        value={rgbaToHex(settings.elevationLabelColor)}
-                        disabled={!settings.showElevation}
-                        onChange={(event) => {
-                          const hex = event.target.value;
-                          const red = Number.parseInt(hex.slice(1, 3), 16);
-                          const green = Number.parseInt(hex.slice(3, 5), 16);
-                          const blue = Number.parseInt(hex.slice(5, 7), 16);
-                          updateSettings({
-                            elevationLabelColor: `rgba(${red}, ${green}, ${blue}, 1)`,
-                          });
-                        }}
-                        className="absolute inset-0 h-full w-full cursor-pointer opacity-0 disabled:cursor-not-allowed"
-                      />
-                      <span className="text-xs text-muted-foreground">+</span>
-                    </label>
-                  </div>
+                  <ColorPicker
+                    value={settings.elevationLabelColor}
+                    onChange={(elevationLabelColor) =>
+                      updateSettings({ elevationLabelColor })
+                    }
+                    presets={GRID_COLOR_PRESETS}
+                    previewOpacity={settings.elevationLineOpacity}
+                    disabled={!settings.showElevation}
+                  />
                 </div>
 
                 <div className="space-y-3">
@@ -843,52 +691,15 @@ export function Settings() {
               >
                 <div className="space-y-2">
                   <Label>Line Color</Label>
-                  <div className="flex flex-wrap items-center gap-2">
-                    {GRID_COLOR_PRESETS.map((preset) => (
-                      <button
-                        key={`const-line-${preset.value}`}
-                        type="button"
-                        aria-label={preset.label}
-                        disabled={!settings.showConstellations}
-                        onClick={() =>
-                          updateSettings({
-                            constellationLineColor: preset.value,
-                          })
-                        }
-                        className={cn(
-                          "h-8 w-8 rounded-full border-2 transition-transform hover:scale-105 disabled:cursor-not-allowed",
-                          settings.constellationLineColor === preset.value
-                            ? "border-primary ring-2 ring-primary/30"
-                            : "border-border/80",
-                        )}
-                        style={{ backgroundColor: preset.value }}
-                      />
-                    ))}
-                    <label
-                      className={cn(
-                        "relative flex h-8 w-8 cursor-pointer items-center justify-center overflow-hidden rounded-full border-2 border-border/80 bg-background",
-                        !settings.showConstellations && "cursor-not-allowed",
-                      )}
-                      aria-label="Custom line color"
-                    >
-                      <input
-                        type="color"
-                        value={rgbaToHex(settings.constellationLineColor)}
-                        disabled={!settings.showConstellations}
-                        onChange={(event) => {
-                          const hex = event.target.value;
-                          const red = Number.parseInt(hex.slice(1, 3), 16);
-                          const green = Number.parseInt(hex.slice(3, 5), 16);
-                          const blue = Number.parseInt(hex.slice(5, 7), 16);
-                          updateSettings({
-                            constellationLineColor: `rgba(${red}, ${green}, ${blue}, 1)`,
-                          });
-                        }}
-                        className="absolute inset-0 h-full w-full cursor-pointer opacity-0 disabled:cursor-not-allowed"
-                      />
-                      <span className="text-xs text-muted-foreground">+</span>
-                    </label>
-                  </div>
+                  <ColorPicker
+                    value={settings.constellationLineColor}
+                    onChange={(constellationLineColor) =>
+                      updateSettings({ constellationLineColor })
+                    }
+                    presets={GRID_COLOR_PRESETS}
+                    previewOpacity={settings.constellationLineOpacity}
+                    disabled={!settings.showConstellations}
+                  />
                 </div>
 
                 <div className="space-y-3">
@@ -965,60 +776,18 @@ export function Settings() {
                 >
                   <div className="space-y-2">
                     <Label>Label Color</Label>
-                    <div className="flex flex-wrap items-center gap-2">
-                      {GRID_COLOR_PRESETS.map((preset) => (
-                        <button
-                          key={`const-label-${preset.value}`}
-                          type="button"
-                          aria-label={preset.label}
-                          disabled={
-                            !settings.showConstellations ||
-                            !settings.showConstellationLabels
-                          }
-                          onClick={() =>
-                            updateSettings({
-                              constellationLabelColor: preset.value,
-                            })
-                          }
-                          className={cn(
-                            "h-8 w-8 rounded-full border-2 transition-transform hover:scale-105 disabled:cursor-not-allowed",
-                            settings.constellationLabelColor === preset.value
-                              ? "border-primary ring-2 ring-primary/30"
-                              : "border-border/80",
-                          )}
-                          style={{ backgroundColor: preset.value }}
-                        />
-                      ))}
-                      <label
-                        className={cn(
-                          "relative flex h-8 w-8 cursor-pointer items-center justify-center overflow-hidden rounded-full border-2 border-border/80 bg-background",
-                          (!settings.showConstellations ||
-                            !settings.showConstellationLabels) &&
-                            "cursor-not-allowed",
-                        )}
-                        aria-label="Custom label color"
-                      >
-                        <input
-                          type="color"
-                          value={rgbaToHex(settings.constellationLabelColor)}
-                          disabled={
-                            !settings.showConstellations ||
-                            !settings.showConstellationLabels
-                          }
-                          onChange={(event) => {
-                            const hex = event.target.value;
-                            const red = Number.parseInt(hex.slice(1, 3), 16);
-                            const green = Number.parseInt(hex.slice(3, 5), 16);
-                            const blue = Number.parseInt(hex.slice(5, 7), 16);
-                            updateSettings({
-                              constellationLabelColor: `rgba(${red}, ${green}, ${blue}, 1)`,
-                            });
-                          }}
-                          className="absolute inset-0 h-full w-full cursor-pointer opacity-0 disabled:cursor-not-allowed"
-                        />
-                        <span className="text-xs text-muted-foreground">+</span>
-                      </label>
-                    </div>
+                    <ColorPicker
+                      value={settings.constellationLabelColor}
+                      onChange={(constellationLabelColor) =>
+                        updateSettings({ constellationLabelColor })
+                      }
+                      presets={GRID_COLOR_PRESETS}
+                      previewOpacity={settings.constellationLineOpacity}
+                      disabled={
+                        !settings.showConstellations ||
+                        !settings.showConstellationLabels
+                      }
+                    />
                   </div>
 
                   <div className="space-y-3">
@@ -1077,53 +846,15 @@ export function Settings() {
               >
                 <div className="space-y-2">
                   <Label>Boundary Color</Label>
-                  <div className="flex flex-wrap items-center gap-2">
-                    {GRID_COLOR_PRESETS.map((preset) => (
-                      <button
-                        key={`const-bound-${preset.value}`}
-                        type="button"
-                        aria-label={preset.label}
-                        disabled={!settings.showConstellationBounds}
-                        onClick={() =>
-                          updateSettings({
-                            constellationBoundsColor: preset.value,
-                          })
-                        }
-                        className={cn(
-                          "h-8 w-8 rounded-full border-2 transition-transform hover:scale-105 disabled:cursor-not-allowed",
-                          settings.constellationBoundsColor === preset.value
-                            ? "border-primary ring-2 ring-primary/30"
-                            : "border-border/80",
-                        )}
-                        style={{ backgroundColor: preset.value }}
-                      />
-                    ))}
-                    <label
-                      className={cn(
-                        "relative flex h-8 w-8 cursor-pointer items-center justify-center overflow-hidden rounded-full border-2 border-border/80 bg-background",
-                        !settings.showConstellationBounds &&
-                          "cursor-not-allowed",
-                      )}
-                      aria-label="Custom boundary color"
-                    >
-                      <input
-                        type="color"
-                        value={rgbaToHex(settings.constellationBoundsColor)}
-                        disabled={!settings.showConstellationBounds}
-                        onChange={(event) => {
-                          const hex = event.target.value;
-                          const red = Number.parseInt(hex.slice(1, 3), 16);
-                          const green = Number.parseInt(hex.slice(3, 5), 16);
-                          const blue = Number.parseInt(hex.slice(5, 7), 16);
-                          updateSettings({
-                            constellationBoundsColor: `rgba(${red}, ${green}, ${blue}, 1)`,
-                          });
-                        }}
-                        className="absolute inset-0 h-full w-full cursor-pointer opacity-0 disabled:cursor-not-allowed"
-                      />
-                      <span className="text-xs text-muted-foreground">+</span>
-                    </label>
-                  </div>
+                  <ColorPicker
+                    value={settings.constellationBoundsColor}
+                    onChange={(constellationBoundsColor) =>
+                      updateSettings({ constellationBoundsColor })
+                    }
+                    presets={GRID_COLOR_PRESETS}
+                    previewOpacity={settings.constellationBoundsOpacity}
+                    disabled={!settings.showConstellationBounds}
+                  />
                 </div>
 
                 <div className="space-y-3">

@@ -66,8 +66,7 @@ export function InstallPrompt() {
 
       if (isIos) {
         toast.message("Install Astro Planisphere", {
-          description:
-            "Tap the Share icon, then choose \"Add to Home Screen\".",
+          description: 'Tap the Share icon, then choose "Add to Home Screen".',
           duration: Infinity,
           action: {
             label: "Dismiss",
