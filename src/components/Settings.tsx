@@ -163,12 +163,17 @@ export function Settings() {
         </SheetHeader>
 
         <Tabs defaultValue="general" className="mt-6">
-          <TabsList>
-            <TabsTrigger value="general">General</TabsTrigger>
-            <TabsTrigger value="ra-dec">RA & Dec</TabsTrigger>
-            <TabsTrigger value="elevation">Elevation</TabsTrigger>
-            <TabsTrigger value="constellations">Constellations</TabsTrigger>
-          </TabsList>
+          <div className="flex flex-col gap-1">
+            <TabsList>
+              <TabsTrigger value="general">General</TabsTrigger>
+              <TabsTrigger value="ra-dec">RA & Dec</TabsTrigger>
+              <TabsTrigger value="elevation">Elevation</TabsTrigger>
+            </TabsList>
+            <TabsList>
+              <TabsTrigger value="constellations">Constellations</TabsTrigger>
+              <TabsTrigger value="solar-system">Solar System</TabsTrigger>
+            </TabsList>
+          </div>
 
           <TabsContent value="general" className="space-y-6">
             <div className="space-y-2">
@@ -902,6 +907,93 @@ export function Settings() {
                     onValueChange={(value) =>
                       updateSettings({
                         constellationBoundsThickness: value[0] ?? 1,
+                      })
+                    }
+                  />
+                </div>
+              </div>
+            </div>
+          </TabsContent>
+
+          <TabsContent value="solar-system" className="space-y-6">
+            <div className="space-y-4">
+              <div className="flex items-center justify-between gap-4">
+                <div className="space-y-1">
+                  <Label htmlFor="ecliptic">Ecliptic</Label>
+                  <p className="text-xs text-muted-foreground">
+                    Show the ecliptic — the Sun&apos;s apparent path across the
+                    sky.
+                  </p>
+                </div>
+                <Switch
+                  id="ecliptic"
+                  checked={settings.showEcliptic}
+                  onCheckedChange={(checked) =>
+                    updateSettings({ showEcliptic: checked })
+                  }
+                />
+              </div>
+
+              <div
+                className={cn(
+                  "space-y-4 border-t border-border/60 pt-4",
+                  !settings.showEcliptic && "pointer-events-none opacity-50",
+                )}
+              >
+                <div className="space-y-2">
+                  <Label>Line Color</Label>
+                  <ColorPicker
+                    value={settings.eclipticLineColor}
+                    onChange={(eclipticLineColor) =>
+                      updateSettings({ eclipticLineColor })
+                    }
+                    presets={GRID_COLOR_PRESETS}
+                    previewOpacity={settings.eclipticLineOpacity}
+                    disabled={!settings.showEcliptic}
+                  />
+                </div>
+
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between">
+                    <Label htmlFor="ecliptic-line-opacity">Line Opacity</Label>
+                    <span className="text-sm text-muted-foreground">
+                      {Math.round(settings.eclipticLineOpacity * 100)}%
+                    </span>
+                  </div>
+                  <Slider
+                    id="ecliptic-line-opacity"
+                    min={0}
+                    max={100}
+                    step={5}
+                    value={[Math.round(settings.eclipticLineOpacity * 100)]}
+                    disabled={!settings.showEcliptic}
+                    onValueChange={(value) =>
+                      updateSettings({
+                        eclipticLineOpacity: (value[0] ?? 50) / 100,
+                      })
+                    }
+                  />
+                </div>
+
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between">
+                    <Label htmlFor="ecliptic-line-thickness">
+                      Line Thickness
+                    </Label>
+                    <span className="text-sm text-muted-foreground">
+                      {settings.eclipticLineThickness.toFixed(1)}
+                    </span>
+                  </div>
+                  <Slider
+                    id="ecliptic-line-thickness"
+                    min={1}
+                    max={4}
+                    step={1.0}
+                    value={[settings.eclipticLineThickness]}
+                    disabled={!settings.showEcliptic}
+                    onValueChange={(value) =>
+                      updateSettings({
+                        eclipticLineThickness: value[0] ?? 1.5,
                       })
                     }
                   />

@@ -9,6 +9,7 @@ import {
 import { useInterval } from "@/hooks/useInterval";
 import { usePanZoom } from "@/hooks/usePanZoom";
 import {
+  eclipticToEquatorial,
   equatorialToHorizontal,
   type FrameConstants,
   getJulianDate,
@@ -52,6 +53,7 @@ function applyOpacity(rgbaColor: string, opacity: number): string {
   return `rgba(${red}, ${green}, ${blue}, ${opacity})`;
 }
 const DECLINATION_SAMPLES = 180;
+const ECLIPTIC_SAMPLES = 180;
 const RIGHT_ASCENSION_SAMPLES = 180;
 
 function getRightAscensionLines(spacingHours: GridRaSpacing): number[] {
@@ -255,6 +257,23 @@ export function Planisphere() {
           settings.gridLineThickness,
           gridLabelColor,
           settings.gridLabelFontSize,
+        );
+      }
+
+      if (settings.showEcliptic) {
+        const eclipticLineColor = applyOpacity(
+          settings.eclipticLineColor,
+          settings.eclipticLineOpacity,
+        );
+        drawEcliptic(
+          context,
+          radius,
+          settings.latitude,
+          lst,
+          settings.mirrorEastWest,
+          viewport.scale,
+          eclipticLineColor,
+          settings.eclipticLineThickness,
         );
       }
 
@@ -570,6 +589,32 @@ function drawDeclinationLines(
       );
     }
   }
+}
+
+function drawEcliptic(
+  context: CanvasRenderingContext2D,
+  radius: number,
+  latitude: number,
+  lst: number,
+  mirrorEastWest: boolean,
+  scale: number,
+  color: string,
+  lineThickness: number,
+) {
+  const samples = Array.from({ length: ECLIPTIC_SAMPLES + 1 }, (_, index) => {
+    const eclipticLongitude = (index / ECLIPTIC_SAMPLES) * 360;
+    const { raHours, decDegrees } = eclipticToEquatorial(eclipticLongitude);
+    return projectEquatorial(
+      raHours,
+      decDegrees,
+      latitude,
+      lst,
+      radius,
+      mirrorEastWest,
+    );
+  });
+
+  strokeSampledPath(context, samples, color, scale, lineThickness);
 }
 
 function drawRightAscensionLines(

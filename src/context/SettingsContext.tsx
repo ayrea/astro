@@ -45,6 +45,10 @@ export interface Settings {
   constellationBoundsColor: string;
   constellationBoundsOpacity: number;
   constellationBoundsThickness: number;
+  showEcliptic: boolean;
+  eclipticLineColor: string;
+  eclipticLineOpacity: number;
+  eclipticLineThickness: number;
 }
 
 interface SettingsContextValue {
@@ -89,6 +93,10 @@ const defaultSettings: Settings = {
   constellationBoundsColor: "rgba(167, 139, 250, 1)",
   constellationBoundsOpacity: 0.15,
   constellationBoundsThickness: 1,
+  showEcliptic: true,
+  eclipticLineColor: "rgba(251, 146, 60, 1)",
+  eclipticLineOpacity: 0.5,
+  eclipticLineThickness: 1.5,
 };
 
 const VALID_RA_SPACINGS = new Set<GridRaSpacing>([1, 2, 3, 6]);
@@ -232,6 +240,26 @@ function normalizeSettings(parsed: Partial<Settings>): Settings {
       ? parsed.constellationBoundsThickness
       : defaultSettings.constellationBoundsThickness;
 
+  const eclipticLineColor =
+    typeof parsed.eclipticLineColor === "string" &&
+    parsed.eclipticLineColor.length > 0
+      ? parsed.eclipticLineColor
+      : defaultSettings.eclipticLineColor;
+
+  const eclipticLineOpacity =
+    typeof parsed.eclipticLineOpacity === "number" &&
+    parsed.eclipticLineOpacity >= 0 &&
+    parsed.eclipticLineOpacity <= 1
+      ? parsed.eclipticLineOpacity
+      : defaultSettings.eclipticLineOpacity;
+
+  const eclipticLineThickness =
+    typeof parsed.eclipticLineThickness === "number" &&
+    parsed.eclipticLineThickness >= 1 &&
+    parsed.eclipticLineThickness <= 4
+      ? parsed.eclipticLineThickness
+      : defaultSettings.eclipticLineThickness;
+
   return {
     ...defaultSettings,
     ...parsed,
@@ -256,6 +284,9 @@ function normalizeSettings(parsed: Partial<Settings>): Settings {
     constellationBoundsColor,
     constellationBoundsOpacity,
     constellationBoundsThickness,
+    eclipticLineColor,
+    eclipticLineOpacity,
+    eclipticLineThickness,
   };
 }
 

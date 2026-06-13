@@ -295,6 +295,23 @@ export function b1875ToJ2000(
   );
 }
 
+/** Mean obliquity of the ecliptic at J2000.0 (degrees). */
+export const OBLIQUITY_J2000_DEG = 23.4393;
+
+export function eclipticToEquatorial(
+  eclipticLongitudeDeg: number,
+  obliquityDeg: number = OBLIQUITY_J2000_DEG,
+): EquatorialCoordinates {
+  const lambda = toRadians(eclipticLongitudeDeg);
+  const eps = toRadians(obliquityDeg);
+  const ra = Math.atan2(Math.sin(lambda) * Math.cos(eps), Math.cos(lambda));
+  const dec = Math.asin(Math.sin(lambda) * Math.sin(eps));
+  return {
+    raHours: normalizeHours(toDegrees(ra) / 15),
+    decDegrees: toDegrees(dec),
+  };
+}
+
 export function equatorialToHorizontal(
   rightAscensionHours: number,
   declinationDegrees: number,
