@@ -5,17 +5,11 @@ import { SettingsTrigger } from "@/components/Settings";
 import { Button } from "@/components/ui/button";
 import { useSettings } from "@/context/SettingsContext";
 import { useInterval } from "@/hooks/useInterval";
+import { findMoonCrossings, type MoonCrossings } from "@/lib/moon";
 import { findSunCrossings } from "@/lib/sun";
 import { cn } from "@/lib/utils";
 
 const REFRESH_MS = 1000;
-
-function formatDate(date: Date): string {
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, "0");
-  const day = String(date.getDate()).padStart(2, "0");
-  return `${year}-${month}-${day}`;
-}
 
 function formatTime(date: Date, includeSeconds: boolean = false): string {
   return date.toLocaleTimeString([], {
@@ -26,8 +20,25 @@ function formatTime(date: Date, includeSeconds: boolean = false): string {
   });
 }
 
-function formatSunTime(date: Date | null): string {
+function formatCrossingTime(date: Date | null): string {
   return date ? formatTime(date) : "—";
+}
+
+function buildCrossingInfoRows(crossings: MoonCrossings) {
+  return [
+    {
+      label: crossings.isAboveHorizon ? "Last Rise" : "Next Rise",
+      value: formatCrossingTime(
+        crossings.isAboveHorizon ? crossings.nextRise : crossings.lastRise,
+      ),
+    },
+    {
+      label: "Next Set",
+      value: formatCrossingTime(
+        crossings.isAboveHorizon ? crossings.nextSet : crossings.lastSet,
+      ),
+    },
+  ];
 }
 
 export function Header() {
@@ -42,19 +53,13 @@ export function Header() {
     [now, settings.latitude, settings.longitude],
   );
 
-  const infoRows = useMemo(
-    () => [
-      {
-        label: "Sunrise",
-        value: formatSunTime(sun.isAboveHorizon ? sun.lastRise : sun.nextRise),
-      },
-      {
-        label: "Sunset",
-        value: formatSunTime(sun.isAboveHorizon ? sun.nextSet : sun.lastSet),
-      },
-    ],
-    [now, sun],
+  const moon = useMemo(
+    () => findMoonCrossings(now, settings.latitude, settings.longitude),
+    [now, settings.latitude, settings.longitude],
   );
+
+  const sunInfoRows = useMemo(() => buildCrossingInfoRows(sun), [sun]);
+  const moonInfoRows = useMemo(() => buildCrossingInfoRows(moon), [moon]);
 
   return (
     <header
@@ -92,7 +97,35 @@ export function Header() {
                       Sun
                     </th>
                   </tr>
-                  {infoRows.map(({ label, value }) => (
+                  {sunInfoRows.map(({ label, value }) => (
+                    <tr key={label}>
+                      <th
+                        scope="row"
+                        className="py-1 pr-4 text-left font-medium text-muted-foreground"
+                      >
+                        {label}
+                      </th>
+                      <td className="py-1 text-left tabular-nums text-foreground">
+                        {value}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            <div className="w-fit overflow-hidden rounded-md border-2 border-border/60 px-3 mx-4">
+              <table className="w-full text-sm">
+                <tbody>
+                  <tr>
+                    <th
+                      colSpan={2}
+                      scope="colgroup"
+                      className="py-1 text-left text-lg font-semibold border-b border-border/40"
+                    >
+                      Moon
+                    </th>
+                  </tr>
+                  {moonInfoRows.map(({ label, value }) => (
                     <tr key={label}>
                       <th
                         scope="row"

@@ -30,6 +30,7 @@ import {
   getStarCountForMagnitude,
   stars,
 } from "@/lib/starData";
+import { getMoonEquatorial } from "@/lib/moon";
 import { getSunEquatorial } from "@/lib/sun";
 import { getCanvasMetrics } from "@/lib/viewport";
 import { cn } from "@/lib/utils";
@@ -37,6 +38,7 @@ import { cn } from "@/lib/utils";
 const REFRESH_INTERVAL_MS = 15_000;
 const ALPHA_BUCKETS = 10;
 const SUN_MAGNITUDE = -26.7;
+const MOON_MAGNITUDE = -12.7;
 
 interface StarArc {
   x: number;
@@ -350,7 +352,7 @@ export function Planisphere() {
       for (let starIndex = 0; starIndex < starCount; starIndex++) {
         const star = stars[starIndex];
 
-        if (star.n === "Sol") {
+        if (star.n === "Sun") {
           continue;
         }
 
@@ -413,8 +415,38 @@ export function Planisphere() {
           labelCandidates.push({
             x: projectedPoint.x,
             y: projectedPoint.y,
-            name: "Sol",
+            name: "Sun",
             magnitude: SUN_MAGNITUDE,
+          });
+        }
+      }
+
+      const { raHours: moonRaHours, decDegrees: moonDecDegrees } =
+        getMoonEquatorial(julianDate);
+
+      equatorialToScreen(
+        moonRaHours,
+        moonDecDegrees,
+        frameConstants,
+        radius,
+        settings.mirrorEastWest,
+        projectedPoint,
+      );
+
+      if (projectedPoint.visible) {
+        const moonRadius = getScreenStarRadius(MOON_MAGNITUDE, viewport.scale);
+        starBuckets[ALPHA_BUCKETS - 1].push({
+          x: projectedPoint.x,
+          y: projectedPoint.y,
+          r: moonRadius,
+        });
+
+        if (settings.showLabels) {
+          labelCandidates.push({
+            x: projectedPoint.x,
+            y: projectedPoint.y,
+            name: "Moon",
+            magnitude: MOON_MAGNITUDE,
           });
         }
       }
