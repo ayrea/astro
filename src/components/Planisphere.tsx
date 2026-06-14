@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef } from "react";
 
 import {
   type ElevationSpacing,
@@ -6,7 +6,7 @@ import {
   type GridRaSpacing,
   useSettings,
 } from "@/context/SettingsContext";
-import { useInterval } from "@/hooks/useInterval";
+import { useObserverTime } from "@/context/TimeContext";
 import { usePanZoom } from "@/hooks/usePanZoom";
 import {
   eclipticToEquatorial,
@@ -35,7 +35,6 @@ import { getSunEquatorial } from "@/lib/sun";
 import { getCanvasMetrics } from "@/lib/viewport";
 import { cn } from "@/lib/utils";
 
-const REFRESH_INTERVAL_MS = 5_000;
 const ALPHA_BUCKETS = 10;
 const SUN_MAGNITUDE = -26.7;
 const MOON_MAGNITUDE = -12.7;
@@ -87,13 +86,7 @@ export function Planisphere() {
   const drawRef = useRef<(() => void) | null>(null);
   const rafIdRef = useRef(0);
   const { settings } = useSettings();
-  const [now, setNow] = useState(() => new Date());
-
-  const refresh = useCallback(() => {
-    setNow(new Date());
-  }, []);
-
-  useInterval(refresh, REFRESH_INTERVAL_MS);
+  const { observerTime } = useObserverTime();
 
   const getMetrics = useCallback(() => {
     const container = containerRef.current;
@@ -218,7 +211,7 @@ export function Planisphere() {
         }
       }
 
-      const julianDate = getJulianDate(now);
+      const julianDate = getJulianDate(observerTime);
       const lst = getLocalSiderealTime(julianDate, settings.longitude);
       const frameConstants = prepareFrameConstants(settings.latitude, lst);
 
@@ -490,7 +483,7 @@ export function Planisphere() {
       resizeObserver.disconnect();
       drawRef.current = null;
     };
-  }, [getViewport, now, settings]);
+  }, [getViewport, observerTime, settings]);
 
   return (
     <div ref={containerRef} className="h-full w-full">

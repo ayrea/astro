@@ -1,14 +1,12 @@
 import { ChevronDown } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 
 import { Button } from "@/components/ui/button";
 import { useSettings } from "@/context/SettingsContext";
-import { useInterval } from "@/hooks/useInterval";
+import { useObserverTime } from "@/context/TimeContext";
 import { findMoonCrossings, type CrossingsDetail } from "@/lib/moon";
 import { findSunCrossings } from "@/lib/sun";
 import { cn } from "@/lib/utils";
-
-const REFRESH_MS = 1000;
 
 function formatTime(date: Date, includeSeconds: boolean = false): string {
   return date.toLocaleTimeString([], {
@@ -86,18 +84,17 @@ function CrossingTable({
 
 export function InfoPanel({ onClose, className }: InfoPanelProps) {
   const { settings } = useSettings();
-  const [now, setNow] = useState(() => new Date());
-
-  useInterval(() => setNow(new Date()), REFRESH_MS);
+  const { observerTime } = useObserverTime();
 
   const sun = useMemo(
-    () => findSunCrossings(now, settings.latitude, settings.longitude),
-    [now, settings.latitude, settings.longitude],
+    () => findSunCrossings(observerTime, settings.latitude, settings.longitude),
+    [observerTime, settings.latitude, settings.longitude],
   );
 
   const moon = useMemo(
-    () => findMoonCrossings(now, settings.latitude, settings.longitude),
-    [now, settings.latitude, settings.longitude],
+    () =>
+      findMoonCrossings(observerTime, settings.latitude, settings.longitude),
+    [observerTime, settings.latitude, settings.longitude],
   );
 
   const sunInfoRows = useMemo(() => buildCrossingInfoRows(sun), [sun]);
