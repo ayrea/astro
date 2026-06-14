@@ -279,11 +279,11 @@ export function SettingsTrigger() {
       <SheetTrigger asChild>
         <Button
           variant="outline"
-          className="border-border/80 bg-card/80 backdrop-blur"
+          className="border-border/80 bg-card/80 backdrop-blur max-md:h-9 max-md:w-9 max-md:px-0"
           aria-label="Open settings"
         >
           <SettingsIcon className="h-4 w-4" />
-          Settings
+          <span className="hidden md:inline">Settings</span>
         </Button>
       </SheetTrigger>
       <SheetContent side="center" size="large" onDismiss={handleCancel}>

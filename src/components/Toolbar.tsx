@@ -12,7 +12,7 @@ interface ToolbarProps {
 
 export function Toolbar({ infoOpen, onInfoToggle }: ToolbarProps) {
   return (
-    <header className="relative z-30 flex h-14 shrink-0 items-center justify-between border-b border-border/60 bg-card/80 px-4 backdrop-blur">
+    <header className="relative z-30 flex min-h-14 shrink-0 items-center justify-between border-b border-border/60 bg-card/80 px-4 py-1.5 backdrop-blur max-md:min-h-[4.75rem]">
       <div className="flex items-center gap-2">
         <Button
           variant="outline"
@@ -27,7 +27,6 @@ export function Toolbar({ infoOpen, onInfoToggle }: ToolbarProps) {
         >
           <PanelLeft className="h-4 w-4" />
         </Button>
-        <h1 className="text-sm font-semibold text-foreground">Planisphere</h1>
       </div>
       <div className="absolute left-1/2 z-10 -translate-x-1/2">
         <ObserverTimeControls />

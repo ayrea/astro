@@ -13,14 +13,9 @@ import {
 } from "@/lib/dateTime";
 import { cn } from "@/lib/utils";
 
-const DATE_TIME_PARTS: ObserverDateTimePart[] = [
-  "day",
-  "month",
-  "year",
-  "hours",
-  "minutes",
-  "seconds",
-];
+const DATE_PARTS: ObserverDateTimePart[] = ["day", "month", "year"];
+const TIME_PARTS: ObserverDateTimePart[] = ["hours", "minutes", "seconds"];
+const DATE_TIME_PARTS: ObserverDateTimePart[] = [...DATE_PARTS, ...TIME_PARTS];
 
 const PART_LABELS: Record<ObserverDateTimePart, string> = {
   day: "Day",
@@ -72,6 +67,62 @@ function getPartAriaValues(
     case "seconds":
       return { now: date.getSeconds(), min: 0, max: 59 };
   }
+}
+
+interface DateTimePartGroupProps {
+  parts: ObserverDateTimePart[];
+  separator: "-" | ":";
+  displayParts: ObserverDateTimeParts;
+  isLive: boolean;
+  invalidPart: ObserverDateTimePart | null;
+  onUpdatePart: (part: ObserverDateTimePart, value: string) => void;
+  onCommitPart: (part: ObserverDateTimePart) => void;
+  onStepPart: (part: ObserverDateTimePart, direction: 1 | -1) => void;
+}
+
+function DateTimePartGroup({
+  parts,
+  separator,
+  displayParts,
+  isLive,
+  invalidPart,
+  onUpdatePart,
+  onCommitPart,
+  onStepPart,
+}: DateTimePartGroupProps) {
+  return (
+    <div className="flex items-center gap-0.5">
+      {parts.map((part, index) => {
+        const ariaValues = getPartAriaValues(part, displayParts);
+
+        return (
+          <div key={part} className="flex items-center gap-0.5">
+            <DateTimePartInput
+              part={part}
+              value={displayParts[part]}
+              readOnly={isLive}
+              invalid={invalidPart === part}
+              ariaLabel={PART_LABELS[part]}
+              widthClass={PART_WIDTHS[part]}
+              inputMode={part === "month" ? "text" : "numeric"}
+              maxLength={PART_MAX_LENGTH[part]}
+              ariaValueNow={ariaValues?.now}
+              ariaValueMin={ariaValues?.min}
+              ariaValueMax={ariaValues?.max}
+              onChange={(value) => onUpdatePart(part, value)}
+              onCommit={() => onCommitPart(part)}
+              onStep={(direction) => onStepPart(part, direction)}
+            />
+            {index < parts.length - 1 && (
+              <span aria-hidden="true" className="px-0.5">
+                {separator}
+              </span>
+            )}
+          </div>
+        );
+      })}
+    </div>
+  );
 }
 
 export function ObserverTimeControls() {
@@ -141,6 +192,15 @@ export function ObserverTimeControls() {
     [observerTime, setObserverTime],
   );
 
+  const partGroupProps = {
+    displayParts,
+    isLive,
+    invalidPart,
+    onUpdatePart: updateDraftPart,
+    onCommitPart: commitPart,
+    onStepPart: stepPart,
+  };
+
   return (
     <div className="flex items-center gap-3">
       <div className="flex items-center gap-2">
@@ -158,48 +218,22 @@ export function ObserverTimeControls() {
         aria-live={isLive ? "polite" : undefined}
         aria-label="Observer date and time"
         className={cn(
-          "flex min-w-0 max-w-[min(100vw-8rem,28rem)] flex-wrap items-center gap-0.5 text-xs text-muted-foreground",
+          "flex min-w-0 flex-col items-center gap-0.5 text-xs text-muted-foreground md:max-w-[min(100vw-8rem,28rem)] md:flex-row md:items-center",
         )}
       >
-        {DATE_TIME_PARTS.map((part, index) => {
-          const ariaValues = getPartAriaValues(part, displayParts);
-
-          return (
-            <div key={part} className="flex items-center gap-0.5">
-              {index === 3 && (
-                <span aria-hidden="true" className="mx-1">
-                  |
-                </span>
-              )}
-              <DateTimePartInput
-                part={part}
-                value={displayParts[part]}
-                readOnly={isLive}
-                invalid={invalidPart === part}
-                ariaLabel={PART_LABELS[part]}
-                widthClass={PART_WIDTHS[part]}
-                inputMode={part === "month" ? "text" : "numeric"}
-                maxLength={PART_MAX_LENGTH[part]}
-                ariaValueNow={ariaValues?.now}
-                ariaValueMin={ariaValues?.min}
-                ariaValueMax={ariaValues?.max}
-                onChange={(value) => updateDraftPart(part, value)}
-                onCommit={() => commitPart(part)}
-                onStep={(direction) => stepPart(part, direction)}
-              />
-              {index < 2 && (
-                <span aria-hidden="true" className="px-0.5">
-                  -
-                </span>
-              )}
-              {index >= 3 && index < 5 && (
-                <span aria-hidden="true" className="px-0.5">
-                  :
-                </span>
-              )}
-            </div>
-          );
-        })}
+        <DateTimePartGroup
+          parts={DATE_PARTS}
+          separator="-"
+          {...partGroupProps}
+        />
+        <span aria-hidden="true" className="mx-1 hidden md:inline">
+          |
+        </span>
+        <DateTimePartGroup
+          parts={TIME_PARTS}
+          separator=":"
+          {...partGroupProps}
+        />
       </div>
     </div>
   );

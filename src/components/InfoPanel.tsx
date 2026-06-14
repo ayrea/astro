@@ -103,7 +103,7 @@ export function InfoPanel({ onClose, className }: InfoPanelProps) {
   return (
     <aside
       className={cn(
-        "order-2 flex shrink-0 flex-col border-border/60 bg-card/80 backdrop-blur md:order-1",
+        "order-2 flex min-h-0 shrink-0 flex-col overflow-hidden border-border/60 bg-card/80 backdrop-blur md:order-1",
         "max-h-[40dvh] w-full border-t",
         "md:h-full md:max-h-none md:w-80 md:border-r md:border-t-0",
         className,
