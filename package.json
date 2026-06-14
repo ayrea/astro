@@ -10,6 +10,7 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "process-stars": "node scripts/process-stars.mjs",
+    "generate-observer-cities": "node scripts/generate-observer-cities.mjs",
     "generate-icons": "node scripts/generate-icons.mjs",
     "preview": "vite preview"
   },

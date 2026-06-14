@@ -1,0 +1,1829 @@
+[
+  {
+    "city": "Toronto",
+    "region": "Ontario",
+    "country": "Canada",
+    "latitude": 43.65,
+    "longitude": -79.38
+  },
+  {
+    "city": "Quebec City",
+    "region": "Quebec",
+    "country": "Canada",
+    "latitude": 46.81,
+    "longitude": -71.21
+  },
+  {
+    "city": "Vancouver",
+    "region": "British Columbia",
+    "country": "Canada",
+    "latitude": 49.28,
+    "longitude": -123.12
+  },
+  {
+    "city": "Edmonton",
+    "region": "Alberta",
+    "country": "Canada",
+    "latitude": 53.55,
+    "longitude": -113.49
+  },
+  {
+    "city": "Winnipeg",
+    "region": "Manitoba",
+    "country": "Canada",
+    "latitude": 49.9,
+    "longitude": -97.14
+  },
+  {
+    "city": "Regina",
+    "region": "Saskatchewan",
+    "country": "Canada",
+    "latitude": 50.45,
+    "longitude": -104.62
+  },
+  {
+    "city": "Victoria",
+    "region": "British Columbia",
+    "country": "Canada",
+    "latitude": 48.43,
+    "longitude": -123.37
+  },
+  {
+    "city": "Halifax",
+    "region": "Nova Scotia",
+    "country": "Canada",
+    "latitude": 44.65,
+    "longitude": -63.57
+  },
+  {
+    "city": "Fredericton",
+    "region": "New Brunswick",
+    "country": "Canada",
+    "latitude": 45.96,
+    "longitude": -66.64
+  },
+  {
+    "city": "St. John's",
+    "region": "Newfoundland and Labrador",
+    "country": "Canada",
+    "latitude": 47.56,
+    "longitude": -52.71
+  },
+  {
+    "city": "Charlottetown",
+    "region": "Prince Edward Island",
+    "country": "Canada",
+    "latitude": 46.24,
+    "longitude": -63.13
+  },
+  {
+    "city": "Whitehorse",
+    "region": "Yukon",
+    "country": "Canada",
+    "latitude": 60.72,
+    "longitude": -135.05
+  },
+  {
+    "city": "Yellowknife",
+    "region": "Northwest Territories",
+    "country": "Canada",
+    "latitude": 62.45,
+    "longitude": -114.37
+  },
+  {
+    "city": "Iqaluit",
+    "region": "Nunavut",
+    "country": "Canada",
+    "latitude": 63.75,
+    "longitude": -68.52
+  },
+  {
+    "city": "Sydney",
+    "region": "New South Wales",
+    "country": "Australia",
+    "latitude": -33.87,
+    "longitude": 151.21
+  },
+  {
+    "city": "Melbourne",
+    "region": "Victoria",
+    "country": "Australia",
+    "latitude": -37.81,
+    "longitude": 144.96
+  },
+  {
+    "city": "Brisbane",
+    "region": "Queensland",
+    "country": "Australia",
+    "latitude": -27.47,
+    "longitude": 153.03
+  },
+  {
+    "city": "Perth",
+    "region": "Western Australia",
+    "country": "Australia",
+    "latitude": -31.95,
+    "longitude": 115.86
+  },
+  {
+    "city": "Adelaide",
+    "region": "South Australia",
+    "country": "Australia",
+    "latitude": -34.93,
+    "longitude": 138.6
+  },
+  {
+    "city": "Hobart",
+    "region": "Tasmania",
+    "country": "Australia",
+    "latitude": -42.88,
+    "longitude": 147.33
+  },
+  {
+    "city": "Darwin",
+    "region": "Northern Territory",
+    "country": "Australia",
+    "latitude": -12.46,
+    "longitude": 130.84
+  },
+  {
+    "city": "Canberra",
+    "region": "Australian Capital Territory",
+    "country": "Australia",
+    "latitude": -35.28,
+    "longitude": 149.13
+  },
+  {
+    "city": "Mumbai",
+    "region": "Maharashtra",
+    "country": "India",
+    "latitude": 19.08,
+    "longitude": 72.88
+  },
+  {
+    "city": "Kolkata",
+    "region": "West Bengal",
+    "country": "India",
+    "latitude": 22.57,
+    "longitude": 88.36
+  },
+  {
+    "city": "Chennai",
+    "region": "Tamil Nadu",
+    "country": "India",
+    "latitude": 13.08,
+    "longitude": 80.27
+  },
+  {
+    "city": "Bengaluru",
+    "region": "Karnataka",
+    "country": "India",
+    "latitude": 12.97,
+    "longitude": 77.59
+  },
+  {
+    "city": "Hyderabad",
+    "region": "Telangana",
+    "country": "India",
+    "latitude": 17.39,
+    "longitude": 78.49
+  },
+  {
+    "city": "Ahmedabad",
+    "region": "Gujarat",
+    "country": "India",
+    "latitude": 23.02,
+    "longitude": 72.57
+  },
+  {
+    "city": "Jaipur",
+    "region": "Rajasthan",
+    "country": "India",
+    "latitude": 26.91,
+    "longitude": 75.79
+  },
+  {
+    "city": "Lucknow",
+    "region": "Uttar Pradesh",
+    "country": "India",
+    "latitude": 26.85,
+    "longitude": 80.95
+  },
+  {
+    "city": "Bhopal",
+    "region": "Madhya Pradesh",
+    "country": "India",
+    "latitude": 23.26,
+    "longitude": 77.41
+  },
+  {
+    "city": "Patna",
+    "region": "Bihar",
+    "country": "India",
+    "latitude": 25.59,
+    "longitude": 85.14
+  },
+  {
+    "city": "Thiruvananthapuram",
+    "region": "Kerala",
+    "country": "India",
+    "latitude": 8.52,
+    "longitude": 76.93
+  },
+  {
+    "city": "Bhubaneswar",
+    "region": "Odisha",
+    "country": "India",
+    "latitude": 20.3,
+    "longitude": 85.82
+  },
+  {
+    "city": "Chandigarh",
+    "region": "Chandigarh",
+    "country": "India",
+    "latitude": 30.73,
+    "longitude": 76.78
+  },
+  {
+    "city": "Ranchi",
+    "region": "Jharkhand",
+    "country": "India",
+    "latitude": 23.35,
+    "longitude": 85.33
+  },
+  {
+    "city": "Raipur",
+    "region": "Chhattisgarh",
+    "country": "India",
+    "latitude": 21.25,
+    "longitude": 81.63
+  },
+  {
+    "city": "Dehradun",
+    "region": "Uttarakhand",
+    "country": "India",
+    "latitude": 30.32,
+    "longitude": 78.03
+  },
+  {
+    "city": "Shimla",
+    "region": "Himachal Pradesh",
+    "country": "India",
+    "latitude": 31.1,
+    "longitude": 77.17
+  },
+  {
+    "city": "Srinagar",
+    "region": "Jammu and Kashmir",
+    "country": "India",
+    "latitude": 34.08,
+    "longitude": 74.8
+  },
+  {
+    "city": "Gandhinagar",
+    "region": "Gujarat",
+    "country": "India",
+    "latitude": 23.22,
+    "longitude": 72.68
+  },
+  {
+    "city": "Panaji",
+    "region": "Goa",
+    "country": "India",
+    "latitude": 15.49,
+    "longitude": 73.83
+  },
+  {
+    "city": "Imphal",
+    "region": "Manipur",
+    "country": "India",
+    "latitude": 24.82,
+    "longitude": 93.95
+  },
+  {
+    "city": "Shillong",
+    "region": "Meghalaya",
+    "country": "India",
+    "latitude": 25.58,
+    "longitude": 91.89
+  },
+  {
+    "city": "Kohima",
+    "region": "Nagaland",
+    "country": "India",
+    "latitude": 25.67,
+    "longitude": 94.11
+  },
+  {
+    "city": "Aizawl",
+    "region": "Mizoram",
+    "country": "India",
+    "latitude": 23.73,
+    "longitude": 92.72
+  },
+  {
+    "city": "Agartala",
+    "region": "Tripura",
+    "country": "India",
+    "latitude": 23.83,
+    "longitude": 91.28
+  },
+  {
+    "city": "Itanagar",
+    "region": "Arunachal Pradesh",
+    "country": "India",
+    "latitude": 27.1,
+    "longitude": 93.62
+  },
+  {
+    "city": "Gangtok",
+    "region": "Sikkim",
+    "country": "India",
+    "latitude": 27.33,
+    "longitude": 88.61
+  },
+  {
+    "city": "Amaravati",
+    "region": "Andhra Pradesh",
+    "country": "India",
+    "latitude": 16.51,
+    "longitude": 80.52
+  },
+  {
+    "city": "Dispur",
+    "region": "Assam",
+    "country": "India",
+    "latitude": 26.14,
+    "longitude": 91.79
+  },
+  {
+    "city": "São Paulo",
+    "region": "São Paulo",
+    "country": "Brazil",
+    "latitude": -23.55,
+    "longitude": -46.63
+  },
+  {
+    "city": "Rio de Janeiro",
+    "region": "Rio de Janeiro",
+    "country": "Brazil",
+    "latitude": -22.91,
+    "longitude": -43.17
+  },
+  {
+    "city": "Salvador",
+    "region": "Bahia",
+    "country": "Brazil",
+    "latitude": -12.97,
+    "longitude": -38.51
+  },
+  {
+    "city": "Fortaleza",
+    "region": "Ceará",
+    "country": "Brazil",
+    "latitude": -3.72,
+    "longitude": -38.54
+  },
+  {
+    "city": "Belo Horizonte",
+    "region": "Minas Gerais",
+    "country": "Brazil",
+    "latitude": -19.92,
+    "longitude": -43.94
+  },
+  {
+    "city": "Manaus",
+    "region": "Amazonas",
+    "country": "Brazil",
+    "latitude": -3.1,
+    "longitude": -60.02
+  },
+  {
+    "city": "Curitiba",
+    "region": "Paraná",
+    "country": "Brazil",
+    "latitude": -25.43,
+    "longitude": -49.27
+  },
+  {
+    "city": "Recife",
+    "region": "Pernambuco",
+    "country": "Brazil",
+    "latitude": -8.05,
+    "longitude": -34.87
+  },
+  {
+    "city": "Porto Alegre",
+    "region": "Rio Grande do Sul",
+    "country": "Brazil",
+    "latitude": -30.03,
+    "longitude": -51.23
+  },
+  {
+    "city": "Belém",
+    "region": "Pará",
+    "country": "Brazil",
+    "latitude": -1.46,
+    "longitude": -48.5
+  },
+  {
+    "city": "Goiânia",
+    "region": "Goiás",
+    "country": "Brazil",
+    "latitude": -16.68,
+    "longitude": -49.26
+  },
+  {
+    "city": "Campo Grande",
+    "region": "Mato Grosso do Sul",
+    "country": "Brazil",
+    "latitude": -20.44,
+    "longitude": -54.65
+  },
+  {
+    "city": "Cuiabá",
+    "region": "Mato Grosso",
+    "country": "Brazil",
+    "latitude": -15.6,
+    "longitude": -56.1
+  },
+  {
+    "city": "Florianópolis",
+    "region": "Santa Catarina",
+    "country": "Brazil",
+    "latitude": -27.59,
+    "longitude": -48.55
+  },
+  {
+    "city": "Vitória",
+    "region": "Espírito Santo",
+    "country": "Brazil",
+    "latitude": -20.32,
+    "longitude": -40.34
+  },
+  {
+    "city": "Natal",
+    "region": "Rio Grande do Norte",
+    "country": "Brazil",
+    "latitude": -5.79,
+    "longitude": -35.21
+  },
+  {
+    "city": "João Pessoa",
+    "region": "Paraíba",
+    "country": "Brazil",
+    "latitude": -7.12,
+    "longitude": -34.86
+  },
+  {
+    "city": "Maceió",
+    "region": "Alagoas",
+    "country": "Brazil",
+    "latitude": -9.67,
+    "longitude": -35.74
+  },
+  {
+    "city": "Aracaju",
+    "region": "Sergipe",
+    "country": "Brazil",
+    "latitude": -10.91,
+    "longitude": -37.07
+  },
+  {
+    "city": "Teresina",
+    "region": "Piauí",
+    "country": "Brazil",
+    "latitude": -5.09,
+    "longitude": -42.8
+  },
+  {
+    "city": "São Luís",
+    "region": "Maranhão",
+    "country": "Brazil",
+    "latitude": -2.53,
+    "longitude": -44.28
+  },
+  {
+    "city": "Palmas",
+    "region": "Tocantins",
+    "country": "Brazil",
+    "latitude": -10.18,
+    "longitude": -48.33
+  },
+  {
+    "city": "Macapá",
+    "region": "Amapá",
+    "country": "Brazil",
+    "latitude": 0.04,
+    "longitude": -51.07
+  },
+  {
+    "city": "Boa Vista",
+    "region": "Roraima",
+    "country": "Brazil",
+    "latitude": 2.82,
+    "longitude": -60.67
+  },
+  {
+    "city": "Porto Velho",
+    "region": "Rondônia",
+    "country": "Brazil",
+    "latitude": -8.76,
+    "longitude": -63.9
+  },
+  {
+    "city": "Rio Branco",
+    "region": "Acre",
+    "country": "Brazil",
+    "latitude": -9.97,
+    "longitude": -67.81
+  },
+  {
+    "city": "Guadalajara",
+    "region": "Jalisco",
+    "country": "Mexico",
+    "latitude": 20.67,
+    "longitude": -103.35
+  },
+  {
+    "city": "Monterrey",
+    "region": "Nuevo León",
+    "country": "Mexico",
+    "latitude": 25.67,
+    "longitude": -100.31
+  },
+  {
+    "city": "Puebla",
+    "region": "Puebla",
+    "country": "Mexico",
+    "latitude": 19.04,
+    "longitude": -98.2
+  },
+  {
+    "city": "Tijuana",
+    "region": "Baja California",
+    "country": "Mexico",
+    "latitude": 32.51,
+    "longitude": -117.0
+  },
+  {
+    "city": "León",
+    "region": "Guanajuato",
+    "country": "Mexico",
+    "latitude": 21.12,
+    "longitude": -101.68
+  },
+  {
+    "city": "Mérida",
+    "region": "Yucatán",
+    "country": "Mexico",
+    "latitude": 20.97,
+    "longitude": -89.62
+  },
+  {
+    "city": "Querétaro",
+    "region": "Querétaro",
+    "country": "Mexico",
+    "latitude": 20.59,
+    "longitude": -100.39
+  },
+  {
+    "city": "San Luis Potosí",
+    "region": "San Luis Potosí",
+    "country": "Mexico",
+    "latitude": 22.15,
+    "longitude": -100.98
+  },
+  {
+    "city": "Aguascalientes",
+    "region": "Aguascalientes",
+    "country": "Mexico",
+    "latitude": 21.88,
+    "longitude": -102.29
+  },
+  {
+    "city": "Hermosillo",
+    "region": "Sonora",
+    "country": "Mexico",
+    "latitude": 29.07,
+    "longitude": -110.96
+  },
+  {
+    "city": "Saltillo",
+    "region": "Coahuila",
+    "country": "Mexico",
+    "latitude": 25.42,
+    "longitude": -101.01
+  },
+  {
+    "city": "Culiacán",
+    "region": "Sinaloa",
+    "country": "Mexico",
+    "latitude": 24.8,
+    "longitude": -107.39
+  },
+  {
+    "city": "Chihuahua",
+    "region": "Chihuahua",
+    "country": "Mexico",
+    "latitude": 28.64,
+    "longitude": -106.09
+  },
+  {
+    "city": "Morelia",
+    "region": "Michoacán",
+    "country": "Mexico",
+    "latitude": 19.7,
+    "longitude": -101.19
+  },
+  {
+    "city": "Toluca",
+    "region": "México",
+    "country": "Mexico",
+    "latitude": 19.28,
+    "longitude": -99.66
+  },
+  {
+    "city": "Xalapa",
+    "region": "Veracruz",
+    "country": "Mexico",
+    "latitude": 19.54,
+    "longitude": -96.91
+  },
+  {
+    "city": "Oaxaca",
+    "region": "Oaxaca",
+    "country": "Mexico",
+    "latitude": 17.07,
+    "longitude": -96.72
+  },
+  {
+    "city": "Villahermosa",
+    "region": "Tabasco",
+    "country": "Mexico",
+    "latitude": 17.99,
+    "longitude": -92.93
+  },
+  {
+    "city": "Cuernavaca",
+    "region": "Morelos",
+    "country": "Mexico",
+    "latitude": 18.92,
+    "longitude": -99.23
+  },
+  {
+    "city": "Tuxtla Gutiérrez",
+    "region": "Chiapas",
+    "country": "Mexico",
+    "latitude": 16.75,
+    "longitude": -93.12
+  },
+  {
+    "city": "Campeche",
+    "region": "Campeche",
+    "country": "Mexico",
+    "latitude": 19.83,
+    "longitude": -90.53
+  },
+  {
+    "city": "Chetumal",
+    "region": "Quintana Roo",
+    "country": "Mexico",
+    "latitude": 18.5,
+    "longitude": -88.3
+  },
+  {
+    "city": "La Paz",
+    "region": "Baja California Sur",
+    "country": "Mexico",
+    "latitude": 24.14,
+    "longitude": -110.31
+  },
+  {
+    "city": "Zacatecas",
+    "region": "Zacatecas",
+    "country": "Mexico",
+    "latitude": 22.77,
+    "longitude": -102.58
+  },
+  {
+    "city": "Durango",
+    "region": "Durango",
+    "country": "Mexico",
+    "latitude": 24.02,
+    "longitude": -104.65
+  },
+  {
+    "city": "Colima",
+    "region": "Colima",
+    "country": "Mexico",
+    "latitude": 19.24,
+    "longitude": -103.72
+  },
+  {
+    "city": "Tepic",
+    "region": "Nayarit",
+    "country": "Mexico",
+    "latitude": 21.51,
+    "longitude": -104.89
+  },
+  {
+    "city": "Pachuca",
+    "region": "Hidalgo",
+    "country": "Mexico",
+    "latitude": 20.1,
+    "longitude": -98.76
+  },
+  {
+    "city": "Tlaxcala",
+    "region": "Tlaxcala",
+    "country": "Mexico",
+    "latitude": 19.32,
+    "longitude": -98.24
+  },
+  {
+    "city": "Munich",
+    "region": "Bavaria",
+    "country": "Germany",
+    "latitude": 48.14,
+    "longitude": 11.58
+  },
+  {
+    "city": "Stuttgart",
+    "region": "Baden-Württemberg",
+    "country": "Germany",
+    "latitude": 48.78,
+    "longitude": 9.18
+  },
+  {
+    "city": "Düsseldorf",
+    "region": "North Rhine-Westphalia",
+    "country": "Germany",
+    "latitude": 51.23,
+    "longitude": 6.78
+  },
+  {
+    "city": "Hamburg",
+    "region": "Hamburg",
+    "country": "Germany",
+    "latitude": 53.55,
+    "longitude": 10.0
+  },
+  {
+    "city": "Bremen",
+    "region": "Bremen",
+    "country": "Germany",
+    "latitude": 53.08,
+    "longitude": 8.8
+  },
+  {
+    "city": "Hannover",
+    "region": "Lower Saxony",
+    "country": "Germany",
+    "latitude": 52.37,
+    "longitude": 9.73
+  },
+  {
+    "city": "Dresden",
+    "region": "Saxony",
+    "country": "Germany",
+    "latitude": 51.05,
+    "longitude": 13.74
+  },
+  {
+    "city": "Magdeburg",
+    "region": "Saxony-Anhalt",
+    "country": "Germany",
+    "latitude": 52.13,
+    "longitude": 11.62
+  },
+  {
+    "city": "Kiel",
+    "region": "Schleswig-Holstein",
+    "country": "Germany",
+    "latitude": 54.32,
+    "longitude": 10.14
+  },
+  {
+    "city": "Mainz",
+    "region": "Rhineland-Palatinate",
+    "country": "Germany",
+    "latitude": 50.0,
+    "longitude": 8.27
+  },
+  {
+    "city": "Saarbrücken",
+    "region": "Saarland",
+    "country": "Germany",
+    "latitude": 49.24,
+    "longitude": 6.99
+  },
+  {
+    "city": "Schwerin",
+    "region": "Mecklenburg-Vorpommern",
+    "country": "Germany",
+    "latitude": 53.63,
+    "longitude": 11.41
+  },
+  {
+    "city": "Erfurt",
+    "region": "Thuringia",
+    "country": "Germany",
+    "latitude": 50.98,
+    "longitude": 11.03
+  },
+  {
+    "city": "Potsdam",
+    "region": "Brandenburg",
+    "country": "Germany",
+    "latitude": 52.4,
+    "longitude": 13.07
+  },
+  {
+    "city": "Wiesbaden",
+    "region": "Hesse",
+    "country": "Germany",
+    "latitude": 50.08,
+    "longitude": 8.24
+  },
+  {
+    "city": "Guangzhou",
+    "region": "Guangdong",
+    "country": "China",
+    "latitude": 23.13,
+    "longitude": 113.26
+  },
+  {
+    "city": "Chengdu",
+    "region": "Sichuan",
+    "country": "China",
+    "latitude": 30.57,
+    "longitude": 104.07
+  },
+  {
+    "city": "Wuhan",
+    "region": "Hubei",
+    "country": "China",
+    "latitude": 30.59,
+    "longitude": 114.31
+  },
+  {
+    "city": "Xi'an",
+    "region": "Shaanxi",
+    "country": "China",
+    "latitude": 34.26,
+    "longitude": 108.94
+  },
+  {
+    "city": "Hangzhou",
+    "region": "Zhejiang",
+    "country": "China",
+    "latitude": 30.25,
+    "longitude": 120.17
+  },
+  {
+    "city": "Nanjing",
+    "region": "Jiangsu",
+    "country": "China",
+    "latitude": 32.06,
+    "longitude": 118.8
+  },
+  {
+    "city": "Chongqing",
+    "region": "Chongqing",
+    "country": "China",
+    "latitude": 29.56,
+    "longitude": 106.55
+  },
+  {
+    "city": "Tianjin",
+    "region": "Tianjin",
+    "country": "China",
+    "latitude": 39.13,
+    "longitude": 117.2
+  },
+  {
+    "city": "Shenyang",
+    "region": "Liaoning",
+    "country": "China",
+    "latitude": 41.8,
+    "longitude": 123.43
+  },
+  {
+    "city": "Harbin",
+    "region": "Heilongjiang",
+    "country": "China",
+    "latitude": 45.75,
+    "longitude": 126.65
+  },
+  {
+    "city": "Changchun",
+    "region": "Jilin",
+    "country": "China",
+    "latitude": 43.88,
+    "longitude": 125.32
+  },
+  {
+    "city": "Taiyuan",
+    "region": "Shanxi",
+    "country": "China",
+    "latitude": 37.87,
+    "longitude": 112.55
+  },
+  {
+    "city": "Hefei",
+    "region": "Anhui",
+    "country": "China",
+    "latitude": 31.82,
+    "longitude": 117.23
+  },
+  {
+    "city": "Fuzhou",
+    "region": "Fujian",
+    "country": "China",
+    "latitude": 26.07,
+    "longitude": 119.3
+  },
+  {
+    "city": "Nanchang",
+    "region": "Jiangxi",
+    "country": "China",
+    "latitude": 28.68,
+    "longitude": 115.86
+  },
+  {
+    "city": "Jinan",
+    "region": "Shandong",
+    "country": "China",
+    "latitude": 36.65,
+    "longitude": 117.12
+  },
+  {
+    "city": "Zhengzhou",
+    "region": "Henan",
+    "country": "China",
+    "latitude": 34.75,
+    "longitude": 113.63
+  },
+  {
+    "city": "Changsha",
+    "region": "Hunan",
+    "country": "China",
+    "latitude": 28.23,
+    "longitude": 112.94
+  },
+  {
+    "city": "Kunming",
+    "region": "Yunnan",
+    "country": "China",
+    "latitude": 25.04,
+    "longitude": 102.72
+  },
+  {
+    "city": "Guiyang",
+    "region": "Guizhou",
+    "country": "China",
+    "latitude": 26.65,
+    "longitude": 106.63
+  },
+  {
+    "city": "Nanning",
+    "region": "Guangxi",
+    "country": "China",
+    "latitude": 22.82,
+    "longitude": 108.32
+  },
+  {
+    "city": "Haikou",
+    "region": "Hainan",
+    "country": "China",
+    "latitude": 20.04,
+    "longitude": 110.32
+  },
+  {
+    "city": "Lanzhou",
+    "region": "Gansu",
+    "country": "China",
+    "latitude": 36.06,
+    "longitude": 103.83
+  },
+  {
+    "city": "Xining",
+    "region": "Qinghai",
+    "country": "China",
+    "latitude": 36.62,
+    "longitude": 101.78
+  },
+  {
+    "city": "Yinchuan",
+    "region": "Ningxia",
+    "country": "China",
+    "latitude": 38.49,
+    "longitude": 106.23
+  },
+  {
+    "city": "Ürümqi",
+    "region": "Xinjiang",
+    "country": "China",
+    "latitude": 43.83,
+    "longitude": 87.62
+  },
+  {
+    "city": "Lhasa",
+    "region": "Tibet",
+    "country": "China",
+    "latitude": 29.65,
+    "longitude": 91.13
+  },
+  {
+    "city": "Hohhot",
+    "region": "Inner Mongolia",
+    "country": "China",
+    "latitude": 40.84,
+    "longitude": 111.75
+  },
+  {
+    "city": "Shijiazhuang",
+    "region": "Hebei",
+    "country": "China",
+    "latitude": 38.04,
+    "longitude": 114.48
+  },
+  {
+    "city": "Edinburgh",
+    "region": "Scotland",
+    "country": "United Kingdom",
+    "latitude": 55.95,
+    "longitude": -3.19
+  },
+  {
+    "city": "Cardiff",
+    "region": "Wales",
+    "country": "United Kingdom",
+    "latitude": 51.48,
+    "longitude": -3.18
+  },
+  {
+    "city": "Belfast",
+    "region": "Northern Ireland",
+    "country": "United Kingdom",
+    "latitude": 54.6,
+    "longitude": -5.93
+  },
+  {
+    "city": "Barcelona",
+    "region": "Catalonia",
+    "country": "Spain",
+    "latitude": 41.39,
+    "longitude": 2.17
+  },
+  {
+    "city": "Seville",
+    "region": "Andalusia",
+    "country": "Spain",
+    "latitude": 37.39,
+    "longitude": -5.98
+  },
+  {
+    "city": "Valencia",
+    "region": "Valencia",
+    "country": "Spain",
+    "latitude": 39.47,
+    "longitude": -0.38
+  },
+  {
+    "city": "Zaragoza",
+    "region": "Aragon",
+    "country": "Spain",
+    "latitude": 41.65,
+    "longitude": -0.88
+  },
+  {
+    "city": "Bilbao",
+    "region": "Basque Country",
+    "country": "Spain",
+    "latitude": 43.26,
+    "longitude": -2.93
+  },
+  {
+    "city": "Milan",
+    "region": "Lombardy",
+    "country": "Italy",
+    "latitude": 45.46,
+    "longitude": 9.19
+  },
+  {
+    "city": "Naples",
+    "region": "Campania",
+    "country": "Italy",
+    "latitude": 40.85,
+    "longitude": 14.27
+  },
+  {
+    "city": "Turin",
+    "region": "Piedmont",
+    "country": "Italy",
+    "latitude": 45.07,
+    "longitude": 7.69
+  },
+  {
+    "city": "Palermo",
+    "region": "Sicily",
+    "country": "Italy",
+    "latitude": 38.12,
+    "longitude": 13.36
+  },
+  {
+    "city": "Florence",
+    "region": "Tuscany",
+    "country": "Italy",
+    "latitude": 43.77,
+    "longitude": 11.25
+  },
+  {
+    "city": "Bologna",
+    "region": "Emilia-Romagna",
+    "country": "Italy",
+    "latitude": 44.49,
+    "longitude": 11.34
+  },
+  {
+    "city": "Venice",
+    "region": "Veneto",
+    "country": "Italy",
+    "latitude": 45.44,
+    "longitude": 12.32
+  },
+  {
+    "city": "Lyon",
+    "region": "Auvergne-Rhône-Alpes",
+    "country": "France",
+    "latitude": 45.76,
+    "longitude": 4.84
+  },
+  {
+    "city": "Marseille",
+    "region": "Provence-Alpes-Côte d'Azur",
+    "country": "France",
+    "latitude": 43.3,
+    "longitude": 5.37
+  },
+  {
+    "city": "Toulouse",
+    "region": "Occitanie",
+    "country": "France",
+    "latitude": 43.6,
+    "longitude": 1.44
+  },
+  {
+    "city": "Bordeaux",
+    "region": "Nouvelle-Aquitaine",
+    "country": "France",
+    "latitude": 44.84,
+    "longitude": -0.58
+  },
+  {
+    "city": "Nantes",
+    "region": "Pays de la Loire",
+    "country": "France",
+    "latitude": 47.22,
+    "longitude": -1.55
+  },
+  {
+    "city": "Strasbourg",
+    "region": "Grand Est",
+    "country": "France",
+    "latitude": 48.58,
+    "longitude": 7.75
+  },
+  {
+    "city": "Lille",
+    "region": "Hauts-de-France",
+    "country": "France",
+    "latitude": 50.63,
+    "longitude": 3.06
+  },
+  {
+    "city": "Rennes",
+    "region": "Brittany",
+    "country": "France",
+    "latitude": 48.11,
+    "longitude": -1.68
+  },
+  {
+    "city": "Cape Town",
+    "region": "Western Cape",
+    "country": "South Africa",
+    "latitude": -33.92,
+    "longitude": 18.42
+  },
+  {
+    "city": "Durban",
+    "region": "KwaZulu-Natal",
+    "country": "South Africa",
+    "latitude": -29.86,
+    "longitude": 31.02
+  },
+  {
+    "city": "Pretoria",
+    "region": "Gauteng",
+    "country": "South Africa",
+    "latitude": -25.75,
+    "longitude": 28.19
+  },
+  {
+    "city": "Bloemfontein",
+    "region": "Free State",
+    "country": "South Africa",
+    "latitude": -29.12,
+    "longitude": 26.21
+  },
+  {
+    "city": "Port Elizabeth",
+    "region": "Eastern Cape",
+    "country": "South Africa",
+    "latitude": -33.96,
+    "longitude": 25.6
+  },
+  {
+    "city": "Polokwane",
+    "region": "Limpopo",
+    "country": "South Africa",
+    "latitude": -23.9,
+    "longitude": 29.45
+  },
+  {
+    "city": "Mahikeng",
+    "region": "North West",
+    "country": "South Africa",
+    "latitude": -25.87,
+    "longitude": 25.64
+  },
+  {
+    "city": "Kimberley",
+    "region": "Northern Cape",
+    "country": "South Africa",
+    "latitude": -28.74,
+    "longitude": 24.77
+  },
+  {
+    "city": "Nelspruit",
+    "region": "Mpumalanga",
+    "country": "South Africa",
+    "latitude": -25.47,
+    "longitude": 30.97
+  },
+  {
+    "city": "Lagos",
+    "region": "Lagos",
+    "country": "Nigeria",
+    "latitude": 6.52,
+    "longitude": 3.38
+  },
+  {
+    "city": "Kano",
+    "region": "Kano",
+    "country": "Nigeria",
+    "latitude": 12.0,
+    "longitude": 8.52
+  },
+  {
+    "city": "Ibadan",
+    "region": "Oyo",
+    "country": "Nigeria",
+    "latitude": 7.38,
+    "longitude": 3.9
+  },
+  {
+    "city": "Abuja",
+    "region": "Federal Capital Territory",
+    "country": "Nigeria",
+    "latitude": 9.06,
+    "longitude": 7.49
+  },
+  {
+    "city": "Port Harcourt",
+    "region": "Rivers",
+    "country": "Nigeria",
+    "latitude": 4.78,
+    "longitude": 7.01
+  },
+  {
+    "city": "Kaduna",
+    "region": "Kaduna",
+    "country": "Nigeria",
+    "latitude": 10.52,
+    "longitude": 7.44
+  },
+  {
+    "city": "Enugu",
+    "region": "Enugu",
+    "country": "Nigeria",
+    "latitude": 6.44,
+    "longitude": 7.5
+  },
+  {
+    "city": "Karachi",
+    "region": "Sindh",
+    "country": "Pakistan",
+    "latitude": 24.86,
+    "longitude": 67.01
+  },
+  {
+    "city": "Lahore",
+    "region": "Punjab",
+    "country": "Pakistan",
+    "latitude": 31.56,
+    "longitude": 74.35
+  },
+  {
+    "city": "Peshawar",
+    "region": "Khyber Pakhtunkhwa",
+    "country": "Pakistan",
+    "latitude": 34.01,
+    "longitude": 71.58
+  },
+  {
+    "city": "Quetta",
+    "region": "Balochistan",
+    "country": "Pakistan",
+    "latitude": 30.18,
+    "longitude": 67.0
+  },
+  {
+    "city": "Surabaya",
+    "region": "East Java",
+    "country": "Indonesia",
+    "latitude": -7.25,
+    "longitude": 112.75
+  },
+  {
+    "city": "Bandung",
+    "region": "West Java",
+    "country": "Indonesia",
+    "latitude": -6.91,
+    "longitude": 107.61
+  },
+  {
+    "city": "Medan",
+    "region": "North Sumatra",
+    "country": "Indonesia",
+    "latitude": 3.6,
+    "longitude": 98.67
+  },
+  {
+    "city": "Semarang",
+    "region": "Central Java",
+    "country": "Indonesia",
+    "latitude": -6.97,
+    "longitude": 110.42
+  },
+  {
+    "city": "Makassar",
+    "region": "South Sulawesi",
+    "country": "Indonesia",
+    "latitude": -5.15,
+    "longitude": 119.43
+  },
+  {
+    "city": "Palembang",
+    "region": "South Sumatra",
+    "country": "Indonesia",
+    "latitude": -2.99,
+    "longitude": 104.76
+  },
+  {
+    "city": "Denpasar",
+    "region": "Bali",
+    "country": "Indonesia",
+    "latitude": -8.67,
+    "longitude": 115.22
+  },
+  {
+    "city": "Cebu City",
+    "region": "Cebu",
+    "country": "Philippines",
+    "latitude": 10.32,
+    "longitude": 123.89
+  },
+  {
+    "city": "Davao City",
+    "region": "Davao del Sur",
+    "country": "Philippines",
+    "latitude": 7.07,
+    "longitude": 125.61
+  },
+  {
+    "city": "Quezon City",
+    "region": "Metro Manila",
+    "country": "Philippines",
+    "latitude": 14.68,
+    "longitude": 121.04
+  },
+  {
+    "city": "George Town",
+    "region": "Penang",
+    "country": "Malaysia",
+    "latitude": 5.41,
+    "longitude": 100.34
+  },
+  {
+    "city": "Ipoh",
+    "region": "Perak",
+    "country": "Malaysia",
+    "latitude": 4.6,
+    "longitude": 101.09
+  },
+  {
+    "city": "Johor Bahru",
+    "region": "Johor",
+    "country": "Malaysia",
+    "latitude": 1.49,
+    "longitude": 103.74
+  },
+  {
+    "city": "Kota Kinabalu",
+    "region": "Sabah",
+    "country": "Malaysia",
+    "latitude": 5.98,
+    "longitude": 116.07
+  },
+  {
+    "city": "Kuching",
+    "region": "Sarawak",
+    "country": "Malaysia",
+    "latitude": 1.55,
+    "longitude": 110.35
+  },
+  {
+    "city": "Osaka",
+    "region": "Osaka",
+    "country": "Japan",
+    "latitude": 34.69,
+    "longitude": 135.5
+  },
+  {
+    "city": "Nagoya",
+    "region": "Aichi",
+    "country": "Japan",
+    "latitude": 35.18,
+    "longitude": 136.91
+  },
+  {
+    "city": "Sapporo",
+    "region": "Hokkaido",
+    "country": "Japan",
+    "latitude": 43.06,
+    "longitude": 141.35
+  },
+  {
+    "city": "Fukuoka",
+    "region": "Fukuoka",
+    "country": "Japan",
+    "latitude": 33.59,
+    "longitude": 130.4
+  },
+  {
+    "city": "Yokohama",
+    "region": "Kanagawa",
+    "country": "Japan",
+    "latitude": 35.44,
+    "longitude": 139.64
+  },
+  {
+    "city": "Kobe",
+    "region": "Hyogo",
+    "country": "Japan",
+    "latitude": 34.69,
+    "longitude": 135.2
+  },
+  {
+    "city": "Kyoto",
+    "region": "Kyoto",
+    "country": "Japan",
+    "latitude": 35.01,
+    "longitude": 135.77
+  },
+  {
+    "city": "Saint Petersburg",
+    "region": "Leningrad Oblast",
+    "country": "Russia",
+    "latitude": 59.93,
+    "longitude": 30.32
+  },
+  {
+    "city": "Novosibirsk",
+    "region": "Novosibirsk Oblast",
+    "country": "Russia",
+    "latitude": 55.03,
+    "longitude": 82.92
+  },
+  {
+    "city": "Yekaterinburg",
+    "region": "Sverdlovsk Oblast",
+    "country": "Russia",
+    "latitude": 56.84,
+    "longitude": 60.6
+  },
+  {
+    "city": "Kazan",
+    "region": "Tatarstan",
+    "country": "Russia",
+    "latitude": 55.8,
+    "longitude": 49.11
+  },
+  {
+    "city": "Vladivostok",
+    "region": "Primorsky Krai",
+    "country": "Russia",
+    "latitude": 43.12,
+    "longitude": 131.89
+  },
+  {
+    "city": "Kraków",
+    "region": "Lesser Poland",
+    "country": "Poland",
+    "latitude": 50.06,
+    "longitude": 19.94
+  },
+  {
+    "city": "Wrocław",
+    "region": "Lower Silesia",
+    "country": "Poland",
+    "latitude": 51.11,
+    "longitude": 17.04
+  },
+  {
+    "city": "Gdańsk",
+    "region": "Pomerania",
+    "country": "Poland",
+    "latitude": 54.35,
+    "longitude": 18.65
+  },
+  {
+    "city": "Poznań",
+    "region": "Greater Poland",
+    "country": "Poland",
+    "latitude": 52.41,
+    "longitude": 16.93
+  },
+  {
+    "city": "Kharkiv",
+    "region": "Kharkiv Oblast",
+    "country": "Ukraine",
+    "latitude": 49.99,
+    "longitude": 36.23
+  },
+  {
+    "city": "Odesa",
+    "region": "Odesa Oblast",
+    "country": "Ukraine",
+    "latitude": 46.48,
+    "longitude": 30.73
+  },
+  {
+    "city": "Dnipro",
+    "region": "Dnipropetrovsk Oblast",
+    "country": "Ukraine",
+    "latitude": 48.46,
+    "longitude": 35.05
+  },
+  {
+    "city": "Lviv",
+    "region": "Lviv Oblast",
+    "country": "Ukraine",
+    "latitude": 49.84,
+    "longitude": 24.03
+  },
+  {
+    "city": "Córdoba",
+    "region": "Córdoba",
+    "country": "Argentina",
+    "latitude": -31.42,
+    "longitude": -64.18
+  },
+  {
+    "city": "Rosario",
+    "region": "Santa Fe",
+    "country": "Argentina",
+    "latitude": -32.95,
+    "longitude": -60.64
+  },
+  {
+    "city": "Mendoza",
+    "region": "Mendoza",
+    "country": "Argentina",
+    "latitude": -32.89,
+    "longitude": -68.83
+  },
+  {
+    "city": "La Plata",
+    "region": "Buenos Aires",
+    "country": "Argentina",
+    "latitude": -34.92,
+    "longitude": -57.95
+  },
+  {
+    "city": "Santiago",
+    "region": "Santiago Metropolitan",
+    "country": "Chile",
+    "latitude": -33.45,
+    "longitude": -70.67
+  },
+  {
+    "city": "Valparaíso",
+    "region": "Valparaíso",
+    "country": "Chile",
+    "latitude": -33.05,
+    "longitude": -71.62
+  },
+  {
+    "city": "Concepción",
+    "region": "Biobío",
+    "country": "Chile",
+    "latitude": -36.83,
+    "longitude": -73.05
+  },
+  {
+    "city": "Medellín",
+    "region": "Antioquia",
+    "country": "Colombia",
+    "latitude": 6.25,
+    "longitude": -75.56
+  },
+  {
+    "city": "Cali",
+    "region": "Valle del Cauca",
+    "country": "Colombia",
+    "latitude": 3.45,
+    "longitude": -76.53
+  },
+  {
+    "city": "Barranquilla",
+    "region": "Atlántico",
+    "country": "Colombia",
+    "latitude": 10.96,
+    "longitude": -74.8
+  },
+  {
+    "city": "Quito",
+    "region": "Pichincha",
+    "country": "Ecuador",
+    "latitude": -0.18,
+    "longitude": -78.47
+  },
+  {
+    "city": "Guayaquil",
+    "region": "Guayas",
+    "country": "Ecuador",
+    "latitude": -2.19,
+    "longitude": -79.89
+  },
+  {
+    "city": "Arequipa",
+    "region": "Arequipa",
+    "country": "Peru",
+    "latitude": -16.4,
+    "longitude": -71.54
+  },
+  {
+    "city": "Cusco",
+    "region": "Cusco",
+    "country": "Peru",
+    "latitude": -13.52,
+    "longitude": -71.97
+  },
+  {
+    "city": "Montevideo",
+    "region": "Montevideo",
+    "country": "Uruguay",
+    "latitude": -34.9,
+    "longitude": -56.16
+  },
+  {
+    "city": "Asunción",
+    "region": "Asunción",
+    "country": "Paraguay",
+    "latitude": -25.26,
+    "longitude": -57.58
+  },
+  {
+    "city": "La Paz",
+    "region": "La Paz",
+    "country": "Bolivia",
+    "latitude": -16.5,
+    "longitude": -68.15
+  },
+  {
+    "city": "Santa Cruz",
+    "region": "Santa Cruz",
+    "country": "Bolivia",
+    "latitude": -17.79,
+    "longitude": -63.18
+  },
+  {
+    "city": "Caracas",
+    "region": "Capital District",
+    "country": "Venezuela",
+    "latitude": 10.49,
+    "longitude": -66.88
+  },
+  {
+    "city": "Maracaibo",
+    "region": "Zulia",
+    "country": "Venezuela",
+    "latitude": 10.63,
+    "longitude": -71.64
+  },
+  {
+    "city": "Panama City",
+    "region": "Panama",
+    "country": "Panama",
+    "latitude": 8.98,
+    "longitude": -79.52
+  },
+  {
+    "city": "San José",
+    "region": "San José",
+    "country": "Costa Rica",
+    "latitude": 9.93,
+    "longitude": -84.08
+  },
+  {
+    "city": "Guatemala City",
+    "region": "Guatemala",
+    "country": "Guatemala",
+    "latitude": 14.63,
+    "longitude": -90.51
+  },
+  {
+    "city": "Tegucigalpa",
+    "region": "Francisco Morazán",
+    "country": "Honduras",
+    "latitude": 14.07,
+    "longitude": -87.19
+  },
+  {
+    "city": "Managua",
+    "region": "Managua",
+    "country": "Nicaragua",
+    "latitude": 12.13,
+    "longitude": -86.25
+  },
+  {
+    "city": "San Salvador",
+    "region": "San Salvador",
+    "country": "El Salvador",
+    "latitude": 13.69,
+    "longitude": -89.19
+  },
+  {
+    "city": "Havana",
+    "region": "Havana",
+    "country": "Cuba",
+    "latitude": 23.13,
+    "longitude": -82.38
+  },
+  {
+    "city": "Santo Domingo",
+    "region": "Distrito Nacional",
+    "country": "Dominican Republic",
+    "latitude": 18.49,
+    "longitude": -69.93
+  },
+  {
+    "city": "Port-au-Prince",
+    "region": "Ouest",
+    "country": "Haiti",
+    "latitude": 18.54,
+    "longitude": -72.34
+  },
+  {
+    "city": "Kingston",
+    "region": "Kingston",
+    "country": "Jamaica",
+    "latitude": 18.0,
+    "longitude": -76.79
+  },
+  {
+    "city": "Nassau",
+    "region": "New Providence",
+    "country": "Bahamas",
+    "latitude": 25.06,
+    "longitude": -77.34
+  },
+  {
+    "city": "Bridgetown",
+    "region": "Saint Michael",
+    "country": "Barbados",
+    "latitude": 13.1,
+    "longitude": -59.61
+  },
+  {
+    "city": "Port of Spain",
+    "region": "Port of Spain",
+    "country": "Trinidad and Tobago",
+    "latitude": 10.66,
+    "longitude": -61.52
+  }
+]

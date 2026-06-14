@@ -3,6 +3,14 @@ import { useEffect, useRef, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { ColorPicker } from "@/components/ui/color-picker";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
@@ -12,6 +20,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { LocationPicker } from "@/components/LocationPicker";
 import {
   Sheet,
   SheetBody,
@@ -32,6 +41,14 @@ import {
   type Settings,
   useSettings,
 } from "@/context/SettingsContext";
+import {
+  CUSTOM_LOCATION_ID,
+  findObserverCity,
+  findObserverCityByKey,
+  loadObserverCities,
+  observerCityKey,
+  type ObserverCity,
+} from "@/data/observer-cities";
 import { cn } from "@/lib/utils";
 
 const PARTIAL_NUMBER_PATTERN = /^-?\d*\.?\d*$/;
@@ -141,15 +158,107 @@ function NumericInput({ id, value, min, max, onChange }: NumericInputProps) {
   );
 }
 
+function formatCoordinate(value: number, positiveSuffix: string): string {
+  const absolute = Math.abs(value);
+  const suffix =
+    value >= 0 ? positiveSuffix : positiveSuffix === "N" ? "S" : "W";
+  return `${absolute.toFixed(3)}°${suffix}`;
+}
+
+function formatLocationCoordinates(
+  latitude: number,
+  longitude: number,
+): string {
+  return `${formatCoordinate(latitude, "N")}, ${formatCoordinate(longitude, "E")}`;
+}
+
+function resolveLocationSelectValue(
+  latitude: number,
+  longitude: number,
+  cities: ObserverCity[],
+): string {
+  const match = findObserverCity(latitude, longitude, cities);
+  return match ? observerCityKey(match) : CUSTOM_LOCATION_ID;
+}
+
 export function SettingsTrigger() {
   const { settings, updateSettings, resetSettings } = useSettings();
   const [confirmingReset, setConfirmingReset] = useState(false);
   const [open, setOpen] = useState(false);
+  const [customDialogOpen, setCustomDialogOpen] = useState(false);
+  const [observerCities, setObserverCities] = useState<ObserverCity[]>([]);
+  const [citiesLoading, setCitiesLoading] = useState(false);
+  const [draftLatitude, setDraftLatitude] = useState(settings.latitude);
+  const [draftLongitude, setDraftLongitude] = useState(settings.longitude);
   const snapshotRef = useRef<Settings | null>(null);
+  const loadIdRef = useRef(0);
+
+  const locationSelectValue = resolveLocationSelectValue(
+    settings.latitude,
+    settings.longitude,
+    observerCities,
+  );
+
+  const openCustomLocationDialog = () => {
+    setDraftLatitude(settings.latitude);
+    setDraftLongitude(settings.longitude);
+    setCustomDialogOpen(true);
+  };
+
+  const handleLocationChange = (value: string) => {
+    if (value === CUSTOM_LOCATION_ID) {
+      openCustomLocationDialog();
+      return;
+    }
+
+    const city = findObserverCityByKey(value, observerCities);
+    if (!city) {
+      return;
+    }
+
+    updateSettings({
+      latitude: city.latitude,
+      longitude: city.longitude,
+    });
+  };
+
+  const handleCustomLocationCancel = () => {
+    setCustomDialogOpen(false);
+  };
+
+  const handleCustomLocationOk = () => {
+    updateSettings({
+      latitude: draftLatitude,
+      longitude: draftLongitude,
+    });
+    setCustomDialogOpen(false);
+  };
+
+  const isCustomLocation =
+    resolveLocationSelectValue(
+      settings.latitude,
+      settings.longitude,
+      observerCities,
+    ) === CUSTOM_LOCATION_ID;
 
   const handleOpenChange = (nextOpen: boolean) => {
     if (nextOpen) {
       snapshotRef.current = { ...settings };
+      if (observerCities.length === 0 && !citiesLoading) {
+        const loadId = ++loadIdRef.current;
+        setCitiesLoading(true);
+        loadObserverCities()
+          .then((cities) => {
+            if (loadId === loadIdRef.current) {
+              setObserverCities(cities);
+            }
+          })
+          .finally(() => {
+            if (loadId === loadIdRef.current) {
+              setCitiesLoading(false);
+            }
+          });
+      }
     }
     setOpen(nextOpen);
   };
@@ -201,31 +310,32 @@ export function SettingsTrigger() {
 
             <TabsContent value="general" className="space-y-6">
               <div className="space-y-2">
-                <Label htmlFor="latitude">Latitude</Label>
-                <NumericInput
-                  id="latitude"
-                  min={-90}
-                  max={90}
-                  value={settings.latitude}
-                  onChange={(latitude) => updateSettings({ latitude })}
+                <Label htmlFor="location">Location</Label>
+                <LocationPicker
+                  id="location"
+                  value={locationSelectValue}
+                  cities={observerCities}
+                  loading={citiesLoading}
+                  onCitySelect={(cityId) => handleLocationChange(cityId)}
+                  onCustomSelect={() =>
+                    handleLocationChange(CUSTOM_LOCATION_ID)
+                  }
                 />
                 <p className="text-xs text-muted-foreground">
-                  Observer latitude in degrees (-90 to 90).
+                  Observer location used for sky projection and rise/set times.
                 </p>
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="longitude">Longitude</Label>
-                <NumericInput
-                  id="longitude"
-                  min={-180}
-                  max={180}
-                  value={settings.longitude}
-                  onChange={(longitude) => updateSettings({ longitude })}
-                />
-                <p className="text-xs text-muted-foreground">
-                  Observer longitude in degrees (-180 to 180, positive east).
-                </p>
+                {isCustomLocation && (
+                  <button
+                    type="button"
+                    className="text-xs text-muted-foreground underline-offset-2 hover:underline"
+                    onClick={openCustomLocationDialog}
+                  >
+                    {formatLocationCoordinates(
+                      settings.latitude,
+                      settings.longitude,
+                    )}
+                  </button>
+                )}
               </div>
 
               <div className="space-y-3">
@@ -289,8 +399,8 @@ export function SettingsTrigger() {
                       Reset all settings to their defaults?
                     </p>
                     <p className="text-sm">
-                      Latitude and longitude values will be kept. All other
-                      settings from all tabs will be reset.
+                      Observer location will be kept. All other settings from
+                      all tabs will be reset.
                     </p>
                     <div className="flex justify-end gap-2">
                       <Button
@@ -321,8 +431,8 @@ export function SettingsTrigger() {
                       Reset to defaults
                     </Button>
                     <p className="text-xs text-muted-foreground">
-                      Restore all settings to defaults. Latitude and longitude
-                      are preserved.
+                      Restore all settings to defaults. Observer location is
+                      preserved.
                     </p>
                   </>
                 )}
@@ -1045,6 +1155,60 @@ export function SettingsTrigger() {
           <Button onClick={handleOk}>OK</Button>
         </SheetFooter>
       </SheetContent>
+
+      <Dialog
+        open={customDialogOpen}
+        onOpenChange={(nextOpen) => {
+          if (!nextOpen) {
+            handleCustomLocationCancel();
+            return;
+          }
+          setCustomDialogOpen(true);
+        }}
+      >
+        <DialogContent onDismiss={handleCustomLocationCancel}>
+          <DialogHeader>
+            <DialogTitle>Custom location</DialogTitle>
+            <DialogDescription>
+              Enter observer latitude and longitude in degrees.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 px-6 py-2">
+            <div className="space-y-2">
+              <Label htmlFor="custom-latitude">Latitude</Label>
+              <NumericInput
+                id="custom-latitude"
+                min={-90}
+                max={90}
+                value={draftLatitude}
+                onChange={setDraftLatitude}
+              />
+              <p className="text-xs text-muted-foreground">
+                Observer latitude in degrees (-90 to 90).
+              </p>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="custom-longitude">Longitude</Label>
+              <NumericInput
+                id="custom-longitude"
+                min={-180}
+                max={180}
+                value={draftLongitude}
+                onChange={setDraftLongitude}
+              />
+              <p className="text-xs text-muted-foreground">
+                Observer longitude in degrees (-180 to 180, positive east).
+              </p>
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={handleCustomLocationCancel}>
+              Cancel
+            </Button>
+            <Button onClick={handleCustomLocationOk}>OK</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </Sheet>
   );
 }

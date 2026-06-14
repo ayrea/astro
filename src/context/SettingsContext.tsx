@@ -60,10 +60,10 @@ interface SettingsContextValue {
 const STORAGE_KEY = "astro-planisphere-settings";
 
 const defaultSettings: Settings = {
-  latitude: 51.5,
-  longitude: -0.12,
+  latitude: -31.95,
+  longitude: 115.86,
   magnitudeCutoff: 5,
-  mirrorEastWest: false,
+  mirrorEastWest: true,
   showLabels: true,
   showGrid: true,
   gridRaSpacing: 2,
