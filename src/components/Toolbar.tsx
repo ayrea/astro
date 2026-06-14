@@ -1,4 +1,4 @@
-import { PanelRight } from "lucide-react";
+import { PanelLeft } from "lucide-react";
 
 import { SettingsTrigger } from "@/components/Settings";
 import { Button } from "@/components/ui/button";
@@ -12,7 +12,6 @@ interface ToolbarProps {
 export function Toolbar({ infoOpen, onInfoToggle }: ToolbarProps) {
   return (
     <header className="relative z-30 flex h-12 shrink-0 items-center justify-between border-b border-border/60 bg-card/80 px-4 backdrop-blur">
-      <h1 className="text-sm font-semibold text-foreground">Planisphere</h1>
       <div className="flex items-center gap-2">
         <Button
           variant="outline"
@@ -25,10 +24,11 @@ export function Toolbar({ infoOpen, onInfoToggle }: ToolbarProps) {
             infoOpen && "bg-accent",
           )}
         >
-          <PanelRight className="h-4 w-4" />
+          <PanelLeft className="h-4 w-4" />
         </Button>
-        <SettingsTrigger />
+        <h1 className="text-sm font-semibold text-foreground">Planisphere</h1>
       </div>
+      <SettingsTrigger />
     </header>
   );
 }

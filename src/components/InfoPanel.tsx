@@ -42,6 +42,7 @@ function buildCrossingInfoRows(crossings: CrossingsDetail) {
 
 interface InfoPanelProps {
   onClose: () => void;
+  className?: string;
 }
 
 function CrossingTable({
@@ -83,7 +84,7 @@ function CrossingTable({
   );
 }
 
-export function InfoPanel({ onClose }: InfoPanelProps) {
+export function InfoPanel({ onClose, className }: InfoPanelProps) {
   const { settings } = useSettings();
   const [now, setNow] = useState(() => new Date());
 
@@ -105,9 +106,10 @@ export function InfoPanel({ onClose }: InfoPanelProps) {
   return (
     <aside
       className={cn(
-        "flex shrink-0 flex-col border-border/60 bg-card/80 backdrop-blur",
+        "order-2 flex shrink-0 flex-col border-border/60 bg-card/80 backdrop-blur md:order-1",
         "max-h-[40dvh] w-full border-t",
-        "md:h-full md:max-h-none md:w-80 md:border-l md:border-t-0",
+        "md:h-full md:max-h-none md:w-80 md:border-r md:border-t-0",
+        className,
       )}
     >
       <div className="flex shrink-0 items-center justify-between border-b border-border/60 px-4 py-2">
@@ -118,7 +120,7 @@ export function InfoPanel({ onClose }: InfoPanelProps) {
           onClick={onClose}
           aria-label="Hide info panel"
         >
-          <ChevronDown className="h-4 w-4 md:rotate-[-90deg]" />
+          <ChevronDown className="h-4 w-4 md:rotate-90" />
         </Button>
       </div>
       <div className="min-h-0 flex-1 overflow-y-auto p-4">
