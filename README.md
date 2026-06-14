@@ -13,10 +13,13 @@ A Progressive Web App (PWA) that can be installed on a mobile device for offline
 - Concentric circles representing elevation angle.
 - Right Ascension & Declination (RA & Dec) lines and coordinates.
 - Can mirror East/West for overhead viewing.
+- Ecliptic line.
+- Position of Sun and Moon.
+- Sun and Moon Rise and Set times.
+- Realtime or manual Date/Time.
+- User location from comprehensive list of world wide cities or custom latitude/Longitude.
 
 Future features roadmap:
 
-- Ecliptic line
-- Planets and Moon
-- Manual setting of Date/Time (currently only the current Date/Time is available)
-- Satellite predictions
+- Show Planets
+- Satellite pass predictions
