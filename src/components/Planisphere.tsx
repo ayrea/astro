@@ -35,7 +35,7 @@ import { getSunEquatorial } from "@/lib/sun";
 import { getCanvasMetrics } from "@/lib/viewport";
 import { cn } from "@/lib/utils";
 
-const REFRESH_INTERVAL_MS = 1_000;
+const REFRESH_INTERVAL_MS = 5_000;
 const ALPHA_BUCKETS = 10;
 const SUN_MAGNITUDE = -26.7;
 const MOON_MAGNITUDE = -12.7;
