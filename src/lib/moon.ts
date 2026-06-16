@@ -10,6 +10,7 @@ import {
   type EquatorialCoordinates,
   type HorizontalCoordinates,
 } from "@/lib/astronomy";
+import { getSunEclipticLongitude } from "@/lib/sun";
 
 /** Standard geocentric moonrise/moonset horizon (degrees). */
 const HORIZON_ELEVATION = 0.125;
@@ -225,7 +226,17 @@ function eclipticLatLonToEquatorial(
   };
 }
 
-export function getMoonEquatorial(julianDate: number): EquatorialCoordinates {
+interface MoonEclipticCoordinates {
+  longitude: number;
+  latitude: number;
+}
+
+export interface MoonPhase {
+  elongationDeg: number;
+  illuminatedFraction: number;
+}
+
+function getMoonEcliptic(julianDate: number): MoonEclipticCoordinates {
   const t = (julianDate - 2_451_545) / 36_525;
 
   const lp = toRadians(
@@ -302,12 +313,24 @@ export function getMoonEquatorial(julianDate: number): EquatorialCoordinates {
     127 * Math.sin(lp - mp) -
     115 * Math.sin(lp + mp);
 
-  const eclipticLongitude = normalizeDegrees(
-    toDegrees(lp) + sumLongitude / 1_000_000,
-  );
-  const eclipticLatitude = sumLatitude / 1_000_000;
+  return {
+    longitude: normalizeDegrees(toDegrees(lp) + sumLongitude / 1_000_000),
+    latitude: sumLatitude / 1_000_000,
+  };
+}
 
-  return eclipticLatLonToEquatorial(eclipticLongitude, eclipticLatitude);
+export function getMoonEquatorial(julianDate: number): EquatorialCoordinates {
+  const { longitude, latitude } = getMoonEcliptic(julianDate);
+  return eclipticLatLonToEquatorial(longitude, latitude);
+}
+
+export function getMoonPhase(julianDate: number): MoonPhase {
+  const moonLon = getMoonEcliptic(julianDate).longitude;
+  const sunLon = getSunEclipticLongitude(julianDate);
+  const elongationDeg = normalizeDegrees(moonLon - sunLon);
+  const illuminatedFraction = (1 - Math.cos(toRadians(elongationDeg))) / 2;
+
+  return { elongationDeg, illuminatedFraction };
 }
 
 export function getMoonHorizontal(

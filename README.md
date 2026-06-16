@@ -15,6 +15,7 @@ A Progressive Web App (PWA) that can be installed on a mobile device for offline
 - Can mirror East/West for overhead viewing.
 - Ecliptic line.
 - Position of Sun and Moon.
+- Moon phase.
 - Sun and Moon Rise and Set times.
 - Realtime or manual Date/Time.
 - User location from comprehensive list of world wide cities or custom latitude/Longitude.

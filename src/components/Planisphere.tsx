@@ -16,6 +16,8 @@ import {
   getLocalSiderealTime,
   prepareFrameConstants,
   equatorialToScreen,
+  toDegrees,
+  toRadians,
 } from "@/lib/astronomy";
 import {
   projectElevationAzimuth,
@@ -30,7 +32,7 @@ import {
   getStarCountForMagnitude,
   stars,
 } from "@/lib/starData";
-import { getMoonEquatorial } from "@/lib/moon";
+import { getMoonEquatorial, getMoonPhase } from "@/lib/moon";
 import { getSunEquatorial } from "@/lib/sun";
 import { getCanvasMetrics } from "@/lib/viewport";
 import { cn } from "@/lib/utils";
@@ -38,6 +40,9 @@ import { cn } from "@/lib/utils";
 const ALPHA_BUCKETS = 10;
 const SUN_MAGNITUDE = -26.7;
 const MOON_MAGNITUDE = -12.7;
+const MOON_LIT_ALPHA = Math.max(0.35, (ALPHA_BUCKETS - 0.5) / ALPHA_BUCKETS);
+const MOON_SHADOW_ALPHA = MOON_LIT_ALPHA / 2;
+const HOURS_TO_RAD = Math.PI / 12;
 
 interface StarArc {
   x: number;
@@ -426,13 +431,38 @@ export function Planisphere() {
         projectedPoint,
       );
 
+      let moonDraw:
+        | {
+            x: number;
+            y: number;
+            radius: number;
+            elongationDeg: number;
+            limbAngle: number;
+          }
+        | undefined;
+
       if (projectedPoint.visible) {
         const moonRadius = getScreenStarRadius(MOON_MAGNITUDE, viewport.scale);
-        starBuckets[ALPHA_BUCKETS - 1].push({
+        const { elongationDeg } = getMoonPhase(julianDate);
+        const limbAngle = getBrightLimbScreenAngle(
+          moonRaHours,
+          moonDecDegrees,
+          sunRaHours,
+          sunDecDegrees,
+          frameConstants,
+          radius,
+          settings.mirrorEastWest,
+          projectedPoint.x,
+          projectedPoint.y,
+        );
+
+        moonDraw = {
           x: projectedPoint.x,
           y: projectedPoint.y,
-          r: moonRadius,
-        });
+          radius: moonRadius,
+          elongationDeg,
+          limbAngle,
+        };
 
         if (settings.showLabels) {
           labelCandidates.push({
@@ -460,6 +490,18 @@ export function Planisphere() {
         }
 
         context.fill();
+      }
+
+      if (moonDraw) {
+        drawMoon(
+          context,
+          moonDraw.x,
+          moonDraw.y,
+          moonDraw.radius,
+          moonDraw.elongationDeg,
+          moonDraw.limbAngle,
+          viewport.scale,
+        );
       }
 
       if (settings.showLabels) {
@@ -498,6 +540,161 @@ export function Planisphere() {
       />
     </div>
   );
+}
+
+function projectToScreenUnclamped(
+  rightAscensionHours: number,
+  declinationDegrees: number,
+  frame: FrameConstants,
+  radius: number,
+  mirrorEastWest: boolean,
+  out: { x: number; y: number },
+): void {
+  const ra = rightAscensionHours * HOURS_TO_RAD;
+  const dec = toRadians(declinationDegrees);
+  const hourAngle = frame.lstRad - ra;
+  const sinElev =
+    Math.sin(dec) * frame.sinLat +
+    Math.cos(dec) * frame.cosLat * Math.cos(hourAngle);
+  const elevation = Math.asin(sinElev);
+  const elevationDegrees = toDegrees(elevation);
+
+  const cosAz =
+    (Math.sin(dec) - Math.sin(elevation) * frame.sinLat) /
+    (Math.cos(elevation) * frame.cosLat);
+
+  let azimuth = Math.acos(Math.min(1, Math.max(-1, cosAz)));
+
+  if (Math.sin(hourAngle) > 0) {
+    azimuth = 2 * Math.PI - azimuth;
+  }
+
+  const projectedRadius = ((90 - elevationDegrees) / 90) * radius;
+  let x = projectedRadius * Math.sin(azimuth);
+  const y = -projectedRadius * Math.cos(azimuth);
+
+  if (mirrorEastWest) {
+    x = -x;
+  }
+
+  out.x = x;
+  out.y = y;
+}
+
+function getBrightLimbScreenAngle(
+  moonRaHours: number,
+  moonDecDegrees: number,
+  sunRaHours: number,
+  sunDecDegrees: number,
+  frame: FrameConstants,
+  radius: number,
+  mirrorEastWest: boolean,
+  moonScreenX: number,
+  moonScreenY: number,
+): number {
+  const moonRa = moonRaHours * HOURS_TO_RAD;
+  const moonDec = toRadians(moonDecDegrees);
+  const sunRa = sunRaHours * HOURS_TO_RAD;
+  const sunDec = toRadians(sunDecDegrees);
+
+  const cosMoonDec = Math.cos(moonDec);
+  const cosSunDec = Math.cos(sunDec);
+  const moonX = cosMoonDec * Math.cos(moonRa);
+  const moonY = cosMoonDec * Math.sin(moonRa);
+  const moonZ = Math.sin(moonDec);
+  const sunX = cosSunDec * Math.cos(sunRa);
+  const sunY = cosSunDec * Math.sin(sunRa);
+  const sunZ = Math.sin(sunDec);
+
+  const dot = moonX * sunX + moonY * sunY + moonZ * sunZ;
+  let tx = sunX - dot * moonX;
+  let ty = sunY - dot * moonY;
+  let tz = sunZ - dot * moonZ;
+  const tMag = Math.hypot(tx, ty, tz);
+
+  if (tMag < 1e-10) {
+    return 0;
+  }
+
+  tx /= tMag;
+  ty /= tMag;
+  tz /= tMag;
+
+  const offsetRad = toRadians(0.5);
+  const cosO = Math.cos(offsetRad);
+  const sinO = Math.sin(offsetRad);
+  const offX = cosO * moonX + sinO * tx;
+  const offY = cosO * moonY + sinO * ty;
+  const offZ = cosO * moonZ + sinO * tz;
+
+  const offDec = Math.asin(Math.min(1, Math.max(-1, offZ)));
+  let offRa = Math.atan2(offY, offX);
+  if (offRa < 0) {
+    offRa += 2 * Math.PI;
+  }
+  const offRaHours = (offRa * 12) / Math.PI;
+  const offDecDegrees = toDegrees(offDec);
+
+  const offsetScreen = { x: 0, y: 0 };
+  projectToScreenUnclamped(
+    offRaHours,
+    offDecDegrees,
+    frame,
+    radius,
+    mirrorEastWest,
+    offsetScreen,
+  );
+
+  return Math.atan2(offsetScreen.y - moonScreenY, offsetScreen.x - moonScreenX);
+}
+
+function drawMoon(
+  context: CanvasRenderingContext2D,
+  cx: number,
+  cy: number,
+  moonRadius: number,
+  elongationDeg: number,
+  limbAngle: number,
+  scale: number,
+): void {
+  const positionAngle = limbAngle;
+  const elongRad = (elongationDeg * Math.PI) / 180;
+  const cosElong = Math.cos(elongRad);
+  const illuminatedFraction = (1 - cosElong) / 2;
+  const pixelRadius = moonRadius * scale;
+
+  context.save();
+  context.translate(cx, cy);
+  context.rotate(positionAngle);
+  context.scale(1 / scale, 1 / scale);
+
+  context.beginPath();
+  context.arc(0, 0, pixelRadius, 0, Math.PI * 2);
+  context.fillStyle = `rgba(248, 250, 252, ${MOON_SHADOW_ALPHA})`;
+  context.fill();
+
+  if (illuminatedFraction > 0.005) {
+    const terminatorRadiusX = pixelRadius * Math.abs(cosElong);
+    const isCrescent = cosElong > 0;
+
+    context.beginPath();
+    context.arc(0, 0, pixelRadius, -Math.PI / 2, Math.PI / 2);
+    context.ellipse(
+      0,
+      0,
+      terminatorRadiusX,
+      pixelRadius,
+      0,
+      Math.PI / 2,
+      -Math.PI / 2,
+      isCrescent,
+    );
+    context.closePath();
+    context.fillStyle = `rgba(248, 250, 252, ${MOON_LIT_ALPHA})`;
+    context.fill();
+  }
+
+  context.restore();
 }
 
 function projectEquatorial(

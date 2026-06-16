@@ -28,7 +28,7 @@ interface Crossing {
   rising: boolean;
 }
 
-export function getSunEquatorial(julianDate: number): EquatorialCoordinates {
+export function getSunEclipticLongitude(julianDate: number): number {
   const t = (julianDate - 2_451_545) / 36_525;
   const meanLongitude = normalizeDegrees(280.46646 + 36000.76983 * t);
   const meanAnomaly = normalizeDegrees(357.52911 + 35999.05029 * t);
@@ -40,13 +40,15 @@ export function getSunEquatorial(julianDate: number): EquatorialCoordinates {
     0.000289 * Math.sin(3 * anomalyRad);
 
   const trueLongitude = normalizeDegrees(meanLongitude + equationOfCenter);
-  const apparentLongitude = normalizeDegrees(
+  return normalizeDegrees(
     trueLongitude -
       0.00569 -
       0.00478 * Math.sin(((125.04 - 1934.136 * t) * Math.PI) / 180),
   );
+}
 
-  return eclipticToEquatorial(apparentLongitude);
+export function getSunEquatorial(julianDate: number): EquatorialCoordinates {
+  return eclipticToEquatorial(getSunEclipticLongitude(julianDate));
 }
 
 export function getSunHorizontal(

@@ -4,7 +4,12 @@ import { useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { useSettings } from "@/context/SettingsContext";
 import { useObserverTime } from "@/context/TimeContext";
-import { findMoonCrossings, type CrossingsDetail } from "@/lib/moon";
+import { getJulianDate } from "@/lib/astronomy";
+import {
+  findMoonCrossings,
+  getMoonPhase,
+  type CrossingsDetail,
+} from "@/lib/moon";
 import { findSunCrossings } from "@/lib/sun";
 import { cn } from "@/lib/utils";
 
@@ -38,6 +43,31 @@ function buildCrossingInfoRows(crossings: CrossingsDetail) {
   ];
 }
 
+function getMoonPhaseName(elongationDeg: number): string {
+  if (elongationDeg < 22.5 || elongationDeg >= 337.5) {
+    return "New Moon";
+  }
+  if (elongationDeg < 67.5) {
+    return "Waxing Crescent";
+  }
+  if (elongationDeg < 112.5) {
+    return "First Quarter";
+  }
+  if (elongationDeg < 157.5) {
+    return "Waxing Gibbous";
+  }
+  if (elongationDeg < 202.5) {
+    return "Full Moon";
+  }
+  if (elongationDeg < 247.5) {
+    return "Waning Gibbous";
+  }
+  if (elongationDeg < 292.5) {
+    return "Last Quarter";
+  }
+  return "Waning Crescent";
+}
+
 interface InfoPanelProps {
   onClose: () => void;
   className?: string;
@@ -52,7 +82,11 @@ function CrossingTable({
 }) {
   return (
     <div className="w-full overflow-hidden rounded-md border-2 border-border/60 px-3">
-      <table className="w-full text-sm">
+      <table className="w-full table-fixed text-sm">
+        <colgroup>
+          <col className="w-32" />
+          <col />
+        </colgroup>
         <tbody>
           <tr>
             <th
@@ -67,11 +101,11 @@ function CrossingTable({
             <tr key={label}>
               <th
                 scope="row"
-                className="py-1 pr-4 text-left font-medium text-muted-foreground"
+                className="py-1 pr-2 text-left font-medium text-muted-foreground"
               >
                 {label}
               </th>
-              <td className="py-1 text-left tabular-nums text-foreground">
+              <td className="py-1 text-left tabular-nums text-foreground whitespace-nowrap">
                 {value}
               </td>
             </tr>
@@ -96,9 +130,23 @@ export function InfoPanel({ onClose, className }: InfoPanelProps) {
       findMoonCrossings(observerTime, settings.latitude, settings.longitude),
     [observerTime, settings.latitude, settings.longitude],
   );
+  const moonPhase = useMemo(
+    () => getMoonPhase(getJulianDate(observerTime)),
+    [observerTime],
+  );
 
   const sunInfoRows = useMemo(() => buildCrossingInfoRows(sun), [sun]);
-  const moonInfoRows = useMemo(() => buildCrossingInfoRows(moon), [moon]);
+  const moonInfoRows = useMemo(
+    () => [
+      ...buildCrossingInfoRows(moon),
+      { label: "Phase", value: getMoonPhaseName(moonPhase.elongationDeg) },
+      {
+        label: "Illumination",
+        value: `${Math.round(moonPhase.illuminatedFraction * 100)}%`,
+      },
+    ],
+    [moon, moonPhase],
+  );
 
   return (
     <aside
@@ -121,7 +169,7 @@ export function InfoPanel({ onClose, className }: InfoPanelProps) {
         </Button>
       </div>
       <div className="min-h-0 flex-1 overflow-y-auto p-4">
-        <div className="flex flex-col gap-4 md:flex-row md:gap-4">
+        <div className="flex flex-col gap-4">
           <CrossingTable title="Sun" rows={sunInfoRows} />
           <CrossingTable title="Moon" rows={moonInfoRows} />
         </div>
