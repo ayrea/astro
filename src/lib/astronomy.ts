@@ -302,10 +302,29 @@ export function eclipticToEquatorial(
   eclipticLongitudeDeg: number,
   obliquityDeg: number = OBLIQUITY_J2000_DEG,
 ): EquatorialCoordinates {
-  const lambda = toRadians(eclipticLongitudeDeg);
-  const eps = toRadians(obliquityDeg);
-  const ra = Math.atan2(Math.sin(lambda) * Math.cos(eps), Math.cos(lambda));
-  const dec = Math.asin(Math.sin(lambda) * Math.sin(eps));
+  return eclipticLatLonToEquatorial(eclipticLongitudeDeg, 0, obliquityDeg);
+}
+
+export function eclipticLatLonToEquatorial(
+  longitudeDeg: number,
+  latitudeDeg: number,
+  obliquityDeg: number = OBLIQUITY_J2000_DEG,
+): EquatorialCoordinates {
+  const lambda = toRadians(longitudeDeg);
+  const beta = toRadians(latitudeDeg);
+  const epsilon = toRadians(obliquityDeg);
+
+  const sinDec =
+    Math.sin(beta) * Math.cos(epsilon) +
+    Math.cos(beta) * Math.sin(epsilon) * Math.sin(lambda);
+  const dec = Math.asin(sinDec);
+
+  const y =
+    Math.sin(lambda) * Math.cos(beta) * Math.cos(epsilon) -
+    Math.sin(beta) * Math.sin(epsilon);
+  const x = Math.cos(lambda) * Math.cos(beta);
+  const ra = Math.atan2(y, x);
+
   return {
     raHours: normalizeHours(toDegrees(ra) / 15),
     decDegrees: toDegrees(dec),

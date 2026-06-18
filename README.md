@@ -19,8 +19,8 @@ A Progressive Web App (PWA) that can be installed on a mobile device for offline
 - Sun and Moon Rise and Set times.
 - Realtime or manual Date/Time.
 - User location from comprehensive list of world wide cities or custom latitude/Longitude.
+- Displays location of Planets, and rise and set times for Planets.
 
 Future features roadmap:
 
-- Show Planets
 - Satellite pass predictions

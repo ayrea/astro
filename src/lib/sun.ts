@@ -7,26 +7,15 @@ import {
   type EquatorialCoordinates,
   type HorizontalCoordinates,
 } from "@/lib/astronomy";
+import { findCrossings, type CrossingsDetail } from "@/lib/crossings";
 
 /** Standard refraction horizon for sunrise/sunset (degrees). */
 const HORIZON_ELEVATION = -0.833;
 
 const SAMPLE_STEP_MS = 5 * 60 * 1000;
 const SEARCH_WINDOW_MS = 36 * 60 * 60 * 1000;
-const BISECT_TOLERANCE_MS = 1000;
 
-export interface SunCrossings {
-  isAboveHorizon: boolean;
-  lastRise: Date | null;
-  lastSet: Date | null;
-  nextRise: Date | null;
-  nextSet: Date | null;
-}
-
-interface Crossing {
-  time: Date;
-  rising: boolean;
-}
+export type SunCrossings = CrossingsDetail;
 
 export function getSunEclipticLongitude(julianDate: number): number {
   const t = (julianDate - 2_451_545) / 36_525;
@@ -71,135 +60,15 @@ function getSunElevation(
   return getSunHorizontal(date, latitudeDegrees, longitudeDegrees).elevation;
 }
 
-function isAboveHorizon(
-  elevation: number,
-  horizonElevation: number = HORIZON_ELEVATION,
-): boolean {
-  return elevation > horizonElevation;
-}
-
-function bisectCrossing(
-  start: Date,
-  end: Date,
-  latitudeDegrees: number,
-  longitudeDegrees: number,
-  rising: boolean,
-): Date {
-  let low = start.getTime();
-  let high = end.getTime();
-
-  while (high - low > BISECT_TOLERANCE_MS) {
-    const mid = (low + high) / 2;
-    const midDate = new Date(mid);
-    const above = isAboveHorizon(
-      getSunElevation(midDate, latitudeDegrees, longitudeDegrees),
-    );
-
-    if (rising === above) {
-      high = mid;
-    } else {
-      low = mid;
-    }
-  }
-
-  return new Date((low + high) / 2);
-}
-
-function findCrossingsInWindow(
-  start: Date,
-  end: Date,
-  latitudeDegrees: number,
-  longitudeDegrees: number,
-): Crossing[] {
-  const crossings: Crossing[] = [];
-  const stepMs = SAMPLE_STEP_MS;
-
-  let previousTime = start.getTime();
-  let previousAbove = isAboveHorizon(
-    getSunElevation(start, latitudeDegrees, longitudeDegrees),
-  );
-
-  for (
-    let timeMs = previousTime + stepMs;
-    timeMs <= end.getTime();
-    timeMs += stepMs
-  ) {
-    const currentDate = new Date(timeMs);
-    const currentAbove = isAboveHorizon(
-      getSunElevation(currentDate, latitudeDegrees, longitudeDegrees),
-    );
-
-    if (currentAbove !== previousAbove) {
-      const crossingTime = bisectCrossing(
-        new Date(previousTime),
-        currentDate,
-        latitudeDegrees,
-        longitudeDegrees,
-        !previousAbove,
-      );
-
-      crossings.push({
-        time: crossingTime,
-        rising: !previousAbove,
-      });
-    }
-
-    previousTime = timeMs;
-    previousAbove = currentAbove;
-  }
-
-  return crossings;
-}
-
 export function findSunCrossings(
   now: Date,
   latitudeDegrees: number,
   longitudeDegrees: number,
 ): SunCrossings {
-  const nowMs = now.getTime();
-  const windowStart = new Date(nowMs - SEARCH_WINDOW_MS);
-  const windowEnd = new Date(nowMs + SEARCH_WINDOW_MS);
-
-  const currentElevation = getSunElevation(
-    now,
-    latitudeDegrees,
-    longitudeDegrees,
-  );
-  const isSunAbove = isAboveHorizon(currentElevation);
-
-  const crossings = findCrossingsInWindow(
-    windowStart,
-    windowEnd,
-    latitudeDegrees,
-    longitudeDegrees,
-  );
-
-  let lastRise: Date | null = null;
-  let lastSet: Date | null = null;
-  let nextRise: Date | null = null;
-  let nextSet: Date | null = null;
-
-  for (const crossing of crossings) {
-    const crossingMs = crossing.time.getTime();
-
-    if (crossingMs <= nowMs) {
-      if (crossing.rising) {
-        lastRise = crossing.time;
-      } else {
-        lastSet = crossing.time;
-      }
-    } else if (crossing.rising && nextRise === null) {
-      nextRise = crossing.time;
-    } else if (!crossing.rising && nextSet === null) {
-      nextSet = crossing.time;
-    }
-  }
-
-  return {
-    isAboveHorizon: isSunAbove,
-    lastRise,
-    lastSet,
-    nextRise,
-    nextSet,
-  };
+  return findCrossings(now, latitudeDegrees, longitudeDegrees, {
+    getElevation: getSunElevation,
+    horizonElevation: HORIZON_ELEVATION,
+    searchWindowMs: SEARCH_WINDOW_MS,
+    sampleStepMs: SAMPLE_STEP_MS,
+  });
 }

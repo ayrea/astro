@@ -33,6 +33,7 @@ import {
   stars,
 } from "@/lib/starData";
 import { getMoonEquatorial, getMoonPhase } from "@/lib/moon";
+import { getPlanetPositions } from "@/lib/planets";
 import { getSunEquatorial } from "@/lib/sun";
 import { getCanvasMetrics } from "@/lib/viewport";
 import { cn } from "@/lib/utils";
@@ -502,6 +503,67 @@ export function Planisphere() {
           moonDraw.limbAngle,
           viewport.scale,
         );
+      }
+
+      if (settings.showPlanets) {
+        const planets = getPlanetPositions(julianDate);
+        const planetLabels: Array<{
+          x: number;
+          y: number;
+          name: string;
+          color: string;
+        }> = [];
+
+        for (const planet of planets) {
+          equatorialToScreen(
+            planet.raHours,
+            planet.decDegrees,
+            frameConstants,
+            radius,
+            settings.mirrorEastWest,
+            projectedPoint,
+          );
+
+          if (!projectedPoint.visible) {
+            continue;
+          }
+
+          const planetRadius =
+            getScreenStarRadius(planet.magnitude, viewport.scale) *
+            settings.planetSizeScale;
+
+          context.beginPath();
+          context.arc(
+            projectedPoint.x,
+            projectedPoint.y,
+            planetRadius,
+            0,
+            Math.PI * 2,
+          );
+          context.fillStyle = applyOpacity(
+            planet.color,
+            settings.planetOpacity,
+          );
+          context.fill();
+
+          if (settings.showPlanetLabels) {
+            planetLabels.push({
+              x: projectedPoint.x,
+              y: projectedPoint.y,
+              name: planet.name,
+              color: applyOpacity(planet.color, settings.planetOpacity),
+            });
+          }
+        }
+
+        if (planetLabels.length > 0) {
+          drawPlanetLabels(
+            context,
+            planetLabels,
+            viewport.scale,
+            settings.planetLabelFontSize,
+          );
+        }
       }
 
       if (settings.showLabels) {
@@ -1013,6 +1075,26 @@ function drawStarLabels(
     context.save();
     context.translate(label.x, label.y);
     context.scale(1 / scale, 1 / scale);
+    context.fillText(label.name, 6, -6);
+    context.restore();
+  }
+}
+
+function drawPlanetLabels(
+  context: CanvasRenderingContext2D,
+  labels: Array<{ x: number; y: number; name: string; color: string }>,
+  scale: number,
+  fontSize: number,
+) {
+  context.font = `${fontSize}px system-ui, sans-serif`;
+  context.textAlign = "left";
+  context.textBaseline = "middle";
+
+  for (const label of labels) {
+    context.save();
+    context.translate(label.x, label.y);
+    context.scale(1 / scale, 1 / scale);
+    context.fillStyle = label.color;
     context.fillText(label.name, 6, -6);
     context.restore();
   }

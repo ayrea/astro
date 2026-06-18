@@ -5,11 +5,13 @@ import { Button } from "@/components/ui/button";
 import { useSettings } from "@/context/SettingsContext";
 import { useObserverTime } from "@/context/TimeContext";
 import { getJulianDate } from "@/lib/astronomy";
+import { type CrossingsDetail } from "@/lib/crossings";
+import { findMoonCrossings, getMoonPhase } from "@/lib/moon";
 import {
-  findMoonCrossings,
-  getMoonPhase,
-  type CrossingsDetail,
-} from "@/lib/moon";
+  findPlanetCrossings,
+  PLANET_NAMES,
+  type PlanetName,
+} from "@/lib/planets";
 import { findSunCrossings } from "@/lib/sun";
 import { cn } from "@/lib/utils";
 
@@ -148,6 +150,21 @@ export function InfoPanel({ onClose, className }: InfoPanelProps) {
     [moon, moonPhase],
   );
 
+  const planetCrossings = useMemo(() => {
+    const crossings = {} as Record<PlanetName, CrossingsDetail>;
+
+    for (const name of PLANET_NAMES) {
+      crossings[name] = findPlanetCrossings(
+        observerTime,
+        settings.latitude,
+        settings.longitude,
+        name,
+      );
+    }
+
+    return crossings;
+  }, [observerTime, settings.latitude, settings.longitude]);
+
   return (
     <aside
       className={cn(
@@ -172,6 +189,13 @@ export function InfoPanel({ onClose, className }: InfoPanelProps) {
         <div className="flex flex-col gap-4">
           <CrossingTable title="Sun" rows={sunInfoRows} />
           <CrossingTable title="Moon" rows={moonInfoRows} />
+          {PLANET_NAMES.map((name) => (
+            <CrossingTable
+              key={name}
+              title={name}
+              rows={buildCrossingInfoRows(planetCrossings[name])}
+            />
+          ))}
         </div>
       </div>
     </aside>

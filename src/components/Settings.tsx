@@ -305,6 +305,7 @@ export function SettingsTrigger() {
               <TabsList>
                 <TabsTrigger value="constellations">Constellations</TabsTrigger>
                 <TabsTrigger value="solar-system">Solar System</TabsTrigger>
+                <TabsTrigger value="planets">Planets</TabsTrigger>
               </TabsList>
             </div>
 
@@ -1138,6 +1139,130 @@ export function SettingsTrigger() {
                       onValueChange={(value) =>
                         updateSettings({
                           eclipticLineThickness: value[0] ?? 1.5,
+                        })
+                      }
+                    />
+                  </div>
+                </div>
+              </div>
+            </TabsContent>
+
+            <TabsContent value="planets" className="space-y-6">
+              <div className="space-y-4">
+                <div className="flex items-center justify-between gap-4">
+                  <div className="space-y-1">
+                    <Label htmlFor="planets">Show Planets</Label>
+                    <p className="text-xs text-muted-foreground">
+                      Display Mercury, Venus, Mars, Jupiter, and Saturn on the
+                      chart.
+                    </p>
+                  </div>
+                  <Switch
+                    id="planets"
+                    checked={settings.showPlanets}
+                    onCheckedChange={(checked) =>
+                      updateSettings({ showPlanets: checked })
+                    }
+                  />
+                </div>
+
+                <div
+                  className={cn(
+                    "space-y-4 border-t border-border/60 pt-4",
+                    !settings.showPlanets && "pointer-events-none opacity-50",
+                  )}
+                >
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between">
+                      <Label htmlFor="planet-size-scale">Planet Size</Label>
+                      <span className="text-sm text-muted-foreground">
+                        {settings.planetSizeScale.toFixed(1)}x
+                      </span>
+                    </div>
+                    <Slider
+                      id="planet-size-scale"
+                      min={5}
+                      max={20}
+                      step={1}
+                      value={[Math.round(settings.planetSizeScale * 10)]}
+                      disabled={!settings.showPlanets}
+                      onValueChange={(value) =>
+                        updateSettings({
+                          planetSizeScale: (value[0] ?? 10) / 10,
+                        })
+                      }
+                    />
+                    <p className="text-xs text-muted-foreground">
+                      Scale planet marker size relative to apparent magnitude.
+                    </p>
+                  </div>
+
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between">
+                      <Label htmlFor="planet-opacity">Opacity</Label>
+                      <span className="text-sm text-muted-foreground">
+                        {Math.round(settings.planetOpacity * 100)}%
+                      </span>
+                    </div>
+                    <Slider
+                      id="planet-opacity"
+                      min={0}
+                      max={100}
+                      step={5}
+                      value={[Math.round(settings.planetOpacity * 100)]}
+                      disabled={!settings.showPlanets}
+                      onValueChange={(value) =>
+                        updateSettings({
+                          planetOpacity: (value[0] ?? 100) / 100,
+                        })
+                      }
+                    />
+                  </div>
+
+                  <div className="flex items-center justify-between gap-4">
+                    <div className="space-y-1">
+                      <Label htmlFor="planet-labels">Show Planet Names</Label>
+                      <p className="text-xs text-muted-foreground">
+                        Label planets on the chart.
+                      </p>
+                    </div>
+                    <Switch
+                      id="planet-labels"
+                      checked={settings.showPlanetLabels}
+                      disabled={!settings.showPlanets}
+                      onCheckedChange={(checked) =>
+                        updateSettings({ showPlanetLabels: checked })
+                      }
+                    />
+                  </div>
+
+                  <div
+                    className={cn(
+                      "space-y-3",
+                      !settings.showPlanetLabels &&
+                        "pointer-events-none opacity-50",
+                    )}
+                  >
+                    <div className="flex items-center justify-between">
+                      <Label htmlFor="planet-label-font-size">
+                        Label Font Size
+                      </Label>
+                      <span className="text-sm text-muted-foreground">
+                        {settings.planetLabelFontSize}px
+                      </span>
+                    </div>
+                    <Slider
+                      id="planet-label-font-size"
+                      min={8}
+                      max={18}
+                      step={1}
+                      value={[settings.planetLabelFontSize]}
+                      disabled={
+                        !settings.showPlanets || !settings.showPlanetLabels
+                      }
+                      onValueChange={(value) =>
+                        updateSettings({
+                          planetLabelFontSize: value[0] ?? 11,
                         })
                       }
                     />

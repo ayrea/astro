@@ -49,6 +49,11 @@ export interface Settings {
   eclipticLineColor: string;
   eclipticLineOpacity: number;
   eclipticLineThickness: number;
+  showPlanets: boolean;
+  showPlanetLabels: boolean;
+  planetLabelFontSize: number;
+  planetOpacity: number;
+  planetSizeScale: number;
 }
 
 interface SettingsContextValue {
@@ -97,6 +102,11 @@ const defaultSettings: Settings = {
   eclipticLineColor: "rgba(251, 146, 60, 1)",
   eclipticLineOpacity: 0.5,
   eclipticLineThickness: 1.5,
+  showPlanets: true,
+  showPlanetLabels: true,
+  planetLabelFontSize: 11,
+  planetOpacity: 1,
+  planetSizeScale: 1,
 };
 
 const VALID_RA_SPACINGS = new Set<GridRaSpacing>([1, 2, 3, 6]);
@@ -260,6 +270,27 @@ function normalizeSettings(parsed: Partial<Settings>): Settings {
       ? parsed.eclipticLineThickness
       : defaultSettings.eclipticLineThickness;
 
+  const planetLabelFontSize =
+    typeof parsed.planetLabelFontSize === "number" &&
+    parsed.planetLabelFontSize >= 8 &&
+    parsed.planetLabelFontSize <= 18
+      ? parsed.planetLabelFontSize
+      : defaultSettings.planetLabelFontSize;
+
+  const planetOpacity =
+    typeof parsed.planetOpacity === "number" &&
+    parsed.planetOpacity >= 0 &&
+    parsed.planetOpacity <= 1
+      ? parsed.planetOpacity
+      : defaultSettings.planetOpacity;
+
+  const planetSizeScale =
+    typeof parsed.planetSizeScale === "number" &&
+    parsed.planetSizeScale >= 0.5 &&
+    parsed.planetSizeScale <= 2
+      ? parsed.planetSizeScale
+      : defaultSettings.planetSizeScale;
+
   return {
     ...defaultSettings,
     ...parsed,
@@ -287,6 +318,9 @@ function normalizeSettings(parsed: Partial<Settings>): Settings {
     eclipticLineColor,
     eclipticLineOpacity,
     eclipticLineThickness,
+    planetLabelFontSize,
+    planetOpacity,
+    planetSizeScale,
   };
 }
 

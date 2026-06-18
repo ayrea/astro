@@ -1,23 +1,24 @@
 import {
+  eclipticLatLonToEquatorial,
   equatorialToHorizontal,
   getJulianDate,
   getLocalSiderealTime,
   normalizeDegrees,
-  normalizeHours,
-  OBLIQUITY_J2000_DEG,
   toDegrees,
   toRadians,
   type EquatorialCoordinates,
   type HorizontalCoordinates,
 } from "@/lib/astronomy";
+import { findCrossings, type CrossingsDetail } from "@/lib/crossings";
 import { getSunEclipticLongitude } from "@/lib/sun";
+
+export type { CrossingsDetail };
 
 /** Standard geocentric moonrise/moonset horizon (degrees). */
 const HORIZON_ELEVATION = 0.125;
 
 const SAMPLE_STEP_MS = 5 * 60 * 1000;
 const SEARCH_WINDOW_MS = 36 * 60 * 60 * 1000;
-const BISECT_TOLERANCE_MS = 1000;
 
 interface LongitudeTerm {
   d: number;
@@ -163,19 +164,6 @@ const LATITUDE_TERMS: LatitudeTerm[] = [
   { d: 2, m: -2, mp: 0, f: 1, sumB: 107 },
 ];
 
-export interface CrossingsDetail {
-  isAboveHorizon: boolean;
-  lastRise: Date | null;
-  lastSet: Date | null;
-  nextRise: Date | null;
-  nextSet: Date | null;
-}
-
-interface Crossing {
-  time: Date;
-  rising: boolean;
-}
-
 function meanElement(
   base: number,
   rate: number,
@@ -198,32 +186,6 @@ function eccentricityFactor(mCoefficient: number, e: number): number {
     return e * e;
   }
   return 1;
-}
-
-function eclipticLatLonToEquatorial(
-  longitudeDeg: number,
-  latitudeDeg: number,
-  obliquityDeg: number = OBLIQUITY_J2000_DEG,
-): EquatorialCoordinates {
-  const lambda = toRadians(longitudeDeg);
-  const beta = toRadians(latitudeDeg);
-  const epsilon = toRadians(obliquityDeg);
-
-  const sinDec =
-    Math.sin(beta) * Math.cos(epsilon) +
-    Math.cos(beta) * Math.sin(epsilon) * Math.sin(lambda);
-  const dec = Math.asin(sinDec);
-
-  const y =
-    Math.sin(lambda) * Math.cos(beta) * Math.cos(epsilon) -
-    Math.sin(beta) * Math.sin(epsilon);
-  const x = Math.cos(lambda) * Math.cos(beta);
-  const ra = Math.atan2(y, x);
-
-  return {
-    raHours: normalizeHours(toDegrees(ra) / 15),
-    decDegrees: toDegrees(dec),
-  };
 }
 
 interface MoonEclipticCoordinates {
@@ -353,135 +315,15 @@ function getMoonElevation(
   return getMoonHorizontal(date, latitudeDegrees, longitudeDegrees).elevation;
 }
 
-function isAboveHorizon(
-  elevation: number,
-  horizonElevation: number = HORIZON_ELEVATION,
-): boolean {
-  return elevation > horizonElevation;
-}
-
-function bisectCrossing(
-  start: Date,
-  end: Date,
-  latitudeDegrees: number,
-  longitudeDegrees: number,
-  rising: boolean,
-): Date {
-  let low = start.getTime();
-  let high = end.getTime();
-
-  while (high - low > BISECT_TOLERANCE_MS) {
-    const mid = (low + high) / 2;
-    const midDate = new Date(mid);
-    const above = isAboveHorizon(
-      getMoonElevation(midDate, latitudeDegrees, longitudeDegrees),
-    );
-
-    if (rising === above) {
-      high = mid;
-    } else {
-      low = mid;
-    }
-  }
-
-  return new Date((low + high) / 2);
-}
-
-function findCrossingsInWindow(
-  start: Date,
-  end: Date,
-  latitudeDegrees: number,
-  longitudeDegrees: number,
-): Crossing[] {
-  const crossings: Crossing[] = [];
-  const stepMs = SAMPLE_STEP_MS;
-
-  let previousTime = start.getTime();
-  let previousAbove = isAboveHorizon(
-    getMoonElevation(start, latitudeDegrees, longitudeDegrees),
-  );
-
-  for (
-    let timeMs = previousTime + stepMs;
-    timeMs <= end.getTime();
-    timeMs += stepMs
-  ) {
-    const currentDate = new Date(timeMs);
-    const currentAbove = isAboveHorizon(
-      getMoonElevation(currentDate, latitudeDegrees, longitudeDegrees),
-    );
-
-    if (currentAbove !== previousAbove) {
-      const crossingTime = bisectCrossing(
-        new Date(previousTime),
-        currentDate,
-        latitudeDegrees,
-        longitudeDegrees,
-        !previousAbove,
-      );
-
-      crossings.push({
-        time: crossingTime,
-        rising: !previousAbove,
-      });
-    }
-
-    previousTime = timeMs;
-    previousAbove = currentAbove;
-  }
-
-  return crossings;
-}
-
 export function findMoonCrossings(
   now: Date,
   latitudeDegrees: number,
   longitudeDegrees: number,
 ): CrossingsDetail {
-  const nowMs = now.getTime();
-  const windowStart = new Date(nowMs - SEARCH_WINDOW_MS);
-  const windowEnd = new Date(nowMs + SEARCH_WINDOW_MS);
-
-  const currentElevation = getMoonElevation(
-    now,
-    latitudeDegrees,
-    longitudeDegrees,
-  );
-  const isMoonAbove = isAboveHorizon(currentElevation);
-
-  const crossings = findCrossingsInWindow(
-    windowStart,
-    windowEnd,
-    latitudeDegrees,
-    longitudeDegrees,
-  );
-
-  let lastRise: Date | null = null;
-  let lastSet: Date | null = null;
-  let nextRise: Date | null = null;
-  let nextSet: Date | null = null;
-
-  for (const crossing of crossings) {
-    const crossingMs = crossing.time.getTime();
-
-    if (crossingMs <= nowMs) {
-      if (crossing.rising) {
-        lastRise = crossing.time;
-      } else {
-        lastSet = crossing.time;
-      }
-    } else if (crossing.rising && nextRise === null) {
-      nextRise = crossing.time;
-    } else if (!crossing.rising && nextSet === null) {
-      nextSet = crossing.time;
-    }
-  }
-
-  return {
-    isAboveHorizon: isMoonAbove,
-    lastRise,
-    lastSet,
-    nextRise,
-    nextSet,
-  };
+  return findCrossings(now, latitudeDegrees, longitudeDegrees, {
+    getElevation: getMoonElevation,
+    horizonElevation: HORIZON_ELEVATION,
+    searchWindowMs: SEARCH_WINDOW_MS,
+    sampleStepMs: SAMPLE_STEP_MS,
+  });
 }
