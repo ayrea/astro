@@ -17,6 +17,7 @@ import {
 } from "@/lib/viewport";
 
 const WHEEL_ZOOM_FACTOR = 1.1;
+const TAP_THRESHOLD_PX = 6;
 
 interface PointerPosition {
   x: number;
@@ -35,6 +36,13 @@ interface PinchState {
   scale: number;
   offsetX: number;
   offsetY: number;
+}
+
+interface TapState {
+  pointerId: number;
+  startX: number;
+  startY: number;
+  hadPinch: boolean;
 }
 
 function getCanvasCenter(canvas: HTMLCanvasElement) {
@@ -80,13 +88,20 @@ export function usePanZoom(
   canvasRef: RefObject<HTMLCanvasElement | null>,
   getCanvasMetrics: () => CanvasMetrics,
   requestRedraw: () => void,
+  onTap?: (clientX: number, clientY: number) => void,
 ) {
   const viewportRef = useRef<Viewport>(DEFAULT_VIEWPORT);
   const pointersRef = useRef(new Map<number, PointerPosition>());
   const dragStateRef = useRef<DragState | null>(null);
   const pinchStateRef = useRef<PinchState | null>(null);
+  const tapStateRef = useRef<TapState | null>(null);
+  const onTapRef = useRef(onTap);
   const [isDragging, setIsDragging] = useState(false);
   const [isZoomed, setIsZoomed] = useState(false);
+
+  useEffect(() => {
+    onTapRef.current = onTap;
+  }, [onTap]);
 
   const getViewport = useCallback(() => viewportRef.current, []);
 
@@ -154,9 +169,22 @@ export function usePanZoom(
         y: event.clientY,
       });
 
+      if (pointersRef.current.size === 1) {
+        tapStateRef.current = {
+          pointerId: event.pointerId,
+          startX: event.clientX,
+          startY: event.clientY,
+          hadPinch: false,
+        };
+      }
+
       if (pointersRef.current.size === 2) {
         dragStateRef.current = null;
         setIsDragging(false);
+
+        if (tapStateRef.current) {
+          tapStateRef.current.hadPinch = true;
+        }
 
         const pinchMetrics = getPinchMetrics(canvas, pointersRef.current);
         if (!pinchMetrics || pinchMetrics.distance === 0) {
@@ -251,12 +279,43 @@ export function usePanZoom(
       }
     };
 
+    const tryInvokeTap = (event: PointerEvent) => {
+      const tapState = tapStateRef.current;
+
+      if (
+        !tapState ||
+        tapState.pointerId !== event.pointerId ||
+        tapState.hadPinch ||
+        pointersRef.current.size !== 1
+      ) {
+        return;
+      }
+
+      const distance = Math.hypot(
+        event.clientX - tapState.startX,
+        event.clientY - tapState.startY,
+      );
+
+      if (distance <= TAP_THRESHOLD_PX) {
+        onTapRef.current?.(event.clientX, event.clientY);
+      }
+    };
+
     const onPointerUp = (event: PointerEvent) => {
+      tryInvokeTap(event);
       clearPointer(event);
+
+      if (pointersRef.current.size === 0) {
+        tapStateRef.current = null;
+      }
     };
 
     const onPointerCancel = (event: PointerEvent) => {
       clearPointer(event);
+
+      if (pointersRef.current.size === 0) {
+        tapStateRef.current = null;
+      }
     };
 
     const onDoubleClick = () => {
@@ -265,6 +324,7 @@ export function usePanZoom(
       setIsDragging(false);
       dragStateRef.current = null;
       pinchStateRef.current = null;
+      tapStateRef.current = null;
       pointersRef.current.clear();
       requestRedraw();
     };

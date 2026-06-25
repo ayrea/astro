@@ -151,6 +151,74 @@ export function equatorialToScreen(
   out.visible = true;
 }
 
+export function horizontalToEquatorial(
+  elevationDegrees: number,
+  azimuthDegrees: number,
+  latitudeDegrees: number,
+  localSiderealTimeHours: number,
+): EquatorialCoordinates {
+  const altitude = toRadians(elevationDegrees);
+  const azimuth = toRadians(azimuthDegrees);
+  const lat = toRadians(latitudeDegrees);
+
+  const sinDec =
+    Math.sin(lat) * Math.sin(altitude) +
+    Math.cos(lat) * Math.cos(altitude) * Math.cos(azimuth);
+  const dec = Math.asin(Math.min(1, Math.max(-1, sinDec)));
+  const cosDec = Math.cos(dec);
+
+  const cosHourAngle =
+    (Math.sin(altitude) - Math.sin(lat) * Math.sin(dec)) /
+    (Math.cos(lat) * cosDec);
+  const sinHourAngle = (-Math.cos(altitude) * Math.sin(azimuth)) / cosDec;
+  const hourAngle = Math.atan2(sinHourAngle, cosHourAngle);
+  const raHours = normalizeHours(
+    localSiderealTimeHours - toDegrees(hourAngle) / 15,
+  );
+
+  return {
+    raHours,
+    decDegrees: toDegrees(dec),
+  };
+}
+
+export function screenToEquatorial(
+  worldX: number,
+  worldY: number,
+  radius: number,
+  mirrorEastWest: boolean,
+  latitudeDegrees: number,
+  localSiderealTimeHours: number,
+): EquatorialCoordinates | null {
+  if (radius <= 0) {
+    return null;
+  }
+
+  let x = worldX;
+  if (mirrorEastWest) {
+    x = -x;
+  }
+
+  const projectedRadius = Math.hypot(x, worldY);
+  if (projectedRadius > radius) {
+    return null;
+  }
+
+  const elevationDegrees = 90 - (projectedRadius / radius) * 90;
+  if (elevationDegrees < 0) {
+    return null;
+  }
+
+  const azimuthDegrees = normalizeDegrees(toDegrees(Math.atan2(x, -worldY)));
+
+  return horizontalToEquatorial(
+    elevationDegrees,
+    azimuthDegrees,
+    latitudeDegrees,
+    localSiderealTimeHours,
+  );
+}
+
 export const B1875_T_CENTURIES = -1.25;
 
 type Matrix3 = [

@@ -1,4 +1,5 @@
-import { useCallback, useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { toast } from "sonner";
 
 import {
   type ElevationSpacing,
@@ -25,8 +26,17 @@ import {
 } from "@/lib/projection";
 import {
   constellationBoundaryEdges,
+  constellationBoundaries,
   constellationLines,
 } from "@/lib/constellationData";
+import {
+  clientToWorld,
+  createEmptyHitTestIndex,
+  findHitAt,
+  TAP_TOLERANCE_PX,
+  type HitTestContext,
+  type HitTestIndex,
+} from "@/lib/planisphereHitTest";
 import {
   getScreenStarRadius,
   getStarCountForMagnitude,
@@ -35,7 +45,12 @@ import {
 import { getMoonEquatorial, getMoonPhase } from "@/lib/moon";
 import { getPlanetPositions } from "@/lib/planets";
 import { getSunEquatorial } from "@/lib/sun";
-import { getCanvasMetrics } from "@/lib/viewport";
+import {
+  DEFAULT_VIEWPORT,
+  getCanvasMetrics,
+  type Viewport,
+} from "@/lib/viewport";
+import { getWikipediaUrl } from "@/lib/wikipedia";
 import { cn } from "@/lib/utils";
 
 const ALPHA_BUCKETS = 10;
@@ -90,9 +105,17 @@ export function Planisphere() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const drawRef = useRef<(() => void) | null>(null);
+  const hitTargetsRef = useRef<HitTestIndex>(createEmptyHitTestIndex());
+  const hitContextRef = useRef<HitTestContext>({
+    radius: 1,
+    latitudeDegrees: 0,
+    localSiderealTimeHours: 0,
+    mirrorEastWest: false,
+  });
   const rafIdRef = useRef(0);
   const { settings } = useSettings();
   const { observerTime } = useObserverTime();
+  const [isOverTarget, setIsOverTarget] = useState(false);
 
   const getMetrics = useCallback(() => {
     const container = containerRef.current;
@@ -121,11 +144,107 @@ export function Planisphere() {
     };
   }, []);
 
+  const getViewportRef = useRef<(() => Viewport) | null>(null);
+
+  const handleTap = useCallback(
+    (clientX: number, clientY: number) => {
+      const canvas = canvasRef.current;
+      if (!canvas) {
+        return;
+      }
+
+      if (!navigator.onLine) {
+        toast("Connect to the internet to view Wikipedia articles");
+        return;
+      }
+
+      const rect = canvas.getBoundingClientRect();
+      const metrics = getMetrics();
+      const viewport = getViewportRef.current?.() ?? DEFAULT_VIEWPORT;
+      const world = clientToWorld(clientX, clientY, rect, metrics, viewport);
+      const toleranceWorld = TAP_TOLERANCE_PX / viewport.scale;
+      const hit = findHitAt(
+        world.x,
+        world.y,
+        hitTargetsRef.current,
+        toleranceWorld,
+        hitContextRef.current,
+        constellationBoundaries,
+      );
+
+      if (!hit) {
+        return;
+      }
+
+      const url = getWikipediaUrl(hit.name, hit.type);
+      window.open(url, "_blank", "noopener,noreferrer");
+    },
+    [getMetrics],
+  );
+
   const { getViewport, isDragging, isZoomed } = usePanZoom(
     canvasRef,
     getMetrics,
     requestRedraw,
+    handleTap,
   );
+
+  useEffect(() => {
+    getViewportRef.current = getViewport;
+  }, [getViewport]);
+
+  const updateHoverState = useCallback(
+    (clientX: number, clientY: number) => {
+      const canvas = canvasRef.current;
+      if (!canvas) {
+        return;
+      }
+
+      const rect = canvas.getBoundingClientRect();
+      const metrics = getMetrics();
+      const viewport = getViewport();
+      const world = clientToWorld(clientX, clientY, rect, metrics, viewport);
+      const toleranceWorld = TAP_TOLERANCE_PX / viewport.scale;
+      const hit = findHitAt(
+        world.x,
+        world.y,
+        hitTargetsRef.current,
+        toleranceWorld,
+        hitContextRef.current,
+        constellationBoundaries,
+      );
+
+      setIsOverTarget(hit !== null);
+    },
+    [getMetrics, getViewport],
+  );
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) {
+      return;
+    }
+
+    const onPointerMove = (event: PointerEvent) => {
+      if (event.pointerType !== "mouse") {
+        return;
+      }
+
+      updateHoverState(event.clientX, event.clientY);
+    };
+
+    const onPointerLeave = () => {
+      setIsOverTarget(false);
+    };
+
+    canvas.addEventListener("pointermove", onPointerMove);
+    canvas.addEventListener("pointerleave", onPointerLeave);
+
+    return () => {
+      canvas.removeEventListener("pointermove", onPointerMove);
+      canvas.removeEventListener("pointerleave", onPointerLeave);
+    };
+  }, [updateHoverState]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -220,6 +339,14 @@ export function Planisphere() {
       const julianDate = getJulianDate(observerTime);
       const lst = getLocalSiderealTime(julianDate, settings.longitude);
       const frameConstants = prepareFrameConstants(settings.latitude, lst);
+      const pointTargets: HitTestIndex["pointTargets"] = [];
+
+      hitContextRef.current = {
+        radius,
+        latitudeDegrees: settings.latitude,
+        localSiderealTimeHours: lst,
+        mirrorEastWest: settings.mirrorEastWest,
+      };
 
       if (settings.showGrid) {
         const rightAscensionLines = getRightAscensionLines(
@@ -380,6 +507,15 @@ export function Planisphere() {
           r: starRadius,
         });
 
+        if (star.n) {
+          pointTargets.push({
+            x: projectedPoint.x,
+            y: projectedPoint.y,
+            name: star.n,
+            type: "star",
+          });
+        }
+
         if (settings.showLabels && star.n) {
           labelCandidates.push({
             x: projectedPoint.x,
@@ -408,6 +544,13 @@ export function Planisphere() {
           x: projectedPoint.x,
           y: projectedPoint.y,
           r: sunRadius,
+        });
+
+        pointTargets.push({
+          x: projectedPoint.x,
+          y: projectedPoint.y,
+          name: "Sun",
+          type: "sun",
         });
 
         if (settings.showLabels) {
@@ -464,6 +607,13 @@ export function Planisphere() {
           elongationDeg,
           limbAngle,
         };
+
+        pointTargets.push({
+          x: projectedPoint.x,
+          y: projectedPoint.y,
+          name: "Moon",
+          type: "moon",
+        });
 
         if (settings.showLabels) {
           labelCandidates.push({
@@ -546,6 +696,13 @@ export function Planisphere() {
           );
           context.fill();
 
+          pointTargets.push({
+            x: projectedPoint.x,
+            y: projectedPoint.y,
+            name: planet.name,
+            type: "planet",
+          });
+
           if (settings.showPlanetLabels) {
             planetLabels.push({
               x: projectedPoint.x,
@@ -569,6 +726,10 @@ export function Planisphere() {
       if (settings.showLabels) {
         drawStarLabels(context, labelCandidates, viewport.scale);
       }
+
+      hitTargetsRef.current = {
+        pointTargets,
+      };
 
       context.restore();
 
@@ -595,7 +756,8 @@ export function Planisphere() {
         ref={canvasRef}
         className={cn(
           "block h-full w-full touch-none",
-          isZoomed && !isDragging && "cursor-grab",
+          isOverTarget && !isDragging && "cursor-pointer",
+          !isOverTarget && isZoomed && !isDragging && "cursor-grab",
           isDragging && "cursor-grabbing",
         )}
         aria-label="Night sky planisphere"
