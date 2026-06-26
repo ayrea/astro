@@ -1,6 +1,7 @@
 import { Settings as SettingsIcon } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
+import { AboutDialog } from "@/components/About";
 import { Button } from "@/components/ui/button";
 import { ColorPicker } from "@/components/ui/color-picker";
 import {
@@ -185,6 +186,7 @@ export function SettingsTrigger() {
   const { settings, updateSettings, resetSettings } = useSettings();
   const [confirmingReset, setConfirmingReset] = useState(false);
   const [open, setOpen] = useState(false);
+  const [aboutOpen, setAboutOpen] = useState(false);
   const [customDialogOpen, setCustomDialogOpen] = useState(false);
   const [observerCities, setObserverCities] = useState<ObserverCity[]>([]);
   const [citiesLoading, setCitiesLoading] = useState(false);
@@ -1273,13 +1275,24 @@ export function SettingsTrigger() {
           </Tabs>
         </SheetBody>
 
-        <SheetFooter>
-          <Button variant="outline" onClick={handleCancel}>
-            Cancel
-          </Button>
-          <Button onClick={handleOk}>OK</Button>
+        <SheetFooter className="justify-between">
+          <button
+            type="button"
+            className="text-sm text-muted-foreground underline-offset-2 hover:underline"
+            onClick={() => setAboutOpen(true)}
+          >
+            About Astro
+          </button>
+          <div className="flex gap-2">
+            <Button variant="outline" onClick={handleCancel}>
+              Cancel
+            </Button>
+            <Button onClick={handleOk}>OK</Button>
+          </div>
         </SheetFooter>
       </SheetContent>
+
+      <AboutDialog open={aboutOpen} onOpenChange={setAboutOpen} />
 
       <Dialog
         open={customDialogOpen}

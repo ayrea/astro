@@ -1,6 +1,5 @@
 import { PanelLeft } from "lucide-react";
 
-import { AboutTrigger } from "@/components/About";
 import { ObserverTimeControls } from "@/components/ObserverTimeControls";
 import { SettingsTrigger } from "@/components/Settings";
 import { Button } from "@/components/ui/button";
@@ -28,7 +27,6 @@ export function Toolbar({ infoOpen, onInfoToggle }: ToolbarProps) {
         >
           <PanelLeft className="h-4 w-4" />
         </Button>
-        <AboutTrigger />
       </div>
       <div className="absolute left-1/2 z-10 -translate-x-1/2">
         <ObserverTimeControls />
