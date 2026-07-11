@@ -149,10 +149,7 @@ export function SettingsTrigger() {
 
     navigator.geolocation.getCurrentPosition(
       (position) => {
-        const latitude = Math.min(
-          90,
-          Math.max(-90, position.coords.latitude),
-        );
+        const latitude = Math.min(90, Math.max(-90, position.coords.latitude));
         const longitude = Math.min(
           180,
           Math.max(-180, position.coords.longitude),

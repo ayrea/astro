@@ -12,7 +12,13 @@ interface NumericInputProps {
   onChange: (value: number) => void;
 }
 
-export function NumericInput({ id, value, min, max, onChange }: NumericInputProps) {
+export function NumericInput({
+  id,
+  value,
+  min,
+  max,
+  onChange,
+}: NumericInputProps) {
   const [text, setText] = useState(String(value));
   const isFocusedRef = useRef(false);
 
