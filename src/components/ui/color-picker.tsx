@@ -1,7 +1,8 @@
 import { Check, ChevronDown } from "lucide-react";
 import { useEffect, useId, useRef, useState } from "react";
 
-import { applyOpacity, hexToRgba, rgbaToHex } from "@/lib/color";
+import { ColorSwatch } from "@/components/ui/color-swatch";
+import { hexToRgba, rgbaToHex } from "@/lib/color";
 import { cn } from "@/lib/utils";
 
 export interface ColorPreset {
@@ -16,29 +17,6 @@ export interface ColorPickerProps {
   presets: ReadonlyArray<ColorPreset>;
   previewOpacity?: number;
   disabled?: boolean;
-}
-
-function ColorSwatch({
-  color,
-  previewOpacity,
-  className,
-}: {
-  color: string;
-  previewOpacity?: number;
-  className?: string;
-}) {
-  const backgroundColor =
-    previewOpacity !== undefined ? applyOpacity(color, previewOpacity) : color;
-
-  return (
-    <span
-      className={cn(
-        "inline-block h-4 w-4 shrink-0 rounded-full border border-border/80",
-        className,
-      )}
-      style={{ backgroundColor }}
-    />
-  );
 }
 
 export function ColorPicker({
