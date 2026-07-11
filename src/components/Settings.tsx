@@ -1,4 +1,4 @@
-import { Settings as SettingsIcon } from "lucide-react";
+import { Loader2, LocateFixed, Settings as SettingsIcon } from "lucide-react";
 import { useRef, useState } from "react";
 
 import { AboutDialog } from "@/components/About";
@@ -117,8 +117,13 @@ export function SettingsTrigger() {
   const [citiesLoading, setCitiesLoading] = useState(false);
   const [draftLatitude, setDraftLatitude] = useState(settings.latitude);
   const [draftLongitude, setDraftLongitude] = useState(settings.longitude);
+  const [locating, setLocating] = useState(false);
+  const [locateError, setLocateError] = useState<string | null>(null);
   const snapshotRef = useRef<Settings | null>(null);
   const loadIdRef = useRef(0);
+
+  const geolocationSupported =
+    typeof navigator !== "undefined" && "geolocation" in navigator;
 
   const locationSelectValue = resolveLocationSelectValue(
     settings.latitude,
@@ -129,7 +134,46 @@ export function SettingsTrigger() {
   const openCustomLocationDialog = () => {
     setDraftLatitude(settings.latitude);
     setDraftLongitude(settings.longitude);
+    setLocating(false);
+    setLocateError(null);
     setCustomDialogOpen(true);
+  };
+
+  const handleUseCurrentLocation = () => {
+    if (!geolocationSupported) {
+      return;
+    }
+
+    setLocateError(null);
+    setLocating(true);
+
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const latitude = Math.min(
+          90,
+          Math.max(-90, position.coords.latitude),
+        );
+        const longitude = Math.min(
+          180,
+          Math.max(-180, position.coords.longitude),
+        );
+        setDraftLatitude(latitude);
+        setDraftLongitude(longitude);
+        setLocating(false);
+      },
+      (error) => {
+        const message =
+          error.code === error.PERMISSION_DENIED
+            ? "Location permission denied."
+            : error.code === error.POSITION_UNAVAILABLE
+              ? "Current location unavailable."
+              : error.code === error.TIMEOUT
+                ? "Timed out getting current location."
+                : "Unable to get current location.";
+        setLocateError(message);
+        setLocating(false);
+      },
+    );
   };
 
   const handleLocationChange = (value: string) => {
@@ -1238,7 +1282,31 @@ export function SettingsTrigger() {
           </DialogHeader>
           <div className="space-y-4 px-6 py-2">
             <div className="space-y-2">
-              <Label htmlFor="custom-latitude">Latitude</Label>
+              <div className="flex items-center justify-between gap-2">
+                <Label htmlFor="custom-latitude">Latitude</Label>
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="icon"
+                  disabled={!geolocationSupported || locating}
+                  aria-label="Use current location"
+                  title={
+                    geolocationSupported
+                      ? "Use current location"
+                      : "Current location is not available in this browser"
+                  }
+                  onClick={handleUseCurrentLocation}
+                >
+                  {locating ? (
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                  ) : (
+                    <LocateFixed className="h-4 w-4" />
+                  )}
+                </Button>
+              </div>
+              {locateError && (
+                <p className="text-xs text-destructive">{locateError}</p>
+              )}
               <NumericInput
                 id="custom-latitude"
                 min={-90}
