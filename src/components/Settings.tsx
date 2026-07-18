@@ -139,6 +139,19 @@ export function SettingsTrigger() {
     setCustomDialogOpen(true);
   };
 
+  const handleGeolocationError = (error: GeolocationPositionError) => {
+    const message =
+      error.code === error.PERMISSION_DENIED
+        ? "Location permission denied."
+        : error.code === error.POSITION_UNAVAILABLE
+          ? "Current location unavailable."
+          : error.code === error.TIMEOUT
+            ? "Timed out getting current location."
+            : "Unable to get current location.";
+    setLocateError(message);
+    setLocating(false);
+  };
+
   const handleUseCurrentLocation = () => {
     if (!geolocationSupported) {
       return;
@@ -147,30 +160,35 @@ export function SettingsTrigger() {
     setLocateError(null);
     setLocating(true);
 
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        const latitude = Math.min(90, Math.max(-90, position.coords.latitude));
-        const longitude = Math.min(
-          180,
-          Math.max(-180, position.coords.longitude),
-        );
-        setDraftLatitude(latitude);
-        setDraftLongitude(longitude);
-        setLocating(false);
-      },
-      (error) => {
-        const message =
-          error.code === error.PERMISSION_DENIED
-            ? "Location permission denied."
-            : error.code === error.POSITION_UNAVAILABLE
-              ? "Current location unavailable."
-              : error.code === error.TIMEOUT
-                ? "Timed out getting current location."
-                : "Unable to get current location.";
-        setLocateError(message);
-        setLocating(false);
-      },
-    );
+    navigator.geolocation.getCurrentPosition((position) => {
+      const latitude = Math.min(90, Math.max(-90, position.coords.latitude));
+      const longitude = Math.min(
+        180,
+        Math.max(-180, position.coords.longitude),
+      );
+      setDraftLatitude(latitude);
+      setDraftLongitude(longitude);
+      setLocating(false);
+    }, handleGeolocationError);
+  };
+
+  const handleApplyCurrentLocation = () => {
+    if (!geolocationSupported) {
+      return;
+    }
+
+    setLocateError(null);
+    setLocating(true);
+
+    navigator.geolocation.getCurrentPosition((position) => {
+      const latitude = Math.min(90, Math.max(-90, position.coords.latitude));
+      const longitude = Math.min(
+        180,
+        Math.max(-180, position.coords.longitude),
+      );
+      updateSettings({ latitude, longitude });
+      setLocating(false);
+    }, handleGeolocationError);
   };
 
   const handleLocationChange = (value: string) => {
@@ -280,16 +298,42 @@ export function SettingsTrigger() {
             <TabsContent value="general" className="space-y-6">
               <div className="space-y-2">
                 <Label htmlFor="location">Location</Label>
-                <LocationPicker
-                  id="location"
-                  value={locationSelectValue}
-                  cities={observerCities}
-                  loading={citiesLoading}
-                  onCitySelect={(cityId) => handleLocationChange(cityId)}
-                  onCustomSelect={() =>
-                    handleLocationChange(CUSTOM_LOCATION_ID)
-                  }
-                />
+                <div className="flex items-center gap-2">
+                  <div className="min-w-0 flex-1">
+                    <LocationPicker
+                      id="location"
+                      value={locationSelectValue}
+                      cities={observerCities}
+                      loading={citiesLoading}
+                      onCitySelect={(cityId) => handleLocationChange(cityId)}
+                      onCustomSelect={() =>
+                        handleLocationChange(CUSTOM_LOCATION_ID)
+                      }
+                    />
+                  </div>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="icon"
+                    disabled={!geolocationSupported || locating}
+                    aria-label="Use current location"
+                    title={
+                      geolocationSupported
+                        ? "Use current location"
+                        : "Current location is not available in this browser"
+                    }
+                    onClick={handleApplyCurrentLocation}
+                  >
+                    {locating && !customDialogOpen ? (
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                    ) : (
+                      <LocateFixed className="h-4 w-4" />
+                    )}
+                  </Button>
+                </div>
+                {locateError && !customDialogOpen && (
+                  <p className="text-xs text-destructive">{locateError}</p>
+                )}
                 <p className="text-xs text-muted-foreground">
                   Observer location used for sky projection and rise/set times.
                 </p>

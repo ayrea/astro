@@ -2,9 +2,10 @@ import { useState } from "react";
 
 import { InfoPanel } from "@/components/InfoPanel";
 import { InstallPrompt } from "@/components/InstallPrompt";
-import { UpdatePrompt } from "@/components/UpdatePrompt";
+import { LocationSetupDialog } from "@/components/LocationSetupDialog";
 import { Planisphere } from "@/components/Planisphere";
 import { Toolbar } from "@/components/Toolbar";
+import { UpdatePrompt } from "@/components/UpdatePrompt";
 import { Toaster } from "@/components/ui/sonner";
 import { SettingsProvider } from "@/context/SettingsContext";
 import { TimeProvider } from "@/context/TimeContext";
@@ -30,6 +31,7 @@ function App() {
             </div>
             {infoOpen && <InfoPanel onClose={() => setInfoOpen(false)} />}
           </main>
+          <LocationSetupDialog />
           <InstallPrompt />
           <UpdatePrompt />
           <Toaster position="top-center" richColors />

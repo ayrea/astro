@@ -22,8 +22,9 @@ interface LocationPickerProps {
   value: string;
   cities: ObserverCity[];
   loading?: boolean;
+  showCustomOption?: boolean;
   onCitySelect: (cityId: string) => void;
-  onCustomSelect: () => void;
+  onCustomSelect?: () => void;
 }
 
 export function LocationPicker({
@@ -31,6 +32,7 @@ export function LocationPicker({
   value,
   cities,
   loading = false,
+  showCustomOption = true,
   onCitySelect,
   onCustomSelect,
 }: LocationPickerProps) {
@@ -97,7 +99,7 @@ export function LocationPicker({
   };
 
   const handleCustomSelect = () => {
-    onCustomSelect();
+    onCustomSelect?.();
     close();
   };
 
@@ -173,21 +175,23 @@ export function LocationPicker({
                   })
                 )}
               </div>
-              <div className="border-t border-border/60 p-1">
-                <button
-                  type="button"
-                  role="option"
-                  aria-selected={value === CUSTOM_LOCATION_ID}
-                  className={cn(
-                    "flex w-full rounded-sm px-2 py-1.5 text-left text-sm outline-none hover:bg-accent hover:text-accent-foreground",
-                    value === CUSTOM_LOCATION_ID &&
-                      "bg-accent text-accent-foreground",
-                  )}
-                  onClick={handleCustomSelect}
-                >
-                  Custom...
-                </button>
-              </div>
+              {showCustomOption && (
+                <div className="border-t border-border/60 p-1">
+                  <button
+                    type="button"
+                    role="option"
+                    aria-selected={value === CUSTOM_LOCATION_ID}
+                    className={cn(
+                      "flex w-full rounded-sm px-2 py-1.5 text-left text-sm outline-none hover:bg-accent hover:text-accent-foreground",
+                      value === CUSTOM_LOCATION_ID &&
+                        "bg-accent text-accent-foreground",
+                    )}
+                    onClick={handleCustomSelect}
+                  >
+                    Custom...
+                  </button>
+                </div>
+              )}
             </div>
           </div>,
           document.body,
