@@ -277,8 +277,6 @@ export function Planisphere() {
       if (canvas.width !== targetWidth || canvas.height !== targetHeight) {
         canvas.width = targetWidth;
         canvas.height = targetHeight;
-        canvas.style.width = `${width}px`;
-        canvas.style.height = `${height}px`;
       }
 
       context.setTransform(dpr, 0, 0, dpr, 0, 0);
@@ -740,18 +738,25 @@ export function Planisphere() {
 
     drawRef.current = draw;
     draw();
+    const settleRafId = requestAnimationFrame(draw);
 
     const resizeObserver = new ResizeObserver(draw);
     resizeObserver.observe(container);
 
+    window.addEventListener("resize", draw);
+    window.addEventListener("orientationchange", draw);
+
     return () => {
+      cancelAnimationFrame(settleRafId);
       resizeObserver.disconnect();
+      window.removeEventListener("resize", draw);
+      window.removeEventListener("orientationchange", draw);
       drawRef.current = null;
     };
   }, [getViewport, observerTime, settings]);
 
   return (
-    <div ref={containerRef} className="h-full w-full">
+    <div ref={containerRef} className="h-full w-full overflow-hidden">
       <canvas
         ref={canvasRef}
         className={cn(
