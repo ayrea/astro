@@ -7,6 +7,8 @@ import {
   type ReactNode,
 } from "react";
 
+import observerCitiesData from "../../data/source/observer-cities.json";
+
 export type GridRaSpacing = 1 | 2 | 3 | 6;
 export type GridDecSpacing = 10 | 15 | 30 | 45;
 export type ElevationSpacing = 10 | 15 | 30 | 45;
@@ -14,6 +16,7 @@ export type ElevationSpacing = 10 | 15 | 30 | 45;
 export interface Settings {
   latitude: number;
   longitude: number;
+  utcOffsetHours: number;
   magnitudeCutoff: number;
   mirrorEastWest: boolean;
   showLabels: boolean;
@@ -64,9 +67,34 @@ interface SettingsContextValue {
 
 const STORAGE_KEY = "astro-planisphere-settings";
 
+const MIN_UTC_OFFSET_HOURS = -12;
+const MAX_UTC_OFFSET_HOURS = 14;
+
+function resolveMigratedUtcOffsetHours(
+  latitude: number,
+  longitude: number,
+): number {
+  const cities = observerCitiesData as Array<{
+    latitude: number;
+    longitude: number;
+    utcOffsetHours: number;
+  }>;
+  const match = cities.find(
+    (city) => city.latitude === latitude && city.longitude === longitude,
+  );
+  if (match) {
+    return match.utcOffsetHours;
+  }
+  return Math.min(
+    MAX_UTC_OFFSET_HOURS,
+    Math.max(MIN_UTC_OFFSET_HOURS, Math.round(longitude / 15)),
+  );
+}
+
 const defaultSettings: Settings = {
   latitude: -31.95,
   longitude: 115.86,
+  utcOffsetHours: 8,
   magnitudeCutoff: 5,
   mirrorEastWest: true,
   showLabels: true,
@@ -291,9 +319,37 @@ function normalizeSettings(parsed: Partial<Settings>): Settings {
       ? parsed.planetSizeScale
       : defaultSettings.planetSizeScale;
 
+  const longitude =
+    typeof parsed.longitude === "number" &&
+    Number.isFinite(parsed.longitude) &&
+    parsed.longitude >= -180 &&
+    parsed.longitude <= 180
+      ? parsed.longitude
+      : defaultSettings.longitude;
+
+  const latitude =
+    typeof parsed.latitude === "number" &&
+    Number.isFinite(parsed.latitude) &&
+    parsed.latitude >= -90 &&
+    parsed.latitude <= 90
+      ? parsed.latitude
+      : defaultSettings.latitude;
+
+  const utcOffsetHours =
+    typeof parsed.utcOffsetHours === "number" &&
+    Number.isFinite(parsed.utcOffsetHours)
+      ? Math.min(
+          MAX_UTC_OFFSET_HOURS,
+          Math.max(MIN_UTC_OFFSET_HOURS, parsed.utcOffsetHours),
+        )
+      : resolveMigratedUtcOffsetHours(latitude, longitude);
+
   return {
     ...defaultSettings,
     ...parsed,
+    latitude,
+    longitude,
+    utcOffsetHours,
     gridRaSpacing,
     gridDecSpacing,
     gridLineColor,
@@ -361,6 +417,7 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
         ...defaultSettings,
         latitude: current.latitude,
         longitude: current.longitude,
+        utcOffsetHours: current.utcOffsetHours,
       };
       window.localStorage.removeItem(STORAGE_KEY);
       window.localStorage.setItem(STORAGE_KEY, JSON.stringify(next));

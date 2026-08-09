@@ -4,1826 +4,2087 @@
     "region": "Ontario",
     "country": "Canada",
     "latitude": 43.65,
-    "longitude": -79.38
+    "longitude": -79.38,
+    "utcOffsetHours": -5
   },
   {
     "city": "Quebec City",
     "region": "Quebec",
     "country": "Canada",
     "latitude": 46.81,
-    "longitude": -71.21
+    "longitude": -71.21,
+    "utcOffsetHours": -5
   },
   {
     "city": "Vancouver",
     "region": "British Columbia",
     "country": "Canada",
     "latitude": 49.28,
-    "longitude": -123.12
+    "longitude": -123.12,
+    "utcOffsetHours": -8
   },
   {
     "city": "Edmonton",
     "region": "Alberta",
     "country": "Canada",
     "latitude": 53.55,
-    "longitude": -113.49
+    "longitude": -113.49,
+    "utcOffsetHours": -7
   },
   {
     "city": "Winnipeg",
     "region": "Manitoba",
     "country": "Canada",
     "latitude": 49.9,
-    "longitude": -97.14
+    "longitude": -97.14,
+    "utcOffsetHours": -6
   },
   {
     "city": "Regina",
     "region": "Saskatchewan",
     "country": "Canada",
     "latitude": 50.45,
-    "longitude": -104.62
+    "longitude": -104.62,
+    "utcOffsetHours": -6
   },
   {
     "city": "Victoria",
     "region": "British Columbia",
     "country": "Canada",
     "latitude": 48.43,
-    "longitude": -123.37
+    "longitude": -123.37,
+    "utcOffsetHours": -8
   },
   {
     "city": "Halifax",
     "region": "Nova Scotia",
     "country": "Canada",
     "latitude": 44.65,
-    "longitude": -63.57
+    "longitude": -63.57,
+    "utcOffsetHours": -4
   },
   {
     "city": "Fredericton",
     "region": "New Brunswick",
     "country": "Canada",
     "latitude": 45.96,
-    "longitude": -66.64
+    "longitude": -66.64,
+    "utcOffsetHours": -4
   },
   {
     "city": "St. John's",
     "region": "Newfoundland and Labrador",
     "country": "Canada",
     "latitude": 47.56,
-    "longitude": -52.71
+    "longitude": -52.71,
+    "utcOffsetHours": -4
   },
   {
     "city": "Charlottetown",
     "region": "Prince Edward Island",
     "country": "Canada",
     "latitude": 46.24,
-    "longitude": -63.13
+    "longitude": -63.13,
+    "utcOffsetHours": -4
   },
   {
     "city": "Whitehorse",
     "region": "Yukon",
     "country": "Canada",
     "latitude": 60.72,
-    "longitude": -135.05
+    "longitude": -135.05,
+    "utcOffsetHours": -9
   },
   {
     "city": "Yellowknife",
     "region": "Northwest Territories",
     "country": "Canada",
     "latitude": 62.45,
-    "longitude": -114.37
+    "longitude": -114.37,
+    "utcOffsetHours": -8
   },
   {
     "city": "Iqaluit",
     "region": "Nunavut",
     "country": "Canada",
     "latitude": 63.75,
-    "longitude": -68.52
+    "longitude": -68.52,
+    "utcOffsetHours": -5
   },
   {
     "city": "Sydney",
     "region": "New South Wales",
     "country": "Australia",
     "latitude": -33.87,
-    "longitude": 151.21
+    "longitude": 151.21,
+    "utcOffsetHours": 10
   },
   {
     "city": "Melbourne",
     "region": "Victoria",
     "country": "Australia",
     "latitude": -37.81,
-    "longitude": 144.96
+    "longitude": 144.96,
+    "utcOffsetHours": 10
   },
   {
     "city": "Brisbane",
     "region": "Queensland",
     "country": "Australia",
     "latitude": -27.47,
-    "longitude": 153.03
+    "longitude": 153.03,
+    "utcOffsetHours": 10
   },
   {
     "city": "Perth",
     "region": "Western Australia",
     "country": "Australia",
     "latitude": -31.95,
-    "longitude": 115.86
+    "longitude": 115.86,
+    "utcOffsetHours": 8
   },
   {
     "city": "Adelaide",
     "region": "South Australia",
     "country": "Australia",
     "latitude": -34.93,
-    "longitude": 138.6
+    "longitude": 138.6,
+    "utcOffsetHours": 9.5
   },
   {
     "city": "Hobart",
     "region": "Tasmania",
     "country": "Australia",
     "latitude": -42.88,
-    "longitude": 147.33
+    "longitude": 147.33,
+    "utcOffsetHours": 10
   },
   {
     "city": "Darwin",
     "region": "Northern Territory",
     "country": "Australia",
     "latitude": -12.46,
-    "longitude": 130.84
+    "longitude": 130.84,
+    "utcOffsetHours": 9.5
   },
   {
     "city": "Canberra",
     "region": "Australian Capital Territory",
     "country": "Australia",
     "latitude": -35.28,
-    "longitude": 149.13
+    "longitude": 149.13,
+    "utcOffsetHours": 10
   },
   {
     "city": "Mumbai",
     "region": "Maharashtra",
     "country": "India",
     "latitude": 19.08,
-    "longitude": 72.88
+    "longitude": 72.88,
+    "utcOffsetHours": 5.5
   },
   {
     "city": "Kolkata",
     "region": "West Bengal",
     "country": "India",
     "latitude": 22.57,
-    "longitude": 88.36
+    "longitude": 88.36,
+    "utcOffsetHours": 5.5
   },
   {
     "city": "Chennai",
     "region": "Tamil Nadu",
     "country": "India",
     "latitude": 13.08,
-    "longitude": 80.27
+    "longitude": 80.27,
+    "utcOffsetHours": 5.5
   },
   {
     "city": "Bengaluru",
     "region": "Karnataka",
     "country": "India",
     "latitude": 12.97,
-    "longitude": 77.59
+    "longitude": 77.59,
+    "utcOffsetHours": 5.5
   },
   {
     "city": "Hyderabad",
     "region": "Telangana",
     "country": "India",
     "latitude": 17.39,
-    "longitude": 78.49
+    "longitude": 78.49,
+    "utcOffsetHours": 5.5
   },
   {
     "city": "Ahmedabad",
     "region": "Gujarat",
     "country": "India",
     "latitude": 23.02,
-    "longitude": 72.57
+    "longitude": 72.57,
+    "utcOffsetHours": 5.5
   },
   {
     "city": "Jaipur",
     "region": "Rajasthan",
     "country": "India",
     "latitude": 26.91,
-    "longitude": 75.79
+    "longitude": 75.79,
+    "utcOffsetHours": 5.5
   },
   {
     "city": "Lucknow",
     "region": "Uttar Pradesh",
     "country": "India",
     "latitude": 26.85,
-    "longitude": 80.95
+    "longitude": 80.95,
+    "utcOffsetHours": 5.5
   },
   {
     "city": "Bhopal",
     "region": "Madhya Pradesh",
     "country": "India",
     "latitude": 23.26,
-    "longitude": 77.41
+    "longitude": 77.41,
+    "utcOffsetHours": 5.5
   },
   {
     "city": "Patna",
     "region": "Bihar",
     "country": "India",
     "latitude": 25.59,
-    "longitude": 85.14
+    "longitude": 85.14,
+    "utcOffsetHours": 5.5
   },
   {
     "city": "Thiruvananthapuram",
     "region": "Kerala",
     "country": "India",
     "latitude": 8.52,
-    "longitude": 76.93
+    "longitude": 76.93,
+    "utcOffsetHours": 5.5
   },
   {
     "city": "Bhubaneswar",
     "region": "Odisha",
     "country": "India",
     "latitude": 20.3,
-    "longitude": 85.82
+    "longitude": 85.82,
+    "utcOffsetHours": 6
   },
   {
     "city": "Chandigarh",
     "region": "Chandigarh",
     "country": "India",
     "latitude": 30.73,
-    "longitude": 76.78
+    "longitude": 76.78,
+    "utcOffsetHours": 5.5
   },
   {
     "city": "Ranchi",
     "region": "Jharkhand",
     "country": "India",
     "latitude": 23.35,
-    "longitude": 85.33
+    "longitude": 85.33,
+    "utcOffsetHours": 5.5
   },
   {
     "city": "Raipur",
     "region": "Chhattisgarh",
     "country": "India",
     "latitude": 21.25,
-    "longitude": 81.63
+    "longitude": 81.63,
+    "utcOffsetHours": 5.5
   },
   {
     "city": "Dehradun",
     "region": "Uttarakhand",
     "country": "India",
     "latitude": 30.32,
-    "longitude": 78.03
+    "longitude": 78.03,
+    "utcOffsetHours": 5
   },
   {
     "city": "Shimla",
     "region": "Himachal Pradesh",
     "country": "India",
     "latitude": 31.1,
-    "longitude": 77.17
+    "longitude": 77.17,
+    "utcOffsetHours": 5.5
   },
   {
     "city": "Srinagar",
     "region": "Jammu and Kashmir",
     "country": "India",
     "latitude": 34.08,
-    "longitude": 74.8
+    "longitude": 74.8,
+    "utcOffsetHours": 5.5
   },
   {
     "city": "Gandhinagar",
     "region": "Gujarat",
     "country": "India",
     "latitude": 23.22,
-    "longitude": 72.68
+    "longitude": 72.68,
+    "utcOffsetHours": 5.5
   },
   {
     "city": "Panaji",
     "region": "Goa",
     "country": "India",
     "latitude": 15.49,
-    "longitude": 73.83
+    "longitude": 73.83,
+    "utcOffsetHours": 5
   },
   {
     "city": "Imphal",
     "region": "Manipur",
     "country": "India",
     "latitude": 24.82,
-    "longitude": 93.95
+    "longitude": 93.95,
+    "utcOffsetHours": 5.5
   },
   {
     "city": "Shillong",
     "region": "Meghalaya",
     "country": "India",
     "latitude": 25.58,
-    "longitude": 91.89
+    "longitude": 91.89,
+    "utcOffsetHours": 5.5
   },
   {
     "city": "Kohima",
     "region": "Nagaland",
     "country": "India",
     "latitude": 25.67,
-    "longitude": 94.11
+    "longitude": 94.11,
+    "utcOffsetHours": 6
   },
   {
     "city": "Aizawl",
     "region": "Mizoram",
     "country": "India",
     "latitude": 23.73,
-    "longitude": 92.72
+    "longitude": 92.72,
+    "utcOffsetHours": 5.5
   },
   {
     "city": "Agartala",
     "region": "Tripura",
     "country": "India",
     "latitude": 23.83,
-    "longitude": 91.28
+    "longitude": 91.28,
+    "utcOffsetHours": 5.5
   },
   {
     "city": "Itanagar",
     "region": "Arunachal Pradesh",
     "country": "India",
     "latitude": 27.1,
-    "longitude": 93.62
+    "longitude": 93.62,
+    "utcOffsetHours": 6
   },
   {
     "city": "Gangtok",
     "region": "Sikkim",
     "country": "India",
     "latitude": 27.33,
-    "longitude": 88.61
+    "longitude": 88.61,
+    "utcOffsetHours": 6
   },
   {
     "city": "Amaravati",
     "region": "Andhra Pradesh",
     "country": "India",
     "latitude": 16.51,
-    "longitude": 80.52
+    "longitude": 80.52,
+    "utcOffsetHours": 5.5
   },
   {
     "city": "Dispur",
     "region": "Assam",
     "country": "India",
     "latitude": 26.14,
-    "longitude": 91.79
+    "longitude": 91.79,
+    "utcOffsetHours": 6
   },
   {
     "city": "São Paulo",
     "region": "São Paulo",
     "country": "Brazil",
     "latitude": -23.55,
-    "longitude": -46.63
+    "longitude": -46.63,
+    "utcOffsetHours": -3
   },
   {
     "city": "Rio de Janeiro",
     "region": "Rio de Janeiro",
     "country": "Brazil",
     "latitude": -22.91,
-    "longitude": -43.17
+    "longitude": -43.17,
+    "utcOffsetHours": -3
   },
   {
     "city": "Salvador",
     "region": "Bahia",
     "country": "Brazil",
     "latitude": -12.97,
-    "longitude": -38.51
+    "longitude": -38.51,
+    "utcOffsetHours": -3
   },
   {
     "city": "Fortaleza",
     "region": "Ceará",
     "country": "Brazil",
     "latitude": -3.72,
-    "longitude": -38.54
+    "longitude": -38.54,
+    "utcOffsetHours": -3
   },
   {
     "city": "Belo Horizonte",
     "region": "Minas Gerais",
     "country": "Brazil",
     "latitude": -19.92,
-    "longitude": -43.94
+    "longitude": -43.94,
+    "utcOffsetHours": -3
   },
   {
     "city": "Manaus",
     "region": "Amazonas",
     "country": "Brazil",
     "latitude": -3.1,
-    "longitude": -60.02
+    "longitude": -60.02,
+    "utcOffsetHours": -4
   },
   {
     "city": "Curitiba",
     "region": "Paraná",
     "country": "Brazil",
     "latitude": -25.43,
-    "longitude": -49.27
+    "longitude": -49.27,
+    "utcOffsetHours": -3
   },
   {
     "city": "Recife",
     "region": "Pernambuco",
     "country": "Brazil",
     "latitude": -8.05,
-    "longitude": -34.87
+    "longitude": -34.87,
+    "utcOffsetHours": -3
   },
   {
     "city": "Porto Alegre",
     "region": "Rio Grande do Sul",
     "country": "Brazil",
     "latitude": -30.03,
-    "longitude": -51.23
+    "longitude": -51.23,
+    "utcOffsetHours": -3
   },
   {
     "city": "Belém",
     "region": "Pará",
     "country": "Brazil",
     "latitude": -1.46,
-    "longitude": -48.5
+    "longitude": -48.5,
+    "utcOffsetHours": -3
   },
   {
     "city": "Goiânia",
     "region": "Goiás",
     "country": "Brazil",
     "latitude": -16.68,
-    "longitude": -49.26
+    "longitude": -49.26,
+    "utcOffsetHours": -3
   },
   {
     "city": "Campo Grande",
     "region": "Mato Grosso do Sul",
     "country": "Brazil",
     "latitude": -20.44,
-    "longitude": -54.65
+    "longitude": -54.65,
+    "utcOffsetHours": -4
   },
   {
     "city": "Cuiabá",
     "region": "Mato Grosso",
     "country": "Brazil",
     "latitude": -15.6,
-    "longitude": -56.1
+    "longitude": -56.1,
+    "utcOffsetHours": -4
   },
   {
     "city": "Florianópolis",
     "region": "Santa Catarina",
     "country": "Brazil",
     "latitude": -27.59,
-    "longitude": -48.55
+    "longitude": -48.55,
+    "utcOffsetHours": -3
   },
   {
     "city": "Vitória",
     "region": "Espírito Santo",
     "country": "Brazil",
     "latitude": -20.32,
-    "longitude": -40.34
+    "longitude": -40.34,
+    "utcOffsetHours": -3
   },
   {
     "city": "Natal",
     "region": "Rio Grande do Norte",
     "country": "Brazil",
     "latitude": -5.79,
-    "longitude": -35.21
+    "longitude": -35.21,
+    "utcOffsetHours": -3
   },
   {
     "city": "João Pessoa",
     "region": "Paraíba",
     "country": "Brazil",
     "latitude": -7.12,
-    "longitude": -34.86
+    "longitude": -34.86,
+    "utcOffsetHours": -3
   },
   {
     "city": "Maceió",
     "region": "Alagoas",
     "country": "Brazil",
     "latitude": -9.67,
-    "longitude": -35.74
+    "longitude": -35.74,
+    "utcOffsetHours": -3
   },
   {
     "city": "Aracaju",
     "region": "Sergipe",
     "country": "Brazil",
     "latitude": -10.91,
-    "longitude": -37.07
+    "longitude": -37.07,
+    "utcOffsetHours": -3
   },
   {
     "city": "Teresina",
     "region": "Piauí",
     "country": "Brazil",
     "latitude": -5.09,
-    "longitude": -42.8
+    "longitude": -42.8,
+    "utcOffsetHours": -3
   },
   {
     "city": "São Luís",
     "region": "Maranhão",
     "country": "Brazil",
     "latitude": -2.53,
-    "longitude": -44.28
+    "longitude": -44.28,
+    "utcOffsetHours": -3
   },
   {
     "city": "Palmas",
     "region": "Tocantins",
     "country": "Brazil",
     "latitude": -10.18,
-    "longitude": -48.33
+    "longitude": -48.33,
+    "utcOffsetHours": -3
   },
   {
     "city": "Macapá",
     "region": "Amapá",
     "country": "Brazil",
     "latitude": 0.04,
-    "longitude": -51.07
+    "longitude": -51.07,
+    "utcOffsetHours": -3
   },
   {
     "city": "Boa Vista",
     "region": "Roraima",
     "country": "Brazil",
     "latitude": 2.82,
-    "longitude": -60.67
+    "longitude": -60.67,
+    "utcOffsetHours": -4
   },
   {
     "city": "Porto Velho",
     "region": "Rondônia",
     "country": "Brazil",
     "latitude": -8.76,
-    "longitude": -63.9
+    "longitude": -63.9,
+    "utcOffsetHours": -4
   },
   {
     "city": "Rio Branco",
     "region": "Acre",
     "country": "Brazil",
     "latitude": -9.97,
-    "longitude": -67.81
+    "longitude": -67.81,
+    "utcOffsetHours": -5
   },
   {
     "city": "Guadalajara",
     "region": "Jalisco",
     "country": "Mexico",
     "latitude": 20.67,
-    "longitude": -103.35
+    "longitude": -103.35,
+    "utcOffsetHours": -6
   },
   {
     "city": "Monterrey",
     "region": "Nuevo León",
     "country": "Mexico",
     "latitude": 25.67,
-    "longitude": -100.31
+    "longitude": -100.31,
+    "utcOffsetHours": -6
   },
   {
     "city": "Puebla",
     "region": "Puebla",
     "country": "Mexico",
     "latitude": 19.04,
-    "longitude": -98.2
+    "longitude": -98.2,
+    "utcOffsetHours": -6
   },
   {
     "city": "Tijuana",
     "region": "Baja California",
     "country": "Mexico",
     "latitude": 32.51,
-    "longitude": -117.0
+    "longitude": -117,
+    "utcOffsetHours": -8
   },
   {
     "city": "León",
     "region": "Guanajuato",
     "country": "Mexico",
     "latitude": 21.12,
-    "longitude": -101.68
+    "longitude": -101.68,
+    "utcOffsetHours": -6
   },
   {
     "city": "Mérida",
     "region": "Yucatán",
     "country": "Mexico",
     "latitude": 20.97,
-    "longitude": -89.62
+    "longitude": -89.62,
+    "utcOffsetHours": -6
   },
   {
     "city": "Querétaro",
     "region": "Querétaro",
     "country": "Mexico",
     "latitude": 20.59,
-    "longitude": -100.39
+    "longitude": -100.39,
+    "utcOffsetHours": -6
   },
   {
     "city": "San Luis Potosí",
     "region": "San Luis Potosí",
     "country": "Mexico",
     "latitude": 22.15,
-    "longitude": -100.98
+    "longitude": -100.98,
+    "utcOffsetHours": -6
   },
   {
     "city": "Aguascalientes",
     "region": "Aguascalientes",
     "country": "Mexico",
     "latitude": 21.88,
-    "longitude": -102.29
+    "longitude": -102.29,
+    "utcOffsetHours": -6
   },
   {
     "city": "Hermosillo",
     "region": "Sonora",
     "country": "Mexico",
     "latitude": 29.07,
-    "longitude": -110.96
+    "longitude": -110.96,
+    "utcOffsetHours": -7
   },
   {
     "city": "Saltillo",
     "region": "Coahuila",
     "country": "Mexico",
     "latitude": 25.42,
-    "longitude": -101.01
+    "longitude": -101.01,
+    "utcOffsetHours": -6
   },
   {
     "city": "Culiacán",
     "region": "Sinaloa",
     "country": "Mexico",
     "latitude": 24.8,
-    "longitude": -107.39
+    "longitude": -107.39,
+    "utcOffsetHours": -7
   },
   {
     "city": "Chihuahua",
     "region": "Chihuahua",
     "country": "Mexico",
     "latitude": 28.64,
-    "longitude": -106.09
+    "longitude": -106.09,
+    "utcOffsetHours": -6
   },
   {
     "city": "Morelia",
     "region": "Michoacán",
     "country": "Mexico",
     "latitude": 19.7,
-    "longitude": -101.19
+    "longitude": -101.19,
+    "utcOffsetHours": -6
   },
   {
     "city": "Toluca",
     "region": "México",
     "country": "Mexico",
     "latitude": 19.28,
-    "longitude": -99.66
+    "longitude": -99.66,
+    "utcOffsetHours": -6
   },
   {
     "city": "Xalapa",
     "region": "Veracruz",
     "country": "Mexico",
     "latitude": 19.54,
-    "longitude": -96.91
+    "longitude": -96.91,
+    "utcOffsetHours": -6
   },
   {
     "city": "Oaxaca",
     "region": "Oaxaca",
     "country": "Mexico",
     "latitude": 17.07,
-    "longitude": -96.72
+    "longitude": -96.72,
+    "utcOffsetHours": -6
   },
   {
     "city": "Villahermosa",
     "region": "Tabasco",
     "country": "Mexico",
     "latitude": 17.99,
-    "longitude": -92.93
+    "longitude": -92.93,
+    "utcOffsetHours": -6
   },
   {
     "city": "Cuernavaca",
     "region": "Morelos",
     "country": "Mexico",
     "latitude": 18.92,
-    "longitude": -99.23
+    "longitude": -99.23,
+    "utcOffsetHours": -6
   },
   {
     "city": "Tuxtla Gutiérrez",
     "region": "Chiapas",
     "country": "Mexico",
     "latitude": 16.75,
-    "longitude": -93.12
+    "longitude": -93.12,
+    "utcOffsetHours": -6
   },
   {
     "city": "Campeche",
     "region": "Campeche",
     "country": "Mexico",
     "latitude": 19.83,
-    "longitude": -90.53
+    "longitude": -90.53,
+    "utcOffsetHours": -6
   },
   {
     "city": "Chetumal",
     "region": "Quintana Roo",
     "country": "Mexico",
     "latitude": 18.5,
-    "longitude": -88.3
+    "longitude": -88.3,
+    "utcOffsetHours": -5
   },
   {
     "city": "La Paz",
     "region": "Baja California Sur",
     "country": "Mexico",
     "latitude": 24.14,
-    "longitude": -110.31
+    "longitude": -110.31,
+    "utcOffsetHours": -7
   },
   {
     "city": "Zacatecas",
     "region": "Zacatecas",
     "country": "Mexico",
     "latitude": 22.77,
-    "longitude": -102.58
+    "longitude": -102.58,
+    "utcOffsetHours": -6
   },
   {
     "city": "Durango",
     "region": "Durango",
     "country": "Mexico",
     "latitude": 24.02,
-    "longitude": -104.65
+    "longitude": -104.65,
+    "utcOffsetHours": -6
   },
   {
     "city": "Colima",
     "region": "Colima",
     "country": "Mexico",
     "latitude": 19.24,
-    "longitude": -103.72
+    "longitude": -103.72,
+    "utcOffsetHours": -6
   },
   {
     "city": "Tepic",
     "region": "Nayarit",
     "country": "Mexico",
     "latitude": 21.51,
-    "longitude": -104.89
+    "longitude": -104.89,
+    "utcOffsetHours": -7
   },
   {
     "city": "Pachuca",
     "region": "Hidalgo",
     "country": "Mexico",
     "latitude": 20.1,
-    "longitude": -98.76
+    "longitude": -98.76,
+    "utcOffsetHours": -6
   },
   {
     "city": "Tlaxcala",
     "region": "Tlaxcala",
     "country": "Mexico",
     "latitude": 19.32,
-    "longitude": -98.24
+    "longitude": -98.24,
+    "utcOffsetHours": -7
   },
   {
     "city": "Munich",
     "region": "Bavaria",
     "country": "Germany",
     "latitude": 48.14,
-    "longitude": 11.58
+    "longitude": 11.58,
+    "utcOffsetHours": 1
   },
   {
     "city": "Stuttgart",
     "region": "Baden-Württemberg",
     "country": "Germany",
     "latitude": 48.78,
-    "longitude": 9.18
+    "longitude": 9.18,
+    "utcOffsetHours": 1
   },
   {
     "city": "Düsseldorf",
     "region": "North Rhine-Westphalia",
     "country": "Germany",
     "latitude": 51.23,
-    "longitude": 6.78
+    "longitude": 6.78,
+    "utcOffsetHours": 1
   },
   {
     "city": "Hamburg",
     "region": "Hamburg",
     "country": "Germany",
     "latitude": 53.55,
-    "longitude": 10.0
+    "longitude": 10,
+    "utcOffsetHours": 1
   },
   {
     "city": "Bremen",
     "region": "Bremen",
     "country": "Germany",
     "latitude": 53.08,
-    "longitude": 8.8
+    "longitude": 8.8,
+    "utcOffsetHours": 1
   },
   {
     "city": "Hannover",
     "region": "Lower Saxony",
     "country": "Germany",
     "latitude": 52.37,
-    "longitude": 9.73
+    "longitude": 9.73,
+    "utcOffsetHours": 1
   },
   {
     "city": "Dresden",
     "region": "Saxony",
     "country": "Germany",
     "latitude": 51.05,
-    "longitude": 13.74
+    "longitude": 13.74,
+    "utcOffsetHours": 1
   },
   {
     "city": "Magdeburg",
     "region": "Saxony-Anhalt",
     "country": "Germany",
     "latitude": 52.13,
-    "longitude": 11.62
+    "longitude": 11.62,
+    "utcOffsetHours": 1
   },
   {
     "city": "Kiel",
     "region": "Schleswig-Holstein",
     "country": "Germany",
     "latitude": 54.32,
-    "longitude": 10.14
+    "longitude": 10.14,
+    "utcOffsetHours": 1
   },
   {
     "city": "Mainz",
     "region": "Rhineland-Palatinate",
     "country": "Germany",
-    "latitude": 50.0,
-    "longitude": 8.27
+    "latitude": 50,
+    "longitude": 8.27,
+    "utcOffsetHours": 1
   },
   {
     "city": "Saarbrücken",
     "region": "Saarland",
     "country": "Germany",
     "latitude": 49.24,
-    "longitude": 6.99
+    "longitude": 6.99,
+    "utcOffsetHours": 1
   },
   {
     "city": "Schwerin",
     "region": "Mecklenburg-Vorpommern",
     "country": "Germany",
     "latitude": 53.63,
-    "longitude": 11.41
+    "longitude": 11.41,
+    "utcOffsetHours": 1
   },
   {
     "city": "Erfurt",
     "region": "Thuringia",
     "country": "Germany",
     "latitude": 50.98,
-    "longitude": 11.03
+    "longitude": 11.03,
+    "utcOffsetHours": 1
   },
   {
     "city": "Potsdam",
     "region": "Brandenburg",
     "country": "Germany",
     "latitude": 52.4,
-    "longitude": 13.07
+    "longitude": 13.07,
+    "utcOffsetHours": 1
   },
   {
     "city": "Wiesbaden",
     "region": "Hesse",
     "country": "Germany",
     "latitude": 50.08,
-    "longitude": 8.24
+    "longitude": 8.24,
+    "utcOffsetHours": 1
   },
   {
     "city": "Guangzhou",
     "region": "Guangdong",
     "country": "China",
     "latitude": 23.13,
-    "longitude": 113.26
+    "longitude": 113.26,
+    "utcOffsetHours": 8
   },
   {
     "city": "Chengdu",
     "region": "Sichuan",
     "country": "China",
     "latitude": 30.57,
-    "longitude": 104.07
+    "longitude": 104.07,
+    "utcOffsetHours": 8
   },
   {
     "city": "Wuhan",
     "region": "Hubei",
     "country": "China",
     "latitude": 30.59,
-    "longitude": 114.31
+    "longitude": 114.31,
+    "utcOffsetHours": 8
   },
   {
     "city": "Xi'an",
     "region": "Shaanxi",
     "country": "China",
     "latitude": 34.26,
-    "longitude": 108.94
+    "longitude": 108.94,
+    "utcOffsetHours": 8
   },
   {
     "city": "Hangzhou",
     "region": "Zhejiang",
     "country": "China",
     "latitude": 30.25,
-    "longitude": 120.17
+    "longitude": 120.17,
+    "utcOffsetHours": 8
   },
   {
     "city": "Nanjing",
     "region": "Jiangsu",
     "country": "China",
     "latitude": 32.06,
-    "longitude": 118.8
+    "longitude": 118.8,
+    "utcOffsetHours": 8
   },
   {
     "city": "Chongqing",
     "region": "Chongqing",
     "country": "China",
     "latitude": 29.56,
-    "longitude": 106.55
+    "longitude": 106.55,
+    "utcOffsetHours": 8
   },
   {
     "city": "Tianjin",
     "region": "Tianjin",
     "country": "China",
     "latitude": 39.13,
-    "longitude": 117.2
+    "longitude": 117.2,
+    "utcOffsetHours": 8
   },
   {
     "city": "Shenyang",
     "region": "Liaoning",
     "country": "China",
     "latitude": 41.8,
-    "longitude": 123.43
+    "longitude": 123.43,
+    "utcOffsetHours": 8
   },
   {
     "city": "Harbin",
     "region": "Heilongjiang",
     "country": "China",
     "latitude": 45.75,
-    "longitude": 126.65
+    "longitude": 126.65,
+    "utcOffsetHours": 8
   },
   {
     "city": "Changchun",
     "region": "Jilin",
     "country": "China",
     "latitude": 43.88,
-    "longitude": 125.32
+    "longitude": 125.32,
+    "utcOffsetHours": 8
   },
   {
     "city": "Taiyuan",
     "region": "Shanxi",
     "country": "China",
     "latitude": 37.87,
-    "longitude": 112.55
+    "longitude": 112.55,
+    "utcOffsetHours": 8
   },
   {
     "city": "Hefei",
     "region": "Anhui",
     "country": "China",
     "latitude": 31.82,
-    "longitude": 117.23
+    "longitude": 117.23,
+    "utcOffsetHours": 8
   },
   {
     "city": "Fuzhou",
     "region": "Fujian",
     "country": "China",
     "latitude": 26.07,
-    "longitude": 119.3
+    "longitude": 119.3,
+    "utcOffsetHours": 8
   },
   {
     "city": "Nanchang",
     "region": "Jiangxi",
     "country": "China",
     "latitude": 28.68,
-    "longitude": 115.86
+    "longitude": 115.86,
+    "utcOffsetHours": 8
   },
   {
     "city": "Jinan",
     "region": "Shandong",
     "country": "China",
     "latitude": 36.65,
-    "longitude": 117.12
+    "longitude": 117.12,
+    "utcOffsetHours": 8
   },
   {
     "city": "Zhengzhou",
     "region": "Henan",
     "country": "China",
     "latitude": 34.75,
-    "longitude": 113.63
+    "longitude": 113.63,
+    "utcOffsetHours": 8
   },
   {
     "city": "Changsha",
     "region": "Hunan",
     "country": "China",
     "latitude": 28.23,
-    "longitude": 112.94
+    "longitude": 112.94,
+    "utcOffsetHours": 8
   },
   {
     "city": "Kunming",
     "region": "Yunnan",
     "country": "China",
     "latitude": 25.04,
-    "longitude": 102.72
+    "longitude": 102.72,
+    "utcOffsetHours": 8
   },
   {
     "city": "Guiyang",
     "region": "Guizhou",
     "country": "China",
     "latitude": 26.65,
-    "longitude": 106.63
+    "longitude": 106.63,
+    "utcOffsetHours": 8
   },
   {
     "city": "Nanning",
     "region": "Guangxi",
     "country": "China",
     "latitude": 22.82,
-    "longitude": 108.32
+    "longitude": 108.32,
+    "utcOffsetHours": 8
   },
   {
     "city": "Haikou",
     "region": "Hainan",
     "country": "China",
     "latitude": 20.04,
-    "longitude": 110.32
+    "longitude": 110.32,
+    "utcOffsetHours": 8
   },
   {
     "city": "Lanzhou",
     "region": "Gansu",
     "country": "China",
     "latitude": 36.06,
-    "longitude": 103.83
+    "longitude": 103.83,
+    "utcOffsetHours": 8
   },
   {
     "city": "Xining",
     "region": "Qinghai",
     "country": "China",
     "latitude": 36.62,
-    "longitude": 101.78
+    "longitude": 101.78,
+    "utcOffsetHours": 8
   },
   {
     "city": "Yinchuan",
     "region": "Ningxia",
     "country": "China",
     "latitude": 38.49,
-    "longitude": 106.23
+    "longitude": 106.23,
+    "utcOffsetHours": 8
   },
   {
     "city": "Ürümqi",
     "region": "Xinjiang",
     "country": "China",
     "latitude": 43.83,
-    "longitude": 87.62
+    "longitude": 87.62,
+    "utcOffsetHours": 6
   },
   {
     "city": "Lhasa",
     "region": "Tibet",
     "country": "China",
     "latitude": 29.65,
-    "longitude": 91.13
+    "longitude": 91.13,
+    "utcOffsetHours": 8
   },
   {
     "city": "Hohhot",
     "region": "Inner Mongolia",
     "country": "China",
     "latitude": 40.84,
-    "longitude": 111.75
+    "longitude": 111.75,
+    "utcOffsetHours": 8
   },
   {
     "city": "Shijiazhuang",
     "region": "Hebei",
     "country": "China",
     "latitude": 38.04,
-    "longitude": 114.48
+    "longitude": 114.48,
+    "utcOffsetHours": 8
   },
   {
     "city": "Edinburgh",
     "region": "Scotland",
     "country": "United Kingdom",
     "latitude": 55.95,
-    "longitude": -3.19
+    "longitude": -3.19,
+    "utcOffsetHours": 0
   },
   {
     "city": "Cardiff",
     "region": "Wales",
     "country": "United Kingdom",
     "latitude": 51.48,
-    "longitude": -3.18
+    "longitude": -3.18,
+    "utcOffsetHours": 0
   },
   {
     "city": "Belfast",
     "region": "Northern Ireland",
     "country": "United Kingdom",
     "latitude": 54.6,
-    "longitude": -5.93
+    "longitude": -5.93,
+    "utcOffsetHours": 0
   },
   {
     "city": "Barcelona",
     "region": "Catalonia",
     "country": "Spain",
     "latitude": 41.39,
-    "longitude": 2.17
+    "longitude": 2.17,
+    "utcOffsetHours": 1
   },
   {
     "city": "Seville",
     "region": "Andalusia",
     "country": "Spain",
     "latitude": 37.39,
-    "longitude": -5.98
+    "longitude": -5.98,
+    "utcOffsetHours": 0
   },
   {
     "city": "Valencia",
     "region": "Valencia",
     "country": "Spain",
     "latitude": 39.47,
-    "longitude": -0.38
+    "longitude": -0.38,
+    "utcOffsetHours": 1
   },
   {
     "city": "Zaragoza",
     "region": "Aragon",
     "country": "Spain",
     "latitude": 41.65,
-    "longitude": -0.88
+    "longitude": -0.88,
+    "utcOffsetHours": 1
   },
   {
     "city": "Bilbao",
     "region": "Basque Country",
     "country": "Spain",
     "latitude": 43.26,
-    "longitude": -2.93
+    "longitude": -2.93,
+    "utcOffsetHours": 1
   },
   {
     "city": "Milan",
     "region": "Lombardy",
     "country": "Italy",
     "latitude": 45.46,
-    "longitude": 9.19
+    "longitude": 9.19,
+    "utcOffsetHours": 1
   },
   {
     "city": "Naples",
     "region": "Campania",
     "country": "Italy",
     "latitude": 40.85,
-    "longitude": 14.27
+    "longitude": 14.27,
+    "utcOffsetHours": 1
   },
   {
     "city": "Turin",
     "region": "Piedmont",
     "country": "Italy",
     "latitude": 45.07,
-    "longitude": 7.69
+    "longitude": 7.69,
+    "utcOffsetHours": 1
   },
   {
     "city": "Palermo",
     "region": "Sicily",
     "country": "Italy",
     "latitude": 38.12,
-    "longitude": 13.36
+    "longitude": 13.36,
+    "utcOffsetHours": 1
   },
   {
     "city": "Florence",
     "region": "Tuscany",
     "country": "Italy",
     "latitude": 43.77,
-    "longitude": 11.25
+    "longitude": 11.25,
+    "utcOffsetHours": 1
   },
   {
     "city": "Bologna",
     "region": "Emilia-Romagna",
     "country": "Italy",
     "latitude": 44.49,
-    "longitude": 11.34
+    "longitude": 11.34,
+    "utcOffsetHours": 1
   },
   {
     "city": "Venice",
     "region": "Veneto",
     "country": "Italy",
     "latitude": 45.44,
-    "longitude": 12.32
+    "longitude": 12.32,
+    "utcOffsetHours": 1
   },
   {
     "city": "Lyon",
     "region": "Auvergne-Rhône-Alpes",
     "country": "France",
     "latitude": 45.76,
-    "longitude": 4.84
+    "longitude": 4.84,
+    "utcOffsetHours": 1
   },
   {
     "city": "Marseille",
     "region": "Provence-Alpes-Côte d'Azur",
     "country": "France",
     "latitude": 43.3,
-    "longitude": 5.37
+    "longitude": 5.37,
+    "utcOffsetHours": 1
   },
   {
     "city": "Toulouse",
     "region": "Occitanie",
     "country": "France",
     "latitude": 43.6,
-    "longitude": 1.44
+    "longitude": 1.44,
+    "utcOffsetHours": 1
   },
   {
     "city": "Bordeaux",
     "region": "Nouvelle-Aquitaine",
     "country": "France",
     "latitude": 44.84,
-    "longitude": -0.58
+    "longitude": -0.58,
+    "utcOffsetHours": 1
   },
   {
     "city": "Nantes",
     "region": "Pays de la Loire",
     "country": "France",
     "latitude": 47.22,
-    "longitude": -1.55
+    "longitude": -1.55,
+    "utcOffsetHours": 1
   },
   {
     "city": "Strasbourg",
     "region": "Grand Est",
     "country": "France",
     "latitude": 48.58,
-    "longitude": 7.75
+    "longitude": 7.75,
+    "utcOffsetHours": 1
   },
   {
     "city": "Lille",
     "region": "Hauts-de-France",
     "country": "France",
     "latitude": 50.63,
-    "longitude": 3.06
+    "longitude": 3.06,
+    "utcOffsetHours": 1
   },
   {
     "city": "Rennes",
     "region": "Brittany",
     "country": "France",
     "latitude": 48.11,
-    "longitude": -1.68
+    "longitude": -1.68,
+    "utcOffsetHours": 1
   },
   {
     "city": "Cape Town",
     "region": "Western Cape",
     "country": "South Africa",
     "latitude": -33.92,
-    "longitude": 18.42
+    "longitude": 18.42,
+    "utcOffsetHours": 2
   },
   {
     "city": "Durban",
     "region": "KwaZulu-Natal",
     "country": "South Africa",
     "latitude": -29.86,
-    "longitude": 31.02
+    "longitude": 31.02,
+    "utcOffsetHours": 2
   },
   {
     "city": "Pretoria",
     "region": "Gauteng",
     "country": "South Africa",
     "latitude": -25.75,
-    "longitude": 28.19
+    "longitude": 28.19,
+    "utcOffsetHours": 2
   },
   {
     "city": "Bloemfontein",
     "region": "Free State",
     "country": "South Africa",
     "latitude": -29.12,
-    "longitude": 26.21
+    "longitude": 26.21,
+    "utcOffsetHours": 2
   },
   {
     "city": "Port Elizabeth",
     "region": "Eastern Cape",
     "country": "South Africa",
     "latitude": -33.96,
-    "longitude": 25.6
+    "longitude": 25.6,
+    "utcOffsetHours": 2
   },
   {
     "city": "Polokwane",
     "region": "Limpopo",
     "country": "South Africa",
     "latitude": -23.9,
-    "longitude": 29.45
+    "longitude": 29.45,
+    "utcOffsetHours": 2
   },
   {
     "city": "Mahikeng",
     "region": "North West",
     "country": "South Africa",
     "latitude": -25.87,
-    "longitude": 25.64
+    "longitude": 25.64,
+    "utcOffsetHours": 2
   },
   {
     "city": "Kimberley",
     "region": "Northern Cape",
     "country": "South Africa",
     "latitude": -28.74,
-    "longitude": 24.77
+    "longitude": 24.77,
+    "utcOffsetHours": 2
   },
   {
     "city": "Nelspruit",
     "region": "Mpumalanga",
     "country": "South Africa",
     "latitude": -25.47,
-    "longitude": 30.97
+    "longitude": 30.97,
+    "utcOffsetHours": 2
   },
   {
     "city": "Lagos",
     "region": "Lagos",
     "country": "Nigeria",
     "latitude": 6.52,
-    "longitude": 3.38
+    "longitude": 3.38,
+    "utcOffsetHours": 1
   },
   {
     "city": "Kano",
     "region": "Kano",
     "country": "Nigeria",
-    "latitude": 12.0,
-    "longitude": 8.52
+    "latitude": 12,
+    "longitude": 8.52,
+    "utcOffsetHours": 1
   },
   {
     "city": "Ibadan",
     "region": "Oyo",
     "country": "Nigeria",
     "latitude": 7.38,
-    "longitude": 3.9
+    "longitude": 3.9,
+    "utcOffsetHours": 1
   },
   {
     "city": "Abuja",
     "region": "Federal Capital Territory",
     "country": "Nigeria",
     "latitude": 9.06,
-    "longitude": 7.49
+    "longitude": 7.49,
+    "utcOffsetHours": 1
   },
   {
     "city": "Port Harcourt",
     "region": "Rivers",
     "country": "Nigeria",
     "latitude": 4.78,
-    "longitude": 7.01
+    "longitude": 7.01,
+    "utcOffsetHours": 1
   },
   {
     "city": "Kaduna",
     "region": "Kaduna",
     "country": "Nigeria",
     "latitude": 10.52,
-    "longitude": 7.44
+    "longitude": 7.44,
+    "utcOffsetHours": 1
   },
   {
     "city": "Enugu",
     "region": "Enugu",
     "country": "Nigeria",
     "latitude": 6.44,
-    "longitude": 7.5
+    "longitude": 7.5,
+    "utcOffsetHours": 1
   },
   {
     "city": "Karachi",
     "region": "Sindh",
     "country": "Pakistan",
     "latitude": 24.86,
-    "longitude": 67.01
+    "longitude": 67.01,
+    "utcOffsetHours": 5
   },
   {
     "city": "Lahore",
     "region": "Punjab",
     "country": "Pakistan",
     "latitude": 31.56,
-    "longitude": 74.35
+    "longitude": 74.35,
+    "utcOffsetHours": 5
   },
   {
     "city": "Peshawar",
     "region": "Khyber Pakhtunkhwa",
     "country": "Pakistan",
     "latitude": 34.01,
-    "longitude": 71.58
+    "longitude": 71.58,
+    "utcOffsetHours": 5
   },
   {
     "city": "Quetta",
     "region": "Balochistan",
     "country": "Pakistan",
     "latitude": 30.18,
-    "longitude": 67.0
+    "longitude": 67,
+    "utcOffsetHours": 5
   },
   {
     "city": "Surabaya",
     "region": "East Java",
     "country": "Indonesia",
     "latitude": -7.25,
-    "longitude": 112.75
+    "longitude": 112.75,
+    "utcOffsetHours": 7
   },
   {
     "city": "Bandung",
     "region": "West Java",
     "country": "Indonesia",
     "latitude": -6.91,
-    "longitude": 107.61
+    "longitude": 107.61,
+    "utcOffsetHours": 7
   },
   {
     "city": "Medan",
     "region": "North Sumatra",
     "country": "Indonesia",
     "latitude": 3.6,
-    "longitude": 98.67
+    "longitude": 98.67,
+    "utcOffsetHours": 7
   },
   {
     "city": "Semarang",
     "region": "Central Java",
     "country": "Indonesia",
     "latitude": -6.97,
-    "longitude": 110.42
+    "longitude": 110.42,
+    "utcOffsetHours": 7
   },
   {
     "city": "Makassar",
     "region": "South Sulawesi",
     "country": "Indonesia",
     "latitude": -5.15,
-    "longitude": 119.43
+    "longitude": 119.43,
+    "utcOffsetHours": 8
   },
   {
     "city": "Palembang",
     "region": "South Sumatra",
     "country": "Indonesia",
     "latitude": -2.99,
-    "longitude": 104.76
+    "longitude": 104.76,
+    "utcOffsetHours": 7
   },
   {
     "city": "Denpasar",
     "region": "Bali",
     "country": "Indonesia",
     "latitude": -8.67,
-    "longitude": 115.22
+    "longitude": 115.22,
+    "utcOffsetHours": 8
   },
   {
     "city": "Cebu City",
     "region": "Cebu",
     "country": "Philippines",
     "latitude": 10.32,
-    "longitude": 123.89
+    "longitude": 123.89,
+    "utcOffsetHours": 8
   },
   {
     "city": "Davao City",
     "region": "Davao del Sur",
     "country": "Philippines",
     "latitude": 7.07,
-    "longitude": 125.61
+    "longitude": 125.61,
+    "utcOffsetHours": 8
   },
   {
     "city": "Quezon City",
     "region": "Metro Manila",
     "country": "Philippines",
     "latitude": 14.68,
-    "longitude": 121.04
+    "longitude": 121.04,
+    "utcOffsetHours": 8
   },
   {
     "city": "George Town",
     "region": "Penang",
     "country": "Malaysia",
     "latitude": 5.41,
-    "longitude": 100.34
+    "longitude": 100.34,
+    "utcOffsetHours": 8
   },
   {
     "city": "Ipoh",
     "region": "Perak",
     "country": "Malaysia",
     "latitude": 4.6,
-    "longitude": 101.09
+    "longitude": 101.09,
+    "utcOffsetHours": 8
   },
   {
     "city": "Johor Bahru",
     "region": "Johor",
     "country": "Malaysia",
     "latitude": 1.49,
-    "longitude": 103.74
+    "longitude": 103.74,
+    "utcOffsetHours": 8
   },
   {
     "city": "Kota Kinabalu",
     "region": "Sabah",
     "country": "Malaysia",
     "latitude": 5.98,
-    "longitude": 116.07
+    "longitude": 116.07,
+    "utcOffsetHours": 8
   },
   {
     "city": "Kuching",
     "region": "Sarawak",
     "country": "Malaysia",
     "latitude": 1.55,
-    "longitude": 110.35
+    "longitude": 110.35,
+    "utcOffsetHours": 8
   },
   {
     "city": "Osaka",
     "region": "Osaka",
     "country": "Japan",
     "latitude": 34.69,
-    "longitude": 135.5
+    "longitude": 135.5,
+    "utcOffsetHours": 9
   },
   {
     "city": "Nagoya",
     "region": "Aichi",
     "country": "Japan",
     "latitude": 35.18,
-    "longitude": 136.91
+    "longitude": 136.91,
+    "utcOffsetHours": 9
   },
   {
     "city": "Sapporo",
     "region": "Hokkaido",
     "country": "Japan",
     "latitude": 43.06,
-    "longitude": 141.35
+    "longitude": 141.35,
+    "utcOffsetHours": 9
   },
   {
     "city": "Fukuoka",
     "region": "Fukuoka",
     "country": "Japan",
     "latitude": 33.59,
-    "longitude": 130.4
+    "longitude": 130.4,
+    "utcOffsetHours": 9
   },
   {
     "city": "Yokohama",
     "region": "Kanagawa",
     "country": "Japan",
     "latitude": 35.44,
-    "longitude": 139.64
+    "longitude": 139.64,
+    "utcOffsetHours": 9
   },
   {
     "city": "Kobe",
     "region": "Hyogo",
     "country": "Japan",
     "latitude": 34.69,
-    "longitude": 135.2
+    "longitude": 135.2,
+    "utcOffsetHours": 9
   },
   {
     "city": "Kyoto",
     "region": "Kyoto",
     "country": "Japan",
     "latitude": 35.01,
-    "longitude": 135.77
+    "longitude": 135.77,
+    "utcOffsetHours": 9
   },
   {
     "city": "Saint Petersburg",
     "region": "Leningrad Oblast",
     "country": "Russia",
     "latitude": 59.93,
-    "longitude": 30.32
+    "longitude": 30.32,
+    "utcOffsetHours": 3
   },
   {
     "city": "Novosibirsk",
     "region": "Novosibirsk Oblast",
     "country": "Russia",
     "latitude": 55.03,
-    "longitude": 82.92
+    "longitude": 82.92,
+    "utcOffsetHours": 7
   },
   {
     "city": "Yekaterinburg",
     "region": "Sverdlovsk Oblast",
     "country": "Russia",
     "latitude": 56.84,
-    "longitude": 60.6
+    "longitude": 60.6,
+    "utcOffsetHours": 5
   },
   {
     "city": "Kazan",
     "region": "Tatarstan",
     "country": "Russia",
     "latitude": 55.8,
-    "longitude": 49.11
+    "longitude": 49.11,
+    "utcOffsetHours": 3
   },
   {
     "city": "Vladivostok",
     "region": "Primorsky Krai",
     "country": "Russia",
     "latitude": 43.12,
-    "longitude": 131.89
+    "longitude": 131.89,
+    "utcOffsetHours": 10
   },
   {
     "city": "Kraków",
     "region": "Lesser Poland",
     "country": "Poland",
     "latitude": 50.06,
-    "longitude": 19.94
+    "longitude": 19.94,
+    "utcOffsetHours": 1
   },
   {
     "city": "Wrocław",
     "region": "Lower Silesia",
     "country": "Poland",
     "latitude": 51.11,
-    "longitude": 17.04
+    "longitude": 17.04,
+    "utcOffsetHours": 1
   },
   {
     "city": "Gdańsk",
     "region": "Pomerania",
     "country": "Poland",
     "latitude": 54.35,
-    "longitude": 18.65
+    "longitude": 18.65,
+    "utcOffsetHours": 1
   },
   {
     "city": "Poznań",
     "region": "Greater Poland",
     "country": "Poland",
     "latitude": 52.41,
-    "longitude": 16.93
+    "longitude": 16.93,
+    "utcOffsetHours": 1
   },
   {
     "city": "Kharkiv",
     "region": "Kharkiv Oblast",
     "country": "Ukraine",
     "latitude": 49.99,
-    "longitude": 36.23
+    "longitude": 36.23,
+    "utcOffsetHours": 2
   },
   {
     "city": "Odesa",
     "region": "Odesa Oblast",
     "country": "Ukraine",
     "latitude": 46.48,
-    "longitude": 30.73
+    "longitude": 30.73,
+    "utcOffsetHours": 2
   },
   {
     "city": "Dnipro",
     "region": "Dnipropetrovsk Oblast",
     "country": "Ukraine",
     "latitude": 48.46,
-    "longitude": 35.05
+    "longitude": 35.05,
+    "utcOffsetHours": 2
   },
   {
     "city": "Lviv",
     "region": "Lviv Oblast",
     "country": "Ukraine",
     "latitude": 49.84,
-    "longitude": 24.03
+    "longitude": 24.03,
+    "utcOffsetHours": 2
   },
   {
     "city": "Córdoba",
     "region": "Córdoba",
     "country": "Argentina",
     "latitude": -31.42,
-    "longitude": -64.18
+    "longitude": -64.18,
+    "utcOffsetHours": -3
   },
   {
     "city": "Rosario",
     "region": "Santa Fe",
     "country": "Argentina",
     "latitude": -32.95,
-    "longitude": -60.64
+    "longitude": -60.64,
+    "utcOffsetHours": -3
   },
   {
     "city": "Mendoza",
     "region": "Mendoza",
     "country": "Argentina",
     "latitude": -32.89,
-    "longitude": -68.83
+    "longitude": -68.83,
+    "utcOffsetHours": -3
   },
   {
     "city": "La Plata",
     "region": "Buenos Aires",
     "country": "Argentina",
     "latitude": -34.92,
-    "longitude": -57.95
+    "longitude": -57.95,
+    "utcOffsetHours": -3
   },
   {
     "city": "Santiago",
     "region": "Santiago Metropolitan",
     "country": "Chile",
     "latitude": -33.45,
-    "longitude": -70.67
+    "longitude": -70.67,
+    "utcOffsetHours": -4
   },
   {
     "city": "Valparaíso",
     "region": "Valparaíso",
     "country": "Chile",
     "latitude": -33.05,
-    "longitude": -71.62
+    "longitude": -71.62,
+    "utcOffsetHours": -4
   },
   {
     "city": "Concepción",
     "region": "Biobío",
     "country": "Chile",
     "latitude": -36.83,
-    "longitude": -73.05
+    "longitude": -73.05,
+    "utcOffsetHours": -4
   },
   {
     "city": "Medellín",
     "region": "Antioquia",
     "country": "Colombia",
     "latitude": 6.25,
-    "longitude": -75.56
+    "longitude": -75.56,
+    "utcOffsetHours": -5
   },
   {
     "city": "Cali",
     "region": "Valle del Cauca",
     "country": "Colombia",
     "latitude": 3.45,
-    "longitude": -76.53
+    "longitude": -76.53,
+    "utcOffsetHours": -5
   },
   {
     "city": "Barranquilla",
     "region": "Atlántico",
     "country": "Colombia",
     "latitude": 10.96,
-    "longitude": -74.8
+    "longitude": -74.8,
+    "utcOffsetHours": -5
   },
   {
     "city": "Quito",
     "region": "Pichincha",
     "country": "Ecuador",
     "latitude": -0.18,
-    "longitude": -78.47
+    "longitude": -78.47,
+    "utcOffsetHours": -5
   },
   {
     "city": "Guayaquil",
     "region": "Guayas",
     "country": "Ecuador",
     "latitude": -2.19,
-    "longitude": -79.89
+    "longitude": -79.89,
+    "utcOffsetHours": -5
   },
   {
     "city": "Arequipa",
     "region": "Arequipa",
     "country": "Peru",
     "latitude": -16.4,
-    "longitude": -71.54
+    "longitude": -71.54,
+    "utcOffsetHours": -5
   },
   {
     "city": "Cusco",
     "region": "Cusco",
     "country": "Peru",
     "latitude": -13.52,
-    "longitude": -71.97
+    "longitude": -71.97,
+    "utcOffsetHours": -5
   },
   {
     "city": "Montevideo",
     "region": "Montevideo",
     "country": "Uruguay",
     "latitude": -34.9,
-    "longitude": -56.16
+    "longitude": -56.16,
+    "utcOffsetHours": -3
   },
   {
     "city": "Asunción",
     "region": "Asunción",
     "country": "Paraguay",
     "latitude": -25.26,
-    "longitude": -57.58
+    "longitude": -57.58,
+    "utcOffsetHours": -4
   },
   {
     "city": "La Paz",
     "region": "La Paz",
     "country": "Bolivia",
     "latitude": -16.5,
-    "longitude": -68.15
+    "longitude": -68.15,
+    "utcOffsetHours": -4
   },
   {
     "city": "Santa Cruz",
     "region": "Santa Cruz",
     "country": "Bolivia",
     "latitude": -17.79,
-    "longitude": -63.18
+    "longitude": -63.18,
+    "utcOffsetHours": -4
   },
   {
     "city": "Caracas",
     "region": "Capital District",
     "country": "Venezuela",
     "latitude": 10.49,
-    "longitude": -66.88
+    "longitude": -66.88,
+    "utcOffsetHours": -4
   },
   {
     "city": "Maracaibo",
     "region": "Zulia",
     "country": "Venezuela",
     "latitude": 10.63,
-    "longitude": -71.64
+    "longitude": -71.64,
+    "utcOffsetHours": -4
   },
   {
     "city": "Panama City",
     "region": "Panama",
     "country": "Panama",
     "latitude": 8.98,
-    "longitude": -79.52
+    "longitude": -79.52,
+    "utcOffsetHours": -5
   },
   {
     "city": "San José",
     "region": "San José",
     "country": "Costa Rica",
     "latitude": 9.93,
-    "longitude": -84.08
+    "longitude": -84.08,
+    "utcOffsetHours": -6
   },
   {
     "city": "Guatemala City",
     "region": "Guatemala",
     "country": "Guatemala",
     "latitude": 14.63,
-    "longitude": -90.51
+    "longitude": -90.51,
+    "utcOffsetHours": -6
   },
   {
     "city": "Tegucigalpa",
     "region": "Francisco Morazán",
     "country": "Honduras",
     "latitude": 14.07,
-    "longitude": -87.19
+    "longitude": -87.19,
+    "utcOffsetHours": -6
   },
   {
     "city": "Managua",
     "region": "Managua",
     "country": "Nicaragua",
     "latitude": 12.13,
-    "longitude": -86.25
+    "longitude": -86.25,
+    "utcOffsetHours": -6
   },
   {
     "city": "San Salvador",
     "region": "San Salvador",
     "country": "El Salvador",
     "latitude": 13.69,
-    "longitude": -89.19
+    "longitude": -89.19,
+    "utcOffsetHours": -6
   },
   {
     "city": "Havana",
     "region": "Havana",
     "country": "Cuba",
     "latitude": 23.13,
-    "longitude": -82.38
+    "longitude": -82.38,
+    "utcOffsetHours": -5
   },
   {
     "city": "Santo Domingo",
     "region": "Distrito Nacional",
     "country": "Dominican Republic",
     "latitude": 18.49,
-    "longitude": -69.93
+    "longitude": -69.93,
+    "utcOffsetHours": -4
   },
   {
     "city": "Port-au-Prince",
     "region": "Ouest",
     "country": "Haiti",
     "latitude": 18.54,
-    "longitude": -72.34
+    "longitude": -72.34,
+    "utcOffsetHours": -5
   },
   {
     "city": "Kingston",
     "region": "Kingston",
     "country": "Jamaica",
-    "latitude": 18.0,
-    "longitude": -76.79
+    "latitude": 18,
+    "longitude": -76.79,
+    "utcOffsetHours": -5
   },
   {
     "city": "Nassau",
     "region": "New Providence",
     "country": "Bahamas",
     "latitude": 25.06,
-    "longitude": -77.34
+    "longitude": -77.34,
+    "utcOffsetHours": -5
   },
   {
     "city": "Bridgetown",
     "region": "Saint Michael",
     "country": "Barbados",
     "latitude": 13.1,
-    "longitude": -59.61
+    "longitude": -59.61,
+    "utcOffsetHours": -4
   },
   {
     "city": "Port of Spain",
     "region": "Port of Spain",
     "country": "Trinidad and Tobago",
     "latitude": 10.66,
-    "longitude": -61.52
+    "longitude": -61.52,
+    "utcOffsetHours": -4
   }
 ]

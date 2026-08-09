@@ -15,6 +15,7 @@ import { useSettings } from "@/context/SettingsContext";
 import {
   findObserverCityByKey,
   loadObserverCities,
+  resolveUtcOffsetHours,
   type ObserverCity,
 } from "@/data/observer-cities";
 import {
@@ -78,7 +79,15 @@ export function LocationSetupDialog() {
           180,
           Math.max(-180, position.coords.longitude),
         );
-        updateSettings({ latitude, longitude });
+        updateSettings({
+          latitude,
+          longitude,
+          utcOffsetHours: resolveUtcOffsetHours(
+            latitude,
+            longitude,
+            observerCities,
+          ),
+        });
         setLocating(false);
         completeSetup();
       },
@@ -106,6 +115,7 @@ export function LocationSetupDialog() {
     updateSettings({
       latitude: city.latitude,
       longitude: city.longitude,
+      utcOffsetHours: city.utcOffsetHours,
     });
     completeSetup();
   };

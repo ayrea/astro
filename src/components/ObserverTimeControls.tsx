@@ -3,6 +3,7 @@ import { useCallback, useEffect, useState } from "react";
 import { DateTimePartGroup } from "@/components/DateTimePartGroup";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
+import { useSettings } from "@/context/SettingsContext";
 import { useObserverTime } from "@/context/TimeContext";
 import {
   buildObserverDateTime,
@@ -17,23 +18,33 @@ const TIME_PARTS: ObserverDateTimePart[] = ["hours", "minutes", "seconds"];
 const DATE_TIME_PARTS: ObserverDateTimePart[] = [...DATE_PARTS, ...TIME_PARTS];
 
 export function ObserverTimeControls() {
+  const { settings } = useSettings();
   const { observerTime, isLive, setLive, setObserverTime } = useObserverTime();
+  const utcOffsetHours = settings.utcOffsetHours;
   const [draftParts, setDraftParts] = useState(() =>
-    getObserverDateTimeParts(observerTime),
+    getObserverDateTimeParts(observerTime, utcOffsetHours),
   );
   const [invalidPart, setInvalidPart] = useState<ObserverDateTimePart | null>(
     null,
   );
+  const [draftOffsetHours, setDraftOffsetHours] = useState(utcOffsetHours);
+
+  // Re-derive wall-clock parts when the observing offset changes.
+  if (utcOffsetHours !== draftOffsetHours) {
+    setDraftOffsetHours(utcOffsetHours);
+    setDraftParts(getObserverDateTimeParts(observerTime, utcOffsetHours));
+    setInvalidPart(null);
+  }
 
   const handleLiveChange = useCallback(
     (enabled: boolean) => {
       setLive(enabled);
       if (!enabled) {
-        setDraftParts(getObserverDateTimeParts(new Date()));
+        setDraftParts(getObserverDateTimeParts(new Date(), utcOffsetHours));
         setInvalidPart(null);
       }
     },
-    [setLive],
+    [setLive, utcOffsetHours],
   );
 
   useEffect(() => {
@@ -46,7 +57,7 @@ export function ObserverTimeControls() {
   }, [isLive]);
 
   const displayParts = isLive
-    ? getObserverDateTimeParts(observerTime)
+    ? getObserverDateTimeParts(observerTime, utcOffsetHours)
     : draftParts;
 
   const updateDraftPart = useCallback(
@@ -59,32 +70,38 @@ export function ObserverTimeControls() {
 
   const commitPart = useCallback(
     (part: ObserverDateTimePart) => {
-      const parsed = buildObserverDateTime(draftParts);
+      const parsed = buildObserverDateTime(draftParts, utcOffsetHours);
       if (!parsed) {
         setInvalidPart(part);
-        setDraftParts(getObserverDateTimeParts(observerTime));
+        setDraftParts(getObserverDateTimeParts(observerTime, utcOffsetHours));
         return;
       }
 
       setInvalidPart(null);
-      setDraftParts(getObserverDateTimeParts(parsed));
+      setDraftParts(getObserverDateTimeParts(parsed, utcOffsetHours));
       setObserverTime(parsed);
     },
-    [draftParts, observerTime, setObserverTime],
+    [draftParts, observerTime, setObserverTime, utcOffsetHours],
   );
 
   const stepPart = useCallback(
     (part: ObserverDateTimePart, direction: 1 | -1) => {
-      const next = stepObserverDateTimePart(observerTime, part, direction);
+      const next = stepObserverDateTimePart(
+        observerTime,
+        part,
+        direction,
+        utcOffsetHours,
+      );
       setInvalidPart(null);
-      setDraftParts(getObserverDateTimeParts(next));
+      setDraftParts(getObserverDateTimeParts(next, utcOffsetHours));
       setObserverTime(next);
     },
-    [observerTime, setObserverTime],
+    [observerTime, setObserverTime, utcOffsetHours],
   );
 
   const partGroupProps = {
     displayParts,
+    utcOffsetHours,
     isLive,
     invalidPart,
     onUpdatePart: updateDraftPart,

@@ -15,33 +15,30 @@ import {
   type PlanetName,
 } from "@/lib/planets";
 import { findSunCrossings } from "@/lib/sun";
+import { formatObserverTime } from "@/lib/dateTime";
 import { cn } from "@/lib/utils";
 
-function formatTime(date: Date, includeSeconds: boolean = false): string {
-  return date.toLocaleTimeString([], {
-    hour: "2-digit",
-    minute: "2-digit",
-    second: includeSeconds ? "2-digit" : undefined,
-    hour12: false,
-  });
+function formatCrossingTime(date: Date | null, utcOffsetHours: number): string {
+  return date ? formatObserverTime(date, utcOffsetHours) : "—";
 }
 
-function formatCrossingTime(date: Date | null): string {
-  return date ? formatTime(date) : "—";
-}
-
-function buildCrossingInfoRows(crossings: CrossingsDetail) {
+function buildCrossingInfoRows(
+  crossings: CrossingsDetail,
+  utcOffsetHours: number,
+) {
   return [
     {
       label: crossings.isAboveHorizon ? "Last Rise" : "Last Set",
       value: formatCrossingTime(
         crossings.isAboveHorizon ? crossings.lastRise : crossings.lastSet,
+        utcOffsetHours,
       ),
     },
     {
       label: crossings.isAboveHorizon ? "Next Set" : "Next Rise",
       value: formatCrossingTime(
         crossings.isAboveHorizon ? crossings.nextSet : crossings.nextRise,
+        utcOffsetHours,
       ),
     },
   ];
@@ -97,17 +94,20 @@ export function InfoPanel({ onClose, className }: InfoPanelProps) {
     [observerTime],
   );
 
-  const sunInfoRows = useMemo(() => buildCrossingInfoRows(sun), [sun]);
+  const sunInfoRows = useMemo(
+    () => buildCrossingInfoRows(sun, settings.utcOffsetHours),
+    [sun, settings.utcOffsetHours],
+  );
   const moonInfoRows = useMemo(
     () => [
-      ...buildCrossingInfoRows(moon),
+      ...buildCrossingInfoRows(moon, settings.utcOffsetHours),
       { label: "Phase", value: getMoonPhaseName(moonPhase.elongationDeg) },
       {
         label: "Illumination",
         value: `${Math.round(moonPhase.illuminatedFraction * 100)}%`,
       },
     ],
-    [moon, moonPhase],
+    [moon, moonPhase, settings.utcOffsetHours],
   );
 
   const planetCrossings = useMemo(() => {
@@ -164,7 +164,10 @@ export function InfoPanel({ onClose, className }: InfoPanelProps) {
             <CrossingTable
               key={name}
               title={name}
-              rows={buildCrossingInfoRows(planetCrossings[name])}
+              rows={buildCrossingInfoRows(
+                planetCrossings[name],
+                settings.utcOffsetHours,
+              )}
             />
           ))}
         </div>

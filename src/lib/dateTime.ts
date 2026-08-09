@@ -31,14 +31,34 @@ function padTwo(value: number): string {
   return value.toString().padStart(2, "0");
 }
 
-export function getObserverDateTimeParts(date: Date): ObserverDateTimeParts {
+function offsetMilliseconds(utcOffsetHours: number): number {
+  return utcOffsetHours * 3_600_000;
+}
+
+function toObserverLocalDate(date: Date, utcOffsetHours: number): Date {
+  return new Date(date.getTime() + offsetMilliseconds(utcOffsetHours));
+}
+
+export function formatUtcOffset(utcOffsetHours: number): string {
+  const sign = utcOffsetHours >= 0 ? "+" : "-";
+  const absolute = Math.abs(utcOffsetHours);
+  const hours = Math.floor(absolute);
+  const minutes = Math.round((absolute - hours) * 60);
+  return `UTC${sign}${padTwo(hours)}:${padTwo(minutes)}`;
+}
+
+export function getObserverDateTimeParts(
+  date: Date,
+  utcOffsetHours: number,
+): ObserverDateTimeParts {
+  const local = toObserverLocalDate(date, utcOffsetHours);
   return {
-    day: padTwo(date.getDate()),
-    month: MONTHS[date.getMonth()],
-    year: date.getFullYear().toString(),
-    hours: padTwo(date.getHours()),
-    minutes: padTwo(date.getMinutes()),
-    seconds: padTwo(date.getSeconds()),
+    day: padTwo(local.getUTCDate()),
+    month: MONTHS[local.getUTCMonth()],
+    year: local.getUTCFullYear().toString(),
+    hours: padTwo(local.getUTCHours()),
+    minutes: padTwo(local.getUTCMinutes()),
+    seconds: padTwo(local.getUTCSeconds()),
   };
 }
 
@@ -53,6 +73,7 @@ function normalizeMonth(monthText: string): string | null {
 
 export function buildObserverDateTime(
   parts: ObserverDateTimeParts,
+  utcOffsetHours: number,
 ): Date | null {
   const month = normalizeMonth(parts.month);
   if (month === null) {
@@ -76,14 +97,19 @@ export function buildObserverDateTime(
     return null;
   }
 
-  const date = new Date(year, monthIndex, day, hours, minutes, seconds);
+  const utcMillis =
+    Date.UTC(year, monthIndex, day, hours, minutes, seconds) -
+    offsetMilliseconds(utcOffsetHours);
+  const date = new Date(utcMillis);
+
+  const local = toObserverLocalDate(date, utcOffsetHours);
   if (
-    date.getFullYear() !== year ||
-    date.getMonth() !== monthIndex ||
-    date.getDate() !== day ||
-    date.getHours() !== hours ||
-    date.getMinutes() !== minutes ||
-    date.getSeconds() !== seconds
+    local.getUTCFullYear() !== year ||
+    local.getUTCMonth() !== monthIndex ||
+    local.getUTCDate() !== day ||
+    local.getUTCHours() !== hours ||
+    local.getUTCMinutes() !== minutes ||
+    local.getUTCSeconds() !== seconds
   ) {
     return null;
   }
@@ -95,42 +121,60 @@ export function stepObserverDateTimePart(
   date: Date,
   part: ObserverDateTimePart,
   direction: 1 | -1,
+  utcOffsetHours: number,
 ): Date {
-  const next = new Date(date.getTime());
+  const local = toObserverLocalDate(date, utcOffsetHours);
 
   switch (part) {
     case "seconds":
-      next.setSeconds(next.getSeconds() + direction);
+      local.setUTCSeconds(local.getUTCSeconds() + direction);
       break;
     case "minutes":
-      next.setMinutes(next.getMinutes() + direction);
+      local.setUTCMinutes(local.getUTCMinutes() + direction);
       break;
     case "hours":
-      next.setHours(next.getHours() + direction);
+      local.setUTCHours(local.getUTCHours() + direction);
       break;
     case "day":
-      next.setDate(next.getDate() + direction);
+      local.setUTCDate(local.getUTCDate() + direction);
       break;
     case "month":
-      next.setMonth(next.getMonth() + direction);
+      local.setUTCMonth(local.getUTCMonth() + direction);
       break;
     case "year":
-      next.setFullYear(next.getFullYear() + direction);
+      local.setUTCFullYear(local.getUTCFullYear() + direction);
       break;
   }
 
-  return next;
+  return new Date(local.getTime() - offsetMilliseconds(utcOffsetHours));
 }
 
-export function formatObserverDateTime(date: Date): string {
-  const parts = getObserverDateTimeParts(date);
+export function formatObserverDateTime(
+  date: Date,
+  utcOffsetHours: number,
+): string {
+  const parts = getObserverDateTimeParts(date, utcOffsetHours);
   return `${parts.day}-${parts.month}-${parts.year} ${parts.hours}:${parts.minutes}:${parts.seconds}`;
+}
+
+export function formatObserverTime(
+  date: Date,
+  utcOffsetHours: number,
+  includeSeconds: boolean = false,
+): string {
+  const parts = getObserverDateTimeParts(date, utcOffsetHours);
+  return includeSeconds
+    ? `${parts.hours}:${parts.minutes}:${parts.seconds}`
+    : `${parts.hours}:${parts.minutes}`;
 }
 
 const OBSERVER_DATE_TIME_PATTERN =
   /^(\d{2})-([A-Za-z]{3})-(\d{4}) (\d{2}):(\d{2}):(\d{2})$/;
 
-export function parseObserverDateTime(text: string): Date | null {
+export function parseObserverDateTime(
+  text: string,
+  utcOffsetHours: number,
+): Date | null {
   const match = text.trim().match(OBSERVER_DATE_TIME_PATTERN);
   if (!match) {
     return null;
@@ -139,12 +183,15 @@ export function parseObserverDateTime(text: string): Date | null {
   const [, dayText, monthText, yearText, hoursText, minutesText, secondsText] =
     match;
 
-  return buildObserverDateTime({
-    day: dayText,
-    month: monthText,
-    year: yearText,
-    hours: hoursText,
-    minutes: minutesText,
-    seconds: secondsText,
-  });
+  return buildObserverDateTime(
+    {
+      day: dayText,
+      month: monthText,
+      year: yearText,
+      hours: hoursText,
+      minutes: minutesText,
+      seconds: secondsText,
+    },
+    utcOffsetHours,
+  );
 }

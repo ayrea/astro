@@ -6,6 +6,7 @@ export interface ObserverCity {
   country: string;
   latitude: number;
   longitude: number;
+  utcOffsetHours: number;
 }
 
 export const CUSTOM_LOCATION_ID = "custom";
@@ -18,6 +19,49 @@ export function formatObserverCityLabel(city: ObserverCity): string {
 
 export function observerCityKey(city: ObserverCity): string {
   return `${city.latitude},${city.longitude}`;
+}
+
+export function estimateUtcOffsetHours(longitude: number): number {
+  return Math.min(14, Math.max(-12, Math.round(longitude / 15)));
+}
+
+export function findNearestObserverCity(
+  latitude: number,
+  longitude: number,
+  cities: ObserverCity[],
+): ObserverCity | undefined {
+  if (cities.length === 0) {
+    return undefined;
+  }
+
+  let best = cities[0];
+  let bestDistance = Number.POSITIVE_INFINITY;
+
+  for (const city of cities) {
+    const dLat = city.latitude - latitude;
+    const dLon = city.longitude - longitude;
+    const distance = dLat * dLat + dLon * dLon;
+    if (distance < bestDistance) {
+      bestDistance = distance;
+      best = city;
+    }
+  }
+
+  return best;
+}
+
+export function resolveUtcOffsetHours(
+  latitude: number,
+  longitude: number,
+  cities: ObserverCity[],
+): number {
+  const exact = findObserverCity(latitude, longitude, cities);
+  if (exact) {
+    return exact.utcOffsetHours;
+  }
+
+  const nearest = findNearestObserverCity(latitude, longitude, cities);
+  return nearest?.utcOffsetHours ?? estimateUtcOffsetHours(longitude);
 }
 
 export async function loadObserverCities(): Promise<ObserverCity[]> {

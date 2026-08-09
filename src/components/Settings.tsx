@@ -48,8 +48,10 @@ import {
   findObserverCityByKey,
   loadObserverCities,
   observerCityKey,
+  resolveUtcOffsetHours,
   type ObserverCity,
 } from "@/data/observer-cities";
+import { formatUtcOffset } from "@/lib/dateTime";
 import { cn } from "@/lib/utils";
 
 const GRID_COLOR_PRESETS = [
@@ -117,6 +119,9 @@ export function SettingsTrigger() {
   const [citiesLoading, setCitiesLoading] = useState(false);
   const [draftLatitude, setDraftLatitude] = useState(settings.latitude);
   const [draftLongitude, setDraftLongitude] = useState(settings.longitude);
+  const [draftUtcOffsetHours, setDraftUtcOffsetHours] = useState(
+    settings.utcOffsetHours,
+  );
   const [locating, setLocating] = useState(false);
   const [locateError, setLocateError] = useState<string | null>(null);
   const snapshotRef = useRef<Settings | null>(null);
@@ -134,6 +139,7 @@ export function SettingsTrigger() {
   const openCustomLocationDialog = () => {
     setDraftLatitude(settings.latitude);
     setDraftLongitude(settings.longitude);
+    setDraftUtcOffsetHours(settings.utcOffsetHours);
     setLocating(false);
     setLocateError(null);
     setCustomDialogOpen(true);
@@ -168,6 +174,9 @@ export function SettingsTrigger() {
       );
       setDraftLatitude(latitude);
       setDraftLongitude(longitude);
+      setDraftUtcOffsetHours(
+        resolveUtcOffsetHours(latitude, longitude, observerCities),
+      );
       setLocating(false);
     }, handleGeolocationError);
   };
@@ -186,7 +195,15 @@ export function SettingsTrigger() {
         180,
         Math.max(-180, position.coords.longitude),
       );
-      updateSettings({ latitude, longitude });
+      updateSettings({
+        latitude,
+        longitude,
+        utcOffsetHours: resolveUtcOffsetHours(
+          latitude,
+          longitude,
+          observerCities,
+        ),
+      });
       setLocating(false);
     }, handleGeolocationError);
   };
@@ -205,6 +222,7 @@ export function SettingsTrigger() {
     updateSettings({
       latitude: city.latitude,
       longitude: city.longitude,
+      utcOffsetHours: city.utcOffsetHours,
     });
   };
 
@@ -216,6 +234,7 @@ export function SettingsTrigger() {
     updateSettings({
       latitude: draftLatitude,
       longitude: draftLongitude,
+      utcOffsetHours: draftUtcOffsetHours,
     });
     setCustomDialogOpen(false);
   };
@@ -336,6 +355,10 @@ export function SettingsTrigger() {
                 )}
                 <p className="text-xs text-muted-foreground">
                   Observer location used for sky projection and rise/set times.
+                </p>
+                <p className="text-xs text-muted-foreground">
+                  UTC offset: {formatUtcOffset(settings.utcOffsetHours)}
+                  {isCustomLocation ? " (custom)" : ""}
                 </p>
                 {isCustomLocation && (
                   <button
@@ -1318,7 +1341,7 @@ export function SettingsTrigger() {
           <DialogHeader>
             <DialogTitle>Custom location</DialogTitle>
             <DialogDescription>
-              Enter observer latitude and longitude in degrees.
+              Enter observer latitude, longitude, and UTC offset.
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4 px-6 py-2">
@@ -1370,6 +1393,21 @@ export function SettingsTrigger() {
               />
               <p className="text-xs text-muted-foreground">
                 Observer longitude in degrees (-180 to 180, positive east).
+              </p>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="custom-utc-offset">UTC offset (hours)</Label>
+              <NumericInput
+                id="custom-utc-offset"
+                min={-12}
+                max={14}
+                value={draftUtcOffsetHours}
+                onChange={setDraftUtcOffsetHours}
+              />
+              <p className="text-xs text-muted-foreground">
+                Fixed offset from UTC, ignoring daylight saving. Example: 8 for
+                UTC+08:00, 5.5 for UTC+05:30. Currently{" "}
+                {formatUtcOffset(draftUtcOffsetHours)}.
               </p>
             </div>
           </div>

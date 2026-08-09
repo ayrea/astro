@@ -1,6 +1,7 @@
 import { DateTimePartInput } from "@/components/DateTimePartInput";
 import {
   buildObserverDateTime,
+  getObserverDateTimeParts,
   type ObserverDateTimePart,
   type ObserverDateTimeParts,
 } from "@/lib/dateTime";
@@ -35,25 +36,47 @@ const PART_MAX_LENGTH: Record<ObserverDateTimePart, number> = {
 function getPartAriaValues(
   part: ObserverDateTimePart,
   parts: ObserverDateTimeParts,
+  utcOffsetHours: number,
 ): { now: number; min: number; max: number } | undefined {
-  const date = buildObserverDateTime(parts);
+  const date = buildObserverDateTime(parts, utcOffsetHours);
   if (!date) {
     return undefined;
   }
 
+  const localParts = getObserverDateTimeParts(date, utcOffsetHours);
+
   switch (part) {
     case "day":
-      return { now: date.getDate(), min: 1, max: 31 };
-    case "month":
-      return { now: date.getMonth() + 1, min: 1, max: 12 };
+      return { now: Number(localParts.day), min: 1, max: 31 };
+    case "month": {
+      const monthNames = [
+        "Jan",
+        "Feb",
+        "Mar",
+        "Apr",
+        "May",
+        "Jun",
+        "Jul",
+        "Aug",
+        "Sep",
+        "Oct",
+        "Nov",
+        "Dec",
+      ];
+      return {
+        now: monthNames.indexOf(localParts.month) + 1,
+        min: 1,
+        max: 12,
+      };
+    }
     case "year":
-      return { now: date.getFullYear(), min: 1, max: 9999 };
+      return { now: Number(localParts.year), min: 1, max: 9999 };
     case "hours":
-      return { now: date.getHours(), min: 0, max: 23 };
+      return { now: Number(localParts.hours), min: 0, max: 23 };
     case "minutes":
-      return { now: date.getMinutes(), min: 0, max: 59 };
+      return { now: Number(localParts.minutes), min: 0, max: 59 };
     case "seconds":
-      return { now: date.getSeconds(), min: 0, max: 59 };
+      return { now: Number(localParts.seconds), min: 0, max: 59 };
   }
 }
 
@@ -61,6 +84,7 @@ interface DateTimePartGroupProps {
   parts: ObserverDateTimePart[];
   separator: "-" | ":";
   displayParts: ObserverDateTimeParts;
+  utcOffsetHours: number;
   isLive: boolean;
   invalidPart: ObserverDateTimePart | null;
   onUpdatePart: (part: ObserverDateTimePart, value: string) => void;
@@ -72,6 +96,7 @@ export function DateTimePartGroup({
   parts,
   separator,
   displayParts,
+  utcOffsetHours,
   isLive,
   invalidPart,
   onUpdatePart,
@@ -81,7 +106,11 @@ export function DateTimePartGroup({
   return (
     <div className="flex items-center gap-0.5">
       {parts.map((part, index) => {
-        const ariaValues = getPartAriaValues(part, displayParts);
+        const ariaValues = getPartAriaValues(
+          part,
+          displayParts,
+          utcOffsetHours,
+        );
 
         return (
           <div key={part} className="flex items-center gap-0.5">
