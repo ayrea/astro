@@ -1,5 +1,6 @@
 import { Loader2, LocateFixed, Settings as SettingsIcon } from "lucide-react";
 import { useRef, useState } from "react";
+import { toast } from "sonner";
 
 import { AboutDialog } from "@/components/About";
 import { LocationPicker } from "@/components/LocationPicker";
@@ -42,6 +43,7 @@ import {
   type Settings,
   useSettings,
 } from "@/context/SettingsContext";
+import { requestDeviceOrientationPermission } from "@/lib/deviceOrientation";
 import {
   CUSTOM_LOCATION_ID,
   findObserverCity,
@@ -409,6 +411,41 @@ export function SettingsTrigger() {
                   onCheckedChange={(checked) =>
                     updateSettings({ mirrorEastWest: checked })
                   }
+                />
+              </div>
+
+              <div className="flex items-center justify-between gap-4">
+                <div className="space-y-1">
+                  <Label htmlFor="sky-align">Sky align (sensors)</Label>
+                  <p className="text-xs text-muted-foreground">
+                    Point the back of the phone at the sky; the chart pans and
+                    rotates to match. Requires motion/compass permission.
+                  </p>
+                </div>
+                <Switch
+                  id="sky-align"
+                  checked={settings.skyAlignEnabled}
+                  onCheckedChange={(checked) => {
+                    updateSettings({ skyAlignEnabled: checked });
+                    if (!checked) {
+                      return;
+                    }
+
+                    void requestDeviceOrientationPermission().then((result) => {
+                      if (result === "unsupported") {
+                        toast(
+                          "Device orientation is not supported on this device",
+                        );
+                        return;
+                      }
+
+                      if (result === "denied") {
+                        toast(
+                          "Motion/compass permission denied — sky align cannot track the sky",
+                        );
+                      }
+                    });
+                  }}
                 />
               </div>
 

@@ -39,6 +39,19 @@ export function HelpDialog({ open, onOpenChange }: HelpDialogProps) {
           </div>
 
           <div className="space-y-2">
+            <h3 className="font-medium">Sky align (sensors)</h3>
+            <p className="text-muted-foreground">
+              Turn on <span className="text-foreground">Sky align (sensors)</span>{" "}
+              in Settings → General. Hold the phone with the screen facing you
+              and point the back of the device at the sky. The chart pans and
+              rotates so the centre of the view matches the direction you are
+              pointing. Pinch or scroll to zoom into that region. Your browser
+              may ask for motion and compass permission; heading follows
+              magnetic north.
+            </p>
+          </div>
+
+          <div className="space-y-2">
             <h3 className="font-medium">What the circle means</h3>
             <p className="text-muted-foreground">
               The planisphere represents the entire sky visible at the chosen

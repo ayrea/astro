@@ -21,6 +21,7 @@ A Progressive Web App (PWA) that can be installed on a mobile device for offline
 - User location from comprehensive list of world wide cities or custom latitude/Longitude.
 - Displays location of Planets, and rise and set times for Planets.
 - When used online, displays Wikipedia articles of night sky objects interactively.
+- Optional sky align using device orientation sensors (point the phone at the sky).
 
 Future features roadmap:
 

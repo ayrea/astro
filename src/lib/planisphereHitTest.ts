@@ -45,11 +45,19 @@ export function clientToWorld(
   const localX = clientX - rect.left;
   const localY = clientY - rect.top;
   const { centerX, centerY } = metrics;
-  const { scale, offsetX, offsetY } = viewport;
+  const { scale, offsetX, offsetY, rotation } = viewport;
+
+  // Inverse of: translate(center+offset) → rotate(rotation) → scale(scale)
+  const screenX = localX - centerX - offsetX;
+  const screenY = localY - centerY - offsetY;
+  const cos = Math.cos(rotation);
+  const sin = Math.sin(rotation);
+  const unrotatedX = screenX * cos + screenY * sin;
+  const unrotatedY = -screenX * sin + screenY * cos;
 
   return {
-    x: (localX - centerX - offsetX) / scale,
-    y: (localY - centerY - offsetY) / scale,
+    x: unrotatedX / scale,
+    y: unrotatedY / scale,
   };
 }
 

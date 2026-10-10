@@ -5,6 +5,8 @@ export interface Viewport {
   scale: number;
   offsetX: number;
   offsetY: number;
+  /** Radians; positive rotates the chart clockwise on the canvas (Y-down). */
+  rotation: number;
 }
 
 export interface CanvasMetrics {
@@ -19,6 +21,7 @@ export const DEFAULT_VIEWPORT: Viewport = {
   scale: MIN_SCALE,
   offsetX: 0,
   offsetY: 0,
+  rotation: 0,
 };
 
 export function getCanvasMetrics(rect: DOMRect): CanvasMetrics {
@@ -58,26 +61,78 @@ export function zoomToPoint(
   };
 }
 
+/** Rotate a world-space point by viewport rotation (canvas Y-down convention). */
+export function rotateWorldPoint(
+  x: number,
+  y: number,
+  rotation: number,
+): { x: number; y: number } {
+  const cos = Math.cos(rotation);
+  const sin = Math.sin(rotation);
+  return {
+    x: x * cos - y * sin,
+    y: x * sin + y * cos,
+  };
+}
+
+/**
+ * Viewport that centers `worldX`/`worldY` on screen and rotates so the
+ * direction from that point toward the zenith (origin) points screen-up.
+ */
+export function viewportForLookPoint(
+  worldX: number,
+  worldY: number,
+  scale: number,
+  previousRotation = 0,
+): Viewport {
+  const clampedScale = clampScale(scale);
+  const distance = Math.hypot(worldX, worldY);
+
+  // At zenith the toward-zenith direction is undefined; keep prior rotation.
+  const rotation =
+    distance < 1e-6 ? previousRotation : Math.atan2(worldX, worldY);
+
+  const rotated = rotateWorldPoint(worldX, worldY, rotation);
+
+  return {
+    scale: clampedScale,
+    offsetX: -clampedScale * rotated.x,
+    offsetY: -clampedScale * rotated.y,
+    rotation,
+  };
+}
+
 export function clampPan(
   offsetX: number,
   offsetY: number,
   scale: number,
   metrics: CanvasMetrics,
+  allowPanAtMinScale = false,
 ): { offsetX: number; offsetY: number } {
-  if (scale <= MIN_SCALE) {
+  if (scale <= MIN_SCALE && !allowPanAtMinScale) {
     return { offsetX: 0, offsetY: 0 };
   }
 
   const { centerX, centerY, radius } = metrics;
   const margin = radius * 0.1;
+  const scaleFactor = Math.max(0, scale - 1);
   const maxOffsetX =
-    radius * (scale - 1) + Math.max(0, centerX - radius) + margin;
+    radius * scaleFactor + Math.max(0, centerX - radius) + margin;
   const maxOffsetY =
-    radius * (scale - 1) + Math.max(0, centerY - radius) + margin;
+    radius * scaleFactor + Math.max(0, centerY - radius) + margin;
+
+  // When panning at min scale (sky-align), still allow offsets up to the rim.
+  const minScalePad = allowPanAtMinScale && scale <= MIN_SCALE ? radius : 0;
 
   return {
-    offsetX: Math.max(-maxOffsetX, Math.min(maxOffsetX, offsetX)),
-    offsetY: Math.max(-maxOffsetY, Math.min(maxOffsetY, offsetY)),
+    offsetX: Math.max(
+      -(maxOffsetX + minScalePad),
+      Math.min(maxOffsetX + minScalePad, offsetX),
+    ),
+    offsetY: Math.max(
+      -(maxOffsetY + minScalePad),
+      Math.min(maxOffsetY + minScalePad, offsetY),
+    ),
   };
 }
 
@@ -86,18 +141,27 @@ export function normalizeViewport(
   offsetX: number,
   offsetY: number,
   metrics: CanvasMetrics,
+  rotation = 0,
+  allowPanAtMinScale = false,
 ): Viewport {
   const clampedScale = clampScale(scale);
 
-  if (clampedScale <= MIN_SCALE) {
-    return DEFAULT_VIEWPORT;
+  if (clampedScale <= MIN_SCALE && !allowPanAtMinScale) {
+    return { ...DEFAULT_VIEWPORT, rotation: 0 };
   }
 
-  const clampedPan = clampPan(offsetX, offsetY, clampedScale, metrics);
+  const clampedPan = clampPan(
+    offsetX,
+    offsetY,
+    clampedScale,
+    metrics,
+    allowPanAtMinScale,
+  );
 
   return {
     scale: clampedScale,
     offsetX: clampedPan.offsetX,
     offsetY: clampedPan.offsetY,
+    rotation,
   };
 }

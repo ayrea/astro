@@ -8,6 +8,7 @@ import {
   useSettings,
 } from "@/context/SettingsContext";
 import { useObserverTime } from "@/context/TimeContext";
+import { useDeviceSkyOrientation } from "@/hooks/useDeviceSkyOrientation";
 import { usePanZoom } from "@/hooks/usePanZoom";
 import {
   eclipticToEquatorial,
@@ -48,6 +49,7 @@ import { getSunEquatorial } from "@/lib/sun";
 import {
   DEFAULT_VIEWPORT,
   getCanvasMetrics,
+  viewportForLookPoint,
   type Viewport,
 } from "@/lib/viewport";
 import { getWikipediaUrl } from "@/lib/wikipedia";
@@ -116,6 +118,10 @@ export function Planisphere() {
   const { settings } = useSettings();
   const { observerTime } = useObserverTime();
   const [isOverTarget, setIsOverTarget] = useState(false);
+  const skyAlignActive = settings.skyAlignEnabled;
+  const mirrorEastWestRef = useRef(settings.mirrorEastWest);
+  const getViewportRef = useRef<(() => Viewport) | null>(null);
+  const applyViewportRef = useRef<((next: Viewport) => void) | null>(null);
 
   const getMetrics = useCallback(() => {
     const container = containerRef.current;
@@ -144,7 +150,45 @@ export function Planisphere() {
     };
   }, []);
 
-  const getViewportRef = useRef<(() => Viewport) | null>(null);
+  useEffect(() => {
+    mirrorEastWestRef.current = settings.mirrorEastWest;
+  }, [settings.mirrorEastWest]);
+
+  const applySkyLook = useCallback(
+    (look: { elevationDegrees: number; azimuthDegrees: number }) => {
+      const apply = applyViewportRef.current;
+      const getViewport = getViewportRef.current;
+      if (!apply || !getViewport) {
+        return;
+      }
+
+      const metrics = getMetrics();
+      const elevation = Math.max(0, look.elevationDegrees);
+      const projected = projectElevationAzimuth(
+        elevation,
+        look.azimuthDegrees,
+        metrics.radius,
+        mirrorEastWestRef.current,
+      );
+
+      if (!projected.visible) {
+        return;
+      }
+
+      const current = getViewport();
+      apply(
+        viewportForLookPoint(
+          projected.x,
+          projected.y,
+          current.scale,
+          current.rotation,
+        ),
+      );
+    },
+    [getMetrics],
+  );
+
+  useDeviceSkyOrientation(skyAlignActive, applySkyLook);
 
   const handleTap = useCallback(
     (clientX: number, clientY: number) => {
@@ -182,16 +226,27 @@ export function Planisphere() {
     [getMetrics],
   );
 
-  const { getViewport, isDragging, isZoomed } = usePanZoom(
+  const { getViewport, applyViewport, isDragging, isZoomed } = usePanZoom(
     canvasRef,
     getMetrics,
     requestRedraw,
     handleTap,
+    {
+      lockPan: skyAlignActive,
+      allowPanAtMinScale: skyAlignActive,
+    },
   );
 
   useEffect(() => {
     getViewportRef.current = getViewport;
-  }, [getViewport]);
+    applyViewportRef.current = applyViewport;
+  }, [applyViewport, getViewport]);
+
+  useEffect(() => {
+    if (!skyAlignActive) {
+      applyViewport(DEFAULT_VIEWPORT);
+    }
+  }, [applyViewport, skyAlignActive]);
 
   const updateHoverState = useCallback(
     (clientX: number, clientY: number) => {
@@ -287,6 +342,7 @@ export function Planisphere() {
 
       context.save();
       context.translate(centerX + viewport.offsetX, centerY + viewport.offsetY);
+      context.rotate(viewport.rotation);
       context.scale(viewport.scale, viewport.scale);
 
       if (settings.showElevation) {

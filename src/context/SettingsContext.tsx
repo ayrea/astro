@@ -19,6 +19,7 @@ export interface Settings {
   utcOffsetHours: number;
   magnitudeCutoff: number;
   mirrorEastWest: boolean;
+  skyAlignEnabled: boolean;
   showLabels: boolean;
   showGrid: boolean;
   gridRaSpacing: GridRaSpacing;
@@ -97,6 +98,7 @@ const defaultSettings: Settings = {
   utcOffsetHours: 8,
   magnitudeCutoff: 5,
   mirrorEastWest: true,
+  skyAlignEnabled: false,
   showLabels: true,
   showGrid: true,
   gridRaSpacing: 2,
@@ -344,12 +346,18 @@ function normalizeSettings(parsed: Partial<Settings>): Settings {
         )
       : resolveMigratedUtcOffsetHours(latitude, longitude);
 
+  const skyAlignEnabled =
+    typeof parsed.skyAlignEnabled === "boolean"
+      ? parsed.skyAlignEnabled
+      : defaultSettings.skyAlignEnabled;
+
   return {
     ...defaultSettings,
     ...parsed,
     latitude,
     longitude,
     utcOffsetHours,
+    skyAlignEnabled,
     gridRaSpacing,
     gridDecSpacing,
     gridLineColor,

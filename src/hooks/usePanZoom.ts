@@ -45,6 +45,13 @@ interface TapState {
   hadPinch: boolean;
 }
 
+export interface PanZoomOptions {
+  /** When true, drag pan is disabled (e.g. sky-align driving the view). */
+  lockPan?: boolean;
+  /** Allow non-zero pan at minimum scale (needed for sky-align). */
+  allowPanAtMinScale?: boolean;
+}
+
 function getCanvasCenter(canvas: HTMLCanvasElement) {
   const rect = canvas.getBoundingClientRect();
   return {
@@ -89,6 +96,7 @@ export function usePanZoom(
   getCanvasMetrics: () => CanvasMetrics,
   requestRedraw: () => void,
   onTap?: (clientX: number, clientY: number) => void,
+  options?: PanZoomOptions,
 ) {
   const viewportRef = useRef<Viewport>(DEFAULT_VIEWPORT);
   const pointersRef = useRef(new Map<number, PointerPosition>());
@@ -96,6 +104,7 @@ export function usePanZoom(
   const pinchStateRef = useRef<PinchState | null>(null);
   const tapStateRef = useRef<TapState | null>(null);
   const onTapRef = useRef(onTap);
+  const optionsRef = useRef(options);
   const [isDragging, setIsDragging] = useState(false);
   const [isZoomed, setIsZoomed] = useState(false);
 
@@ -103,15 +112,22 @@ export function usePanZoom(
     onTapRef.current = onTap;
   }, [onTap]);
 
+  useEffect(() => {
+    optionsRef.current = options;
+  }, [options]);
+
   const getViewport = useCallback(() => viewportRef.current, []);
 
   const applyViewport = useCallback(
     (next: Viewport) => {
+      const allowPanAtMinScale = optionsRef.current?.allowPanAtMinScale ?? false;
       const normalized = normalizeViewport(
         next.scale,
         next.offsetX,
         next.offsetY,
         getCanvasMetrics(),
+        next.rotation,
+        allowPanAtMinScale,
       );
       viewportRef.current = normalized;
       setIsZoomed(normalized.scale > MIN_SCALE);
@@ -129,12 +145,8 @@ export function usePanZoom(
     const onWheel = (event: WheelEvent) => {
       event.preventDefault();
 
-      const { anchorX, anchorY } = getAnchorFromClient(
-        canvas,
-        event.clientX,
-        event.clientY,
-      );
-      const { scale, offsetX, offsetY } = viewportRef.current;
+      const lockPan = optionsRef.current?.lockPan ?? false;
+      const { scale, offsetX, offsetY, rotation } = viewportRef.current;
       const factor =
         event.deltaY < 0 ? WHEEL_ZOOM_FACTOR : 1 / WHEEL_ZOOM_FACTOR;
       const nextScale = clampScale(scale * factor);
@@ -143,6 +155,30 @@ export function usePanZoom(
         return;
       }
 
+      if (lockPan) {
+        // Zoom about screen center; keep look point centered while scale changes.
+        const zoomedOffset = zoomToPoint(
+          offsetX,
+          offsetY,
+          scale,
+          nextScale,
+          0,
+          0,
+        );
+        applyViewport({
+          scale: nextScale,
+          offsetX: zoomedOffset.offsetX,
+          offsetY: zoomedOffset.offsetY,
+          rotation,
+        });
+        return;
+      }
+
+      const { anchorX, anchorY } = getAnchorFromClient(
+        canvas,
+        event.clientX,
+        event.clientY,
+      );
       const zoomedOffset = zoomToPoint(
         offsetX,
         offsetY,
@@ -156,6 +192,7 @@ export function usePanZoom(
         scale: nextScale,
         offsetX: zoomedOffset.offsetX,
         offsetY: zoomedOffset.offsetY,
+        rotation,
       });
     };
 
@@ -201,6 +238,10 @@ export function usePanZoom(
         return;
       }
 
+      if (optionsRef.current?.lockPan) {
+        return;
+      }
+
       if (viewportRef.current.scale <= MIN_SCALE) {
         return;
       }
@@ -233,6 +274,27 @@ export function usePanZoom(
 
         const ratio = pinchMetrics.distance / pinchStateRef.current.distance;
         const nextScale = pinchStateRef.current.scale * ratio;
+        const rotation = viewportRef.current.rotation;
+        const lockPan = optionsRef.current?.lockPan ?? false;
+
+        if (lockPan) {
+          const zoomedOffset = zoomToPoint(
+            pinchStateRef.current.offsetX,
+            pinchStateRef.current.offsetY,
+            pinchStateRef.current.scale,
+            nextScale,
+            0,
+            0,
+          );
+          applyViewport({
+            scale: nextScale,
+            offsetX: zoomedOffset.offsetX,
+            offsetY: zoomedOffset.offsetY,
+            rotation,
+          });
+          return;
+        }
+
         const zoomedOffset = zoomToPoint(
           pinchStateRef.current.offsetX,
           pinchStateRef.current.offsetY,
@@ -246,12 +308,17 @@ export function usePanZoom(
           scale: nextScale,
           offsetX: zoomedOffset.offsetX,
           offsetY: zoomedOffset.offsetY,
+          rotation,
         });
         return;
       }
 
       const dragState = dragStateRef.current;
-      if (!dragState || pointersRef.current.size !== 1) {
+      if (
+        !dragState ||
+        pointersRef.current.size !== 1 ||
+        optionsRef.current?.lockPan
+      ) {
         return;
       }
 
@@ -259,6 +326,7 @@ export function usePanZoom(
         scale: viewportRef.current.scale,
         offsetX: dragState.offsetX + (event.clientX - dragState.startX),
         offsetY: dragState.offsetY + (event.clientY - dragState.startY),
+        rotation: viewportRef.current.rotation,
       });
     };
 
@@ -319,14 +387,34 @@ export function usePanZoom(
     };
 
     const onDoubleClick = () => {
-      viewportRef.current = DEFAULT_VIEWPORT;
-      setIsZoomed(false);
+      const lockPan = optionsRef.current?.lockPan ?? false;
+      if (lockPan) {
+        // Reset zoom about screen center; next orientation sample re-syncs.
+        const { scale, offsetX, offsetY, rotation } = viewportRef.current;
+        const zoomedOffset = zoomToPoint(
+          offsetX,
+          offsetY,
+          scale,
+          MIN_SCALE,
+          0,
+          0,
+        );
+        applyViewport({
+          scale: MIN_SCALE,
+          offsetX: zoomedOffset.offsetX,
+          offsetY: zoomedOffset.offsetY,
+          rotation,
+        });
+      } else {
+        viewportRef.current = DEFAULT_VIEWPORT;
+        setIsZoomed(false);
+        requestRedraw();
+      }
       setIsDragging(false);
       dragStateRef.current = null;
       pinchStateRef.current = null;
       tapStateRef.current = null;
       pointersRef.current.clear();
-      requestRedraw();
     };
 
     canvas.addEventListener("wheel", onWheel, { passive: false });
@@ -348,6 +436,7 @@ export function usePanZoom(
 
   return {
     getViewport,
+    applyViewport,
     isDragging,
     isZoomed,
   };
