@@ -68,32 +68,15 @@ export function useDeviceSkyOrientation(
     }, [supported]);
 
   useEffect(() => {
-    if (!enabled) {
+    if (!enabled || !supported) {
       smoothedRef.current = null;
       pendingRef.current = null;
       sawEventRef.current = false;
-      setLook(null);
-      setPermission((current) =>
-        current === "unsupported" ? current : "idle",
-      );
+      if (rafRef.current !== null) {
+        window.cancelAnimationFrame(rafRef.current);
+        rafRef.current = null;
+      }
       return;
-    }
-
-    if (!supported) {
-      setPermission("unsupported");
-      return;
-    }
-
-    const DeviceOrientationEventWithPermission =
-      DeviceOrientationEvent as unknown as {
-        requestPermission?: () => Promise<"granted" | "denied">;
-      };
-
-    if (
-      typeof DeviceOrientationEventWithPermission.requestPermission !==
-      "function"
-    ) {
-      setPermission("granted");
     }
 
     const onOrientation = (event: DeviceOrientationEvent) => {
@@ -151,9 +134,15 @@ export function useDeviceSkyOrientation(
     };
   }, [enabled, flushLook, supported]);
 
+  const effectivePermission: SkyOrientationPermission = !supported
+    ? "unsupported"
+    : !enabled
+      ? "idle"
+      : permission;
+
   return {
-    look,
-    permission,
+    look: enabled ? look : null,
+    permission: effectivePermission,
     supported,
     requestPermission,
   };

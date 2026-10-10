@@ -120,7 +120,8 @@ export function usePanZoom(
 
   const applyViewport = useCallback(
     (next: Viewport) => {
-      const allowPanAtMinScale = optionsRef.current?.allowPanAtMinScale ?? false;
+      const allowPanAtMinScale =
+        optionsRef.current?.allowPanAtMinScale ?? false;
       const normalized = normalizeViewport(
         next.scale,
         next.offsetX,

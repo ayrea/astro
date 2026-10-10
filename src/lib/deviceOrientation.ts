@@ -63,9 +63,10 @@ export async function requestDeviceOrientationPermission(): Promise<DeviceOrient
     return "unsupported";
   }
 
-  const DeviceOrientationEventWithPermission = DeviceOrientationEvent as unknown as {
-    requestPermission?: () => Promise<"granted" | "denied">;
-  };
+  const DeviceOrientationEventWithPermission =
+    DeviceOrientationEvent as unknown as {
+      requestPermission?: () => Promise<"granted" | "denied">;
+    };
 
   if (
     typeof DeviceOrientationEventWithPermission.requestPermission === "function"
