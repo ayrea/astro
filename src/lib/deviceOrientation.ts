@@ -7,18 +7,24 @@ export interface LookDirection {
   azimuthDegrees: number;
 }
 
+interface Vec3 {
+  east: number;
+  north: number;
+  up: number;
+}
+
 /**
- * Convert DeviceOrientationEvent angles to the look direction of the
- * device back (−Z), in a local Earth frame (X east, Y north, Z up).
- *
- * Uses the ZXY rotation matrix from the Device Orientation spec worked example.
- * Compass heading is magnetic north unless the browser provides absolute orientation.
+ * Device → Earth rotation matrix (W3C Device Orientation worked example, ZXY)
+ * applied to a device-frame vector.
  */
-export function deviceOrientationToLook(
+function deviceVectorToEarth(
   alphaDegrees: number,
   betaDegrees: number,
   gammaDegrees: number,
-): LookDirection {
+  deviceX: number,
+  deviceY: number,
+  deviceZ: number,
+): Vec3 {
   const x = toRadians(betaDegrees);
   const y = toRadians(gammaDegrees);
   const z = toRadians(alphaDegrees);
@@ -30,19 +36,122 @@ export function deviceOrientationToLook(
   const cZ = Math.cos(z);
   const sZ = Math.sin(z);
 
-  // Columns of R (device → Earth). Look vector is R * [0, 0, −1].
-  const east = -(cY * sZ * sX + cZ * sY);
-  const north = -(sZ * sY - cZ * cY * sX);
-  const up = -(cX * cY);
+  const m11 = cZ * cY - sZ * sX * sY;
+  const m12 = -cX * sZ;
+  const m13 = cY * sZ * sX + cZ * sY;
 
+  const m21 = cY * sZ + cZ * sX * sY;
+  const m22 = cZ * cX;
+  const m23 = sZ * sY - cZ * cY * sX;
+
+  const m31 = -cX * sY;
+  const m32 = sX;
+  const m33 = cX * cY;
+
+  return {
+    east: m11 * deviceX + m12 * deviceY + m13 * deviceZ,
+    north: m21 * deviceX + m22 * deviceY + m23 * deviceZ,
+    up: m31 * deviceX + m32 * deviceY + m33 * deviceZ,
+  };
+}
+
+function horizontalHeadingDegrees(east: number, north: number): number | null {
   const horizontal = Math.hypot(east, north);
-  const elevationDegrees = toDegrees(Math.atan2(up, horizontal));
-  let azimuthDegrees = toDegrees(Math.atan2(east, north));
-  if (azimuthDegrees < 0) {
-    azimuthDegrees += 360;
+  if (horizontal < 1e-6) {
+    return null;
   }
 
-  return { elevationDegrees, azimuthDegrees };
+  let heading = toDegrees(Math.atan2(east, north));
+  if (heading < 0) {
+    heading += 360;
+  }
+  return heading;
+}
+
+function normalizeDegrees(degrees: number): number {
+  let value = degrees % 360;
+  if (value < 0) {
+    value += 360;
+  }
+  return value;
+}
+
+function shortestAngleDeltaDegrees(from: number, to: number): number {
+  let delta = to - from;
+  while (delta > 180) {
+    delta -= 360;
+  }
+  while (delta < -180) {
+    delta += 360;
+  }
+  return delta;
+}
+
+/**
+ * Convert DeviceOrientationEvent angles to the look direction of the
+ * device back (−Z), in a local Earth frame (X east, Y north, Z up).
+ *
+ * Uses the ZXY rotation matrix from the Device Orientation spec worked example.
+ *
+ * Optional `compassHeadingDegrees` (e.g. iOS `webkitCompassHeading`) is the
+ * magnetic heading of the device *top* (+Y). It is applied only as an absolute
+ * yaw correction — never substituted for alpha — so tilted sky-view poses keep
+ * the correct north/south sense.
+ */
+export function deviceOrientationToLook(
+  alphaDegrees: number,
+  betaDegrees: number,
+  gammaDegrees: number,
+  compassHeadingDegrees?: number | null,
+): LookDirection {
+  // Look vector is out the back of the device: R * [0, 0, −1]
+  const look = deviceVectorToEarth(
+    alphaDegrees,
+    betaDegrees,
+    gammaDegrees,
+    0,
+    0,
+    -1,
+  );
+
+  if (
+    typeof compassHeadingDegrees === "number" &&
+    Number.isFinite(compassHeadingDegrees)
+  ) {
+    // Heading of the device top (+Y) from the same matrix / alpha.
+    const top = deviceVectorToEarth(
+      alphaDegrees,
+      betaDegrees,
+      gammaDegrees,
+      0,
+      1,
+      0,
+    );
+    const topHeading = horizontalHeadingDegrees(top.east, top.north);
+    if (topHeading !== null) {
+      // Rotate look's horizontal projection so the matrix top-heading matches
+      // the absolute compass heading (adds yawError to azimuth).
+      const yawError = shortestAngleDeltaDegrees(
+        topHeading,
+        normalizeDegrees(compassHeadingDegrees),
+      );
+      const cosYaw = Math.cos(toRadians(yawError));
+      const sinYaw = Math.sin(toRadians(yawError));
+      const rotatedEast = look.east * cosYaw + look.north * sinYaw;
+      const rotatedNorth = look.north * cosYaw - look.east * sinYaw;
+      look.east = rotatedEast;
+      look.north = rotatedNorth;
+    }
+  }
+
+  const horizontal = Math.hypot(look.east, look.north);
+  const elevationDegrees = toDegrees(Math.atan2(look.up, horizontal));
+  const azimuth = horizontalHeadingDegrees(look.east, look.north);
+
+  return {
+    elevationDegrees,
+    azimuthDegrees: azimuth ?? 0,
+  };
 }
 
 export function isDeviceOrientationSupported(): boolean {

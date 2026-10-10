@@ -84,15 +84,20 @@ export function useDeviceSkyOrientation(
         return;
       }
 
-      let alpha = event.alpha;
       const webkitHeading = (
         event as DeviceOrientationEvent & { webkitCompassHeading?: number }
       ).webkitCompassHeading;
-      if (typeof webkitHeading === "number" && Number.isFinite(webkitHeading)) {
-        alpha = 360 - webkitHeading;
-      }
 
-      const raw = deviceOrientationToLook(alpha, event.beta, event.gamma);
+      // Never substitute compass heading for alpha — that inverts N/S when the
+      // phone is leaned back (sky-view pose) because the top of the device then
+      // points roughly opposite the look direction. Use heading only to correct
+      // absolute yaw (iOS).
+      const raw = deviceOrientationToLook(
+        event.alpha,
+        event.beta,
+        event.gamma,
+        typeof webkitHeading === "number" ? webkitHeading : null,
+      );
       const previous = smoothedRef.current;
 
       const next: LookDirection = previous
@@ -123,10 +128,63 @@ export function useDeviceSkyOrientation(
       }
     };
 
-    window.addEventListener("deviceorientation", onOrientation, true);
+    // Prefer absolute compass-referenced orientation when available; fall back
+    // to deviceorientation so iOS / older browsers still work.
+    const absoluteSupported = "ondeviceorientationabsolute" in window;
+    let listeningRelative = false;
+    let fallbackTimer: number | null = null;
+
+    const startRelative = () => {
+      if (listeningRelative) {
+        return;
+      }
+      listeningRelative = true;
+      window.addEventListener("deviceorientation", onOrientation, true);
+    };
+
+    const stopRelative = () => {
+      if (!listeningRelative) {
+        return;
+      }
+      listeningRelative = false;
+      window.removeEventListener("deviceorientation", onOrientation, true);
+    };
+
+    const onAbsoluteOrientation = (event: Event) => {
+      if (fallbackTimer !== null) {
+        window.clearTimeout(fallbackTimer);
+        fallbackTimer = null;
+      }
+      stopRelative();
+      onOrientation(event as DeviceOrientationEvent);
+    };
+
+    if (absoluteSupported) {
+      window.addEventListener(
+        "deviceorientationabsolute",
+        onAbsoluteOrientation,
+        true,
+      );
+      fallbackTimer = window.setTimeout(() => {
+        fallbackTimer = null;
+        startRelative();
+      }, 500);
+    } else {
+      startRelative();
+    }
 
     return () => {
-      window.removeEventListener("deviceorientation", onOrientation, true);
+      if (fallbackTimer !== null) {
+        window.clearTimeout(fallbackTimer);
+      }
+      if (absoluteSupported) {
+        window.removeEventListener(
+          "deviceorientationabsolute",
+          onAbsoluteOrientation,
+          true,
+        );
+      }
+      stopRelative();
       if (rafRef.current !== null) {
         window.cancelAnimationFrame(rafRef.current);
         rafRef.current = null;
