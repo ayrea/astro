@@ -119,7 +119,9 @@ export function Planisphere() {
   const { observerTime } = useObserverTime();
   const [isOverTarget, setIsOverTarget] = useState(false);
   const skyAlignActive = settings.skyAlignEnabled;
-  const mirrorEastWestRef = useRef(settings.mirrorEastWest);
+  // Sky-align always uses overhead (mirrored) E/W handedness.
+  const mirrorEastWest = settings.mirrorEastWest || settings.skyAlignEnabled;
+  const mirrorEastWestRef = useRef(mirrorEastWest);
   const getViewportRef = useRef<(() => Viewport) | null>(null);
   const applyViewportRef = useRef<((next: Viewport) => void) | null>(null);
 
@@ -151,8 +153,8 @@ export function Planisphere() {
   }, []);
 
   useEffect(() => {
-    mirrorEastWestRef.current = settings.mirrorEastWest;
-  }, [settings.mirrorEastWest]);
+    mirrorEastWestRef.current = mirrorEastWest;
+  }, [mirrorEastWest]);
 
   const applySkyLook = useCallback(
     (look: { elevationDegrees: number; azimuthDegrees: number }) => {
@@ -399,7 +401,7 @@ export function Planisphere() {
         radius,
         latitudeDegrees: settings.latitude,
         localSiderealTimeHours: lst,
-        mirrorEastWest: settings.mirrorEastWest,
+        mirrorEastWest,
       };
 
       if (settings.showGrid) {
@@ -421,7 +423,7 @@ export function Planisphere() {
           radius,
           settings.latitude,
           lst,
-          settings.mirrorEastWest,
+          mirrorEastWest,
           viewport.scale,
           declinationLines,
           gridLineColor,
@@ -434,7 +436,7 @@ export function Planisphere() {
           radius,
           settings.latitude,
           lst,
-          settings.mirrorEastWest,
+          mirrorEastWest,
           viewport.scale,
           rightAscensionLines,
           gridLineColor,
@@ -454,7 +456,7 @@ export function Planisphere() {
           radius,
           settings.latitude,
           lst,
-          settings.mirrorEastWest,
+          mirrorEastWest,
           viewport.scale,
           eclipticLineColor,
           settings.eclipticLineThickness,
@@ -470,7 +472,7 @@ export function Planisphere() {
           context,
           frameConstants,
           radius,
-          settings.mirrorEastWest,
+          mirrorEastWest,
           viewport.scale,
           boundsColor,
           settings.constellationBoundsThickness,
@@ -486,7 +488,7 @@ export function Planisphere() {
           context,
           frameConstants,
           radius,
-          settings.mirrorEastWest,
+          mirrorEastWest,
           viewport.scale,
           constLineColor,
           settings.constellationLineThickness,
@@ -501,7 +503,7 @@ export function Planisphere() {
             context,
             frameConstants,
             radius,
-            settings.mirrorEastWest,
+            mirrorEastWest,
             viewport.scale,
             constellationLabelColor,
             settings.constellationLabelFontSize,
@@ -515,7 +517,7 @@ export function Planisphere() {
       context.lineWidth = 1.5;
       context.stroke();
 
-      drawCompassLabels(context, radius, settings.mirrorEastWest);
+      drawCompassLabels(context, radius, mirrorEastWest);
 
       const starCount = getStarCountForMagnitude(settings.magnitudeCutoff);
       const labelCandidates: Array<{
@@ -541,7 +543,7 @@ export function Planisphere() {
           star.d,
           frameConstants,
           radius,
-          settings.mirrorEastWest,
+          mirrorEastWest,
           projectedPoint,
         );
 
@@ -588,7 +590,7 @@ export function Planisphere() {
         sunDecDegrees,
         frameConstants,
         radius,
-        settings.mirrorEastWest,
+        mirrorEastWest,
         projectedPoint,
       );
 
@@ -625,7 +627,7 @@ export function Planisphere() {
         moonDecDegrees,
         frameConstants,
         radius,
-        settings.mirrorEastWest,
+        mirrorEastWest,
         projectedPoint,
       );
 
@@ -649,7 +651,7 @@ export function Planisphere() {
           sunDecDegrees,
           frameConstants,
           radius,
-          settings.mirrorEastWest,
+          mirrorEastWest,
           projectedPoint.x,
           projectedPoint.y,
         );
@@ -724,7 +726,7 @@ export function Planisphere() {
             planet.decDegrees,
             frameConstants,
             radius,
-            settings.mirrorEastWest,
+            mirrorEastWest,
             projectedPoint,
           );
 
