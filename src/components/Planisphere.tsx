@@ -157,7 +157,11 @@ export function Planisphere() {
   }, [mirrorEastWest]);
 
   const applySkyLook = useCallback(
-    (look: { elevationDegrees: number; azimuthDegrees: number }) => {
+    (look: {
+      elevationDegrees: number;
+      azimuthDegrees: number;
+      horizonAngleCanvasRadians: number | null;
+    }) => {
       const apply = applyViewportRef.current;
       const getViewport = getViewportRef.current;
       if (!apply || !getViewport) {
@@ -184,6 +188,7 @@ export function Planisphere() {
           projected.y,
           current.scale,
           current.rotation,
+          look.horizonAngleCanvasRadians,
         ),
       );
     },
@@ -811,7 +816,7 @@ export function Planisphere() {
       window.removeEventListener("orientationchange", draw);
       drawRef.current = null;
     };
-  }, [getViewport, observerTime, settings]);
+  }, [getViewport, mirrorEastWest, observerTime, settings]);
 
   return (
     <div ref={containerRef} className="h-full w-full overflow-hidden">

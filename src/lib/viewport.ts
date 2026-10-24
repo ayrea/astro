@@ -77,20 +77,33 @@ export function rotateWorldPoint(
 
 /**
  * Viewport that centers `worldX`/`worldY` on screen and rotates so the
- * direction from that point toward the zenith (origin) points screen-up.
+ * chart direction toward the horizon (away from zenith) aligns with
+ * `horizonAngleCanvas` on the display.
+ *
+ * `horizonAngleCanvas` uses canvas coords (+X right, +Y down): 0 = toward
+ * bottom, π/2 = toward right. Pass `null` when gravity-on-screen is
+ * unavailable (phone flat) to freeze roll at `previousRotation`.
  */
 export function viewportForLookPoint(
   worldX: number,
   worldY: number,
   scale: number,
   previousRotation = 0,
+  horizonAngleCanvas: number | null = 0,
 ): Viewport {
   const clampedScale = clampScale(scale);
   const distance = Math.hypot(worldX, worldY);
 
-  // At zenith the toward-zenith direction is undefined; keep prior rotation.
-  const rotation =
-    distance < 1e-6 ? previousRotation : Math.atan2(worldX, worldY);
+  let rotation: number;
+  if (horizonAngleCanvas === null) {
+    rotation = distance < 1e-6 ? previousRotation : Math.atan2(worldX, worldY);
+  } else if (distance < 1e-6) {
+    // At zenith, radial horizon direction is undefined — roll from gravity only.
+    rotation = -horizonAngleCanvas;
+  } else {
+    // After rotate(θ), angle of W becomes atan2(Wx,Wy) − θ; match horizon angle.
+    rotation = Math.atan2(worldX, worldY) - horizonAngleCanvas;
+  }
 
   const rotated = rotateWorldPoint(worldX, worldY, rotation);
 

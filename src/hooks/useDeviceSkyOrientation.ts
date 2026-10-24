@@ -1,7 +1,9 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 
 import {
+  deviceHorizonToCanvasRadians,
   deviceOrientationToLook,
+  getScreenOrientationDegrees,
   isDeviceOrientationSupported,
   requestDeviceOrientationPermission,
   smoothAngleDegrees,
@@ -18,8 +20,14 @@ export type SkyOrientationPermission =
   | "denied"
   | "unsupported";
 
+/** Look direction plus canvas-space horizon angle for viewport roll. */
+export interface SkyLookSample extends LookDirection {
+  /** Radians; 0 = horizon toward canvas bottom. Null when phone is flat. */
+  horizonAngleCanvasRadians: number | null;
+}
+
 export interface DeviceSkyOrientation {
-  look: LookDirection | null;
+  look: SkyLookSample | null;
   permission: SkyOrientationPermission;
   supported: boolean;
   /** Call from a user gesture after enabling the setting (needed on iOS). */
@@ -28,15 +36,16 @@ export interface DeviceSkyOrientation {
 
 export function useDeviceSkyOrientation(
   enabled: boolean,
-  onLook?: (look: LookDirection) => void,
+  onLook?: (look: SkyLookSample) => void,
 ): DeviceSkyOrientation {
   const supported = isDeviceOrientationSupported();
   const [permission, setPermission] =
     useState<SkyOrientationPermission>("idle");
-  const [look, setLook] = useState<LookDirection | null>(null);
-  const smoothedRef = useRef<LookDirection | null>(null);
+  const [look, setLook] = useState<SkyLookSample | null>(null);
+  const smoothedRef = useRef<SkyLookSample | null>(null);
+  const lastDeviceHorizonRef = useRef<number | null>(null);
   const rafRef = useRef<number | null>(null);
-  const pendingRef = useRef<LookDirection | null>(null);
+  const pendingRef = useRef<SkyLookSample | null>(null);
   const sawEventRef = useRef(false);
   const onLookRef = useRef(onLook);
 
@@ -71,6 +80,7 @@ export function useDeviceSkyOrientation(
     if (!enabled || !supported) {
       smoothedRef.current = null;
       pendingRef.current = null;
+      lastDeviceHorizonRef.current = null;
       sawEventRef.current = false;
       if (rafRef.current !== null) {
         window.cancelAnimationFrame(rafRef.current);
@@ -98,9 +108,33 @@ export function useDeviceSkyOrientation(
         event.gamma,
         typeof webkitHeading === "number" ? webkitHeading : null,
       );
+
+      let deviceHorizon = raw.horizonAngleDeviceDegrees;
+      if (deviceHorizon === null) {
+        deviceHorizon = lastDeviceHorizonRef.current;
+      } else {
+        const previousHorizon = lastDeviceHorizonRef.current;
+        if (previousHorizon !== null) {
+          deviceHorizon = smoothAngleDegrees(
+            previousHorizon,
+            deviceHorizon,
+            SMOOTHING,
+          );
+        }
+        lastDeviceHorizonRef.current = deviceHorizon;
+      }
+
+      const horizonAngleCanvasRadians =
+        deviceHorizon === null
+          ? null
+          : deviceHorizonToCanvasRadians(
+              deviceHorizon,
+              getScreenOrientationDegrees(),
+            );
+
       const previous = smoothedRef.current;
 
-      const next: LookDirection = previous
+      const next: SkyLookSample = previous
         ? {
             elevationDegrees: smoothScalar(
               previous.elevationDegrees,
@@ -112,8 +146,14 @@ export function useDeviceSkyOrientation(
               raw.azimuthDegrees,
               SMOOTHING,
             ),
+            horizonAngleDeviceDegrees: deviceHorizon,
+            horizonAngleCanvasRadians,
           }
-        : raw;
+        : {
+            ...raw,
+            horizonAngleDeviceDegrees: deviceHorizon,
+            horizonAngleCanvasRadians,
+          };
 
       smoothedRef.current = next;
       pendingRef.current = next;

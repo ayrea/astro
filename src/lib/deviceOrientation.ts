@@ -5,6 +5,12 @@ export interface LookDirection {
   elevationDegrees: number;
   /** Degrees clockwise from north toward east. */
   azimuthDegrees: number;
+  /**
+   * Angle of gravity-down (toward physical horizon) in the device screen
+   * plane, in degrees. 0 = toward device top (+Y), 90 = toward device right
+   * (+X). Null when the phone is nearly flat (screen plane ≈ horizontal).
+   */
+  horizonAngleDeviceDegrees: number | null;
 }
 
 interface Vec3 {
@@ -87,9 +93,12 @@ function shortestAngleDeltaDegrees(from: number, to: number): number {
   return delta;
 }
 
+const FLAT_SCREEN_GRAVITY_EPSILON = 1e-3;
+
 /**
  * Convert DeviceOrientationEvent angles to the look direction of the
- * device back (−Z), in a local Earth frame (X east, Y north, Z up).
+ * device back (−Z), in a local Earth frame (X east, Y north, Z up), plus
+ * the gravity-down direction in the device screen plane (X/Y).
  *
  * Uses the ZXY rotation matrix from the Device Orientation spec worked example.
  *
@@ -114,23 +123,43 @@ export function deviceOrientationToLook(
     -1,
   );
 
+  // Gravity (0,0,−1) projected onto device +X / +Y (screen plane).
+  // g · deviceAxis = −(R · deviceAxis).up
+  const deviceRight = deviceVectorToEarth(
+    alphaDegrees,
+    betaDegrees,
+    gammaDegrees,
+    1,
+    0,
+    0,
+  );
+  const deviceTop = deviceVectorToEarth(
+    alphaDegrees,
+    betaDegrees,
+    gammaDegrees,
+    0,
+    1,
+    0,
+  );
+  const gDeviceX = -deviceRight.up;
+  const gDeviceY = -deviceTop.up;
+  const gScreen = Math.hypot(gDeviceX, gDeviceY);
+
+  let horizonAngleDeviceDegrees: number | null = null;
+  if (gScreen >= FLAT_SCREEN_GRAVITY_EPSILON) {
+    // atan2(x, y): 0 = toward device top, 90 = toward device right.
+    horizonAngleDeviceDegrees = toDegrees(Math.atan2(gDeviceX, gDeviceY));
+  }
+
   if (
     typeof compassHeadingDegrees === "number" &&
     Number.isFinite(compassHeadingDegrees)
   ) {
-    // Heading of the device top (+Y) from the same matrix / alpha.
-    const top = deviceVectorToEarth(
-      alphaDegrees,
-      betaDegrees,
-      gammaDegrees,
-      0,
-      1,
-      0,
+    const topHeading = horizontalHeadingDegrees(
+      deviceTop.east,
+      deviceTop.north,
     );
-    const topHeading = horizontalHeadingDegrees(top.east, top.north);
     if (topHeading !== null) {
-      // Rotate look's horizontal projection so the matrix top-heading matches
-      // the absolute compass heading (adds yawError to azimuth).
       const yawError = shortestAngleDeltaDegrees(
         topHeading,
         normalizeDegrees(compassHeadingDegrees),
@@ -151,7 +180,44 @@ export function deviceOrientationToLook(
   return {
     elevationDegrees,
     azimuthDegrees: azimuth ?? 0,
+    horizonAngleDeviceDegrees,
   };
+}
+
+/**
+ * Map device-plane horizon angle to canvas coordinates (CSS: +X right, +Y down).
+ * Result: 0 = horizon toward canvas bottom, π/2 = toward canvas right.
+ */
+export function deviceHorizonToCanvasRadians(
+  horizonAngleDeviceDegrees: number,
+  screenOrientationDegrees = 0,
+): number {
+  return (
+    Math.PI -
+    toRadians(horizonAngleDeviceDegrees) -
+    toRadians(screenOrientationDegrees)
+  );
+}
+
+export function getScreenOrientationDegrees(): number {
+  if (typeof window === "undefined") {
+    return 0;
+  }
+
+  const screenOrientation = window.screen?.orientation?.angle;
+  if (
+    typeof screenOrientation === "number" &&
+    Number.isFinite(screenOrientation)
+  ) {
+    return screenOrientation;
+  }
+
+  const legacy = (window as Window & { orientation?: number }).orientation;
+  if (typeof legacy === "number" && Number.isFinite(legacy)) {
+    return legacy;
+  }
+
+  return 0;
 }
 
 export function isDeviceOrientationSupported(): boolean {

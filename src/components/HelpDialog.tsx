@@ -46,9 +46,10 @@ export function HelpDialog({ open, onOpenChange }: HelpDialogProps) {
               Settings → General. Hold the phone with the screen facing you and
               point the back of the device at the sky. The chart pans and
               rotates so the centre of the view matches the direction you are
-              pointing. Pinch or scroll to zoom into that region. Your browser
-              may ask for motion and compass permission; heading follows
-              magnetic north.
+              pointing. You can roll the phone or use landscape — the horizon on
+              the chart stays toward the real horizon. Pinch or scroll to zoom
+              into that region. Your browser may ask for motion and compass
+              permission; heading follows magnetic north.
             </p>
           </div>
 
