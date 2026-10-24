@@ -187,6 +187,20 @@ export function deviceOrientationToLook(
 /**
  * Map device-plane horizon angle to canvas coordinates (CSS: +X right, +Y down).
  * Result: 0 = horizon toward canvas bottom, π/2 = toward canvas right.
+ *
+ * `horizonAngleDeviceDegrees` is gravity-down in the device's natural axes
+ * (0 = device top, 90 = device right), independent of the current UI.
+ * `screenOrientationDegrees` is the clockwise angle from that natural
+ * orientation to the current viewport (`screen.orientation.angle`, or
+ * `window.orientation`, where −90 is the same turn as 270). Add it: the
+ * viewport is rotated clockwise from the device frame. Subtracting it leaves
+ * portrait unchanged and turns both landscapes upside down.
+ *
+ * Upright holds (bottom of the screen toward the ground) all map to 0:
+ * - 0° portrait, device horizon 180°
+ * - 90° landscape (device top to the left), device horizon −90°
+ * - 180° portrait upside down, device horizon 0°
+ * - 270° landscape (device top to the right), device horizon 90°
  */
 export function deviceHorizonToCanvasRadians(
   horizonAngleDeviceDegrees: number,
@@ -194,7 +208,7 @@ export function deviceHorizonToCanvasRadians(
 ): number {
   return (
     Math.PI -
-    toRadians(horizonAngleDeviceDegrees) -
+    toRadians(horizonAngleDeviceDegrees) +
     toRadians(screenOrientationDegrees)
   );
 }

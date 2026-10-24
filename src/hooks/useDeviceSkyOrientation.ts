@@ -89,6 +89,28 @@ export function useDeviceSkyOrientation(
       return;
     }
 
+    const canvasHorizon = (deviceHorizon: number | null) =>
+      deviceHorizon === null
+        ? null
+        : deviceHorizonToCanvasRadians(
+            deviceHorizon,
+            getScreenOrientationDegrees(),
+          );
+
+    const publishLook = (next: SkyLookSample) => {
+      smoothedRef.current = next;
+      pendingRef.current = next;
+
+      if (!sawEventRef.current) {
+        sawEventRef.current = true;
+        setPermission("granted");
+      }
+
+      if (rafRef.current === null) {
+        rafRef.current = window.requestAnimationFrame(flushLook);
+      }
+    };
+
     const onOrientation = (event: DeviceOrientationEvent) => {
       if (event.alpha === null || event.beta === null || event.gamma === null) {
         return;
@@ -124,14 +146,6 @@ export function useDeviceSkyOrientation(
         lastDeviceHorizonRef.current = deviceHorizon;
       }
 
-      const horizonAngleCanvasRadians =
-        deviceHorizon === null
-          ? null
-          : deviceHorizonToCanvasRadians(
-              deviceHorizon,
-              getScreenOrientationDegrees(),
-            );
-
       const previous = smoothedRef.current;
 
       const next: SkyLookSample = previous
@@ -147,25 +161,32 @@ export function useDeviceSkyOrientation(
               SMOOTHING,
             ),
             horizonAngleDeviceDegrees: deviceHorizon,
-            horizonAngleCanvasRadians,
+            horizonAngleCanvasRadians: canvasHorizon(deviceHorizon),
           }
         : {
             ...raw,
             horizonAngleDeviceDegrees: deviceHorizon,
-            horizonAngleCanvasRadians,
+            horizonAngleCanvasRadians: canvasHorizon(deviceHorizon),
           };
 
-      smoothedRef.current = next;
-      pendingRef.current = next;
+      publishLook(next);
+    };
 
-      if (!sawEventRef.current) {
-        sawEventRef.current = true;
-        setPermission("granted");
+    // Screen angle is otherwise sampled only on a motion event. Re-apply the
+    // last device-frame horizon when the viewport rotates so landscape roll
+    // updates even if the phone is then held still. Keep the smoothed look.
+    const onScreenOrientation = () => {
+      const previous = smoothedRef.current;
+      const deviceHorizon = lastDeviceHorizonRef.current;
+      if (!previous || deviceHorizon === null) {
+        return;
       }
 
-      if (rafRef.current === null) {
-        rafRef.current = window.requestAnimationFrame(flushLook);
-      }
+      publishLook({
+        ...previous,
+        horizonAngleDeviceDegrees: deviceHorizon,
+        horizonAngleCanvasRadians: canvasHorizon(deviceHorizon),
+      });
     };
 
     // Prefer absolute compass-referenced orientation when available; fall back
@@ -199,6 +220,10 @@ export function useDeviceSkyOrientation(
       onOrientation(event as DeviceOrientationEvent);
     };
 
+    const screenOrientation = window.screen?.orientation;
+    screenOrientation?.addEventListener("change", onScreenOrientation);
+    window.addEventListener("orientationchange", onScreenOrientation);
+
     if (absoluteSupported) {
       window.addEventListener(
         "deviceorientationabsolute",
@@ -214,6 +239,8 @@ export function useDeviceSkyOrientation(
     }
 
     return () => {
+      screenOrientation?.removeEventListener("change", onScreenOrientation);
+      window.removeEventListener("orientationchange", onScreenOrientation);
       if (fallbackTimer !== null) {
         window.clearTimeout(fallbackTimer);
       }
