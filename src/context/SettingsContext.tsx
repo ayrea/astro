@@ -98,7 +98,7 @@ const defaultSettings: Settings = {
   utcOffsetHours: 8,
   magnitudeCutoff: 5,
   mirrorEastWest: true,
-  skyAlignEnabled: false,
+  skyAlignEnabled: true,
   showLabels: true,
   showGrid: true,
   gridRaSpacing: 2,

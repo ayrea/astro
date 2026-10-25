@@ -1,5 +1,7 @@
 export const MIN_SCALE = 1;
 export const MAX_SCALE = 32;
+/** Scale when sky-align starts: half the linear field ≈ one quarter of sky area. */
+export const SKY_ALIGN_INITIAL_SCALE = 4;
 
 export interface Viewport {
   scale: number;

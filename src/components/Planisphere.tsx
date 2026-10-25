@@ -49,6 +49,7 @@ import { getSunEquatorial } from "@/lib/sun";
 import {
   DEFAULT_VIEWPORT,
   getCanvasMetrics,
+  SKY_ALIGN_INITIAL_SCALE,
   viewportForLookPoint,
   type Viewport,
 } from "@/lib/viewport";
@@ -124,6 +125,8 @@ export function Planisphere() {
   const mirrorEastWestRef = useRef(mirrorEastWest);
   const getViewportRef = useRef<(() => Viewport) | null>(null);
   const applyViewportRef = useRef<((next: Viewport) => void) | null>(null);
+  /** True after the first sky-align viewport (initial zoom or look) this session. */
+  const skyAlignZoomAppliedRef = useRef(false);
 
   const getMetrics = useCallback(() => {
     const container = containerRef.current;
@@ -182,11 +185,15 @@ export function Planisphere() {
       }
 
       const current = getViewport();
+      const scale = skyAlignZoomAppliedRef.current
+        ? current.scale
+        : SKY_ALIGN_INITIAL_SCALE;
+      skyAlignZoomAppliedRef.current = true;
       apply(
         viewportForLookPoint(
           projected.x,
           projected.y,
-          current.scale,
+          scale,
           current.rotation,
           look.horizonAngleCanvasRadians,
         ),
@@ -251,7 +258,20 @@ export function Planisphere() {
 
   useEffect(() => {
     if (!skyAlignActive) {
+      skyAlignZoomAppliedRef.current = false;
       applyViewport(DEFAULT_VIEWPORT);
+      return;
+    }
+
+    // Start sky-align zoomed so ~1/4 of the sky area fills the display.
+    // Skip if a look sample already applied the initial zoom (avoids wiping pan).
+    // Later sensor samples keep whatever scale the user pinches to.
+    if (!skyAlignZoomAppliedRef.current) {
+      applyViewport({
+        ...DEFAULT_VIEWPORT,
+        scale: SKY_ALIGN_INITIAL_SCALE,
+      });
+      skyAlignZoomAppliedRef.current = true;
     }
   }, [applyViewport, skyAlignActive]);
 
