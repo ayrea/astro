@@ -238,18 +238,14 @@ export function isDeviceOrientationSupported(): boolean {
   return typeof window !== "undefined" && "DeviceOrientationEvent" in window;
 }
 
-export type DeviceOrientationPermissionResult =
-  | "granted"
-  | "denied"
-  | "unsupported";
-
 /**
- * Request permission for device orientation where required (iOS 13+).
- * Returns the resulting permission state.
+ * True on platforms (iOS Safari / home-screen) that require
+ * DeviceOrientationEvent.requestPermission() from a user gesture.
+ * Permission is session-scoped and resets when the app is relaunched.
  */
-export async function requestDeviceOrientationPermission(): Promise<DeviceOrientationPermissionResult> {
-  if (!isDeviceOrientationSupported()) {
-    return "unsupported";
+export function isDeviceOrientationPermissionRequired(): boolean {
+  if (typeof window === "undefined" || !("DeviceOrientationEvent" in window)) {
+    return false;
   }
 
   const DeviceOrientationEventWithPermission =
@@ -257,19 +253,75 @@ export async function requestDeviceOrientationPermission(): Promise<DeviceOrient
       requestPermission?: () => Promise<"granted" | "denied">;
     };
 
-  if (
+  return (
     typeof DeviceOrientationEventWithPermission.requestPermission === "function"
-  ) {
-    try {
-      const result =
-        await DeviceOrientationEventWithPermission.requestPermission();
-      return result === "granted" ? "granted" : "denied";
-    } catch {
-      return "denied";
-    }
+  );
+}
+
+/** Set when orientation is allowed for this page load (grant or first event). */
+let orientationPermissionGrantedThisSession = false;
+
+const orientationPermissionListeners = new Set<() => void>();
+
+export function hasDeviceOrientationPermissionThisSession(): boolean {
+  return orientationPermissionGrantedThisSession;
+}
+
+export function markDeviceOrientationPermissionGranted(): void {
+  if (orientationPermissionGrantedThisSession) {
+    return;
+  }
+  orientationPermissionGrantedThisSession = true;
+  for (const listener of orientationPermissionListeners) {
+    listener();
+  }
+}
+
+/** Notify React when Settings (or another caller) grants this session. */
+export function subscribeDeviceOrientationPermissionGranted(
+  listener: () => void,
+): () => void {
+  orientationPermissionListeners.add(listener);
+  return () => {
+    orientationPermissionListeners.delete(listener);
+  };
+}
+
+export type DeviceOrientationPermissionResult =
+  | "granted"
+  | "denied"
+  | "unsupported";
+
+/**
+ * Request permission for device orientation where required (iOS 13+).
+ * Must be called from a user gesture. Returns the resulting permission state.
+ */
+export async function requestDeviceOrientationPermission(): Promise<DeviceOrientationPermissionResult> {
+  if (!isDeviceOrientationSupported()) {
+    return "unsupported";
   }
 
-  return "granted";
+  if (!isDeviceOrientationPermissionRequired()) {
+    markDeviceOrientationPermissionGranted();
+    return "granted";
+  }
+
+  const DeviceOrientationEventWithPermission =
+    DeviceOrientationEvent as unknown as {
+      requestPermission: () => Promise<"granted" | "denied">;
+    };
+
+  try {
+    const result =
+      await DeviceOrientationEventWithPermission.requestPermission();
+    if (result === "granted") {
+      markDeviceOrientationPermissionGranted();
+      return "granted";
+    }
+    return "denied";
+  } catch {
+    return "denied";
+  }
 }
 
 export function smoothAngleDegrees(

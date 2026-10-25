@@ -4,8 +4,12 @@ import {
   deviceHorizonToCanvasRadians,
   deviceOrientationToLook,
   getScreenOrientationDegrees,
+  hasDeviceOrientationPermissionThisSession,
+  isDeviceOrientationPermissionRequired,
   isDeviceOrientationSupported,
+  markDeviceOrientationPermissionGranted,
   requestDeviceOrientationPermission,
+  subscribeDeviceOrientationPermissionGranted,
   smoothAngleDegrees,
   smoothScalar,
   type LookDirection,
@@ -30,6 +34,11 @@ export interface DeviceSkyOrientation {
   look: SkyLookSample | null;
   permission: SkyOrientationPermission;
   supported: boolean;
+  /**
+   * True when Sky Align is on but iOS-style permission has not been granted
+   * this page session — show a tap UI so requestPermission can run from a gesture.
+   */
+  needsPermissionPrompt: boolean;
   /** Call from a user gesture after enabling the setting (needed on iOS). */
   requestPermission: () => Promise<SkyOrientationPermission>;
 }
@@ -39,9 +48,12 @@ export function useDeviceSkyOrientation(
   onLook?: (look: SkyLookSample) => void,
 ): DeviceSkyOrientation {
   const supported = isDeviceOrientationSupported();
+  const permissionRequired = isDeviceOrientationPermissionRequired();
   const [permission, setPermission] =
     useState<SkyOrientationPermission>("idle");
   const [look, setLook] = useState<SkyLookSample | null>(null);
+  /** Bumps when session grant changes so needsPermissionPrompt re-renders. */
+  const [sessionGrantEpoch, setSessionGrantEpoch] = useState(0);
   const smoothedRef = useRef<SkyLookSample | null>(null);
   const lastDeviceHorizonRef = useRef<number | null>(null);
   const rafRef = useRef<number | null>(null);
@@ -52,6 +64,17 @@ export function useDeviceSkyOrientation(
   useEffect(() => {
     onLookRef.current = onLook;
   }, [onLook]);
+
+  useEffect(() => {
+    return subscribeDeviceOrientationPermissionGranted(() => {
+      setSessionGrantEpoch((epoch) => epoch + 1);
+    });
+  }, []);
+
+  const noteSessionGranted = useCallback(() => {
+    markDeviceOrientationPermissionGranted();
+    setSessionGrantEpoch((epoch) => epoch + 1);
+  }, []);
 
   const flushLook = useCallback(() => {
     rafRef.current = null;
@@ -72,9 +95,12 @@ export function useDeviceSkyOrientation(
 
       setPermission("pending");
       const result = await requestDeviceOrientationPermission();
+      if (result === "granted") {
+        noteSessionGranted();
+      }
       setPermission(result);
       return result;
-    }, [supported]);
+    }, [noteSessionGranted, supported]);
 
   useEffect(() => {
     if (!enabled || !supported) {
@@ -103,7 +129,9 @@ export function useDeviceSkyOrientation(
 
       if (!sawEventRef.current) {
         sawEventRef.current = true;
+        markDeviceOrientationPermissionGranted();
         setPermission("granted");
+        setSessionGrantEpoch((epoch) => epoch + 1);
       }
 
       if (rafRef.current === null) {
@@ -265,10 +293,20 @@ export function useDeviceSkyOrientation(
       ? "idle"
       : permission;
 
+  // sessionGrantEpoch forces a re-render when Settings (or a first event)
+  // marks this session granted via the module-level flag.
+  const needsPermissionPrompt =
+    enabled &&
+    supported &&
+    permissionRequired &&
+    sessionGrantEpoch >= 0 &&
+    !hasDeviceOrientationPermissionThisSession();
+
   return {
     look: enabled ? look : null,
     permission: effectivePermission,
     supported,
+    needsPermissionPrompt,
     requestPermission,
   };
 }

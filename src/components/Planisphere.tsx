@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 
+import { SkyAlignPermissionDialog } from "@/components/SkyAlignPermissionDialog";
 import {
   type ElevationSpacing,
   type GridDecSpacing,
@@ -202,7 +203,21 @@ export function Planisphere() {
     [getMetrics],
   );
 
-  useDeviceSkyOrientation(skyAlignActive, applySkyLook);
+  const { needsPermissionPrompt, requestPermission } = useDeviceSkyOrientation(
+    skyAlignActive,
+    applySkyLook,
+  );
+  const [permissionPromptDismissed, setPermissionPromptDismissed] =
+    useState(false);
+
+  // Clear "Not now" once the prompt is no longer needed (or Sky Align is off)
+  // so a later enable can show it again — adjust during render, not in an effect.
+  if (
+    permissionPromptDismissed &&
+    (!skyAlignActive || !needsPermissionPrompt)
+  ) {
+    setPermissionPromptDismissed(false);
+  }
 
   const handleTap = useCallback(
     (clientX: number, clientY: number) => {
@@ -849,6 +864,11 @@ export function Planisphere() {
           isDragging && "cursor-grabbing",
         )}
         aria-label="Night sky planisphere"
+      />
+      <SkyAlignPermissionDialog
+        open={needsPermissionPrompt && !permissionPromptDismissed}
+        onRequestPermission={requestPermission}
+        onDismiss={() => setPermissionPromptDismissed(true)}
       />
     </div>
   );

@@ -49,7 +49,9 @@ export function HelpDialog({ open, onOpenChange }: HelpDialogProps) {
               pointing. You can roll the phone or use landscape — the horizon on
               the chart stays toward the real horizon. Pinch or scroll to zoom
               into that region. Your browser may ask for motion and compass
-              permission; heading follows magnetic north.
+              permission; heading follows magnetic north. On iPhone, each new
+              open of the home-screen app may ask again to allow motion — tap
+              Enable sensors when prompted.
             </p>
           </div>
 
